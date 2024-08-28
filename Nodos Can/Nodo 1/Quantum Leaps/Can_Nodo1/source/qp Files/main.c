@@ -30,6 +30,7 @@
 //$endhead${.::main.c} ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 #include "qpc.h"                 // QP/C real-time embedded framework
 #include "bsp.h"                 // Board Support Package
+#include "Includes/Temp.h"       // Periferico de temperatura
 #include <stdio.h>
 #include "board.h"
 #include "peripherals.h"
