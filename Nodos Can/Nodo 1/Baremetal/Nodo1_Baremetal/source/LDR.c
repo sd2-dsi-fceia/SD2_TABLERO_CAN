@@ -30,7 +30,7 @@ volatile uint32_t g_Adc16ConversionValue;
 static adc16_config_t adc16ConfigStruct;
 static adc16_channel_config_t adc16ChannelConfigStruct;
 
-extern Error_t LDR_init(void)
+extern Error_LDR_t LDR_init(void)
 {
 	/* Configuracion del ADC */
 	ADC16_GetDefaultConfig(&adc16ConfigStruct);
@@ -43,7 +43,7 @@ extern Error_t LDR_init(void)
 	}
 	else
 	{
-		return ERROR_INIT;
+		return ERROR_LDR_INIT;
 	}
 #endif /* FSL_FEATURE_ADC16_HAS_CALIBRATION */
 
@@ -63,7 +63,7 @@ extern Error_t LDR_init(void)
 	PORT_SetPinMux(BOARD_ADC_LIGHT_SNS_PORT, BOARD_ADC_LIGHT_SNS_PIN,
 			kPORT_PinDisabledOrAnalog);
 
-	return ERROR_OK;
+	return ERROR_LDR_OK;
 }
 
 extern void LDR_read(void)
@@ -79,12 +79,12 @@ extern uint16_t LDR_UltimaConversion(void)
 	return g_Adc16ConversionValue;
 }
 
-extern Error_t LDR_convertir(void)
+extern Error_LDR_t LDR_convertir(void)
 {
 	ADC16_SetChannelConfig(ADC16_BASE, ADC16_CHANNEL_GROUP,
 			&adc16ChannelConfigStruct);
 
-	return ERROR_OK;
+	return ERROR_LDR_OK;
 }
 
 extern bool LDR_getConvComplete(void)

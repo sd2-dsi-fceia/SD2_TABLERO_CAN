@@ -41,10 +41,44 @@
 #include "fsl_debug_console.h"
 /* TODO: insert other include files here. */
 #include "LDR.h"
+#include "spi.h"
+#include "mcp2515.h"
 
 /* TODO: insert other definitions and declarations here. */
+#define PIN_NUMBER 17
+
+#define CAN_LDR_ID	10
 
 uint16_t Delay1s = TIEMPO_DE_MUESTREO_LDR;
+
+/**
+ * @brief Interrupcion por recepcion de datos del modulo can.
+ *
+ * Cuando se genera una interrupcion por recepcion se activa
+ * la bandera y luego dicha bandera se detecta por polling en
+ * el programa principal.
+ *
+ * @note Debe ser de tipo volatile para que no sea optimizada
+ * por el compilador, dado que es una variable que se modifica
+ * en una interrupcion.
+ */
+volatile static bool Rx_flag_mcp2515 = false;
+
+/**
+ * @brief Mensaje de tipo can.
+ */
+struct can_frame canMsg1;
+
+/**
+ * @brief Inicializacion de perifericos.
+ */
+static void perifericos_init(void);
+/**
+ * @brief Configuraciones de interrupcion.
+ */
+static void interrupt_init(void);
+
+static void canmsg_escritura(void);
 
 /*
  * @brief   Application entry point.
@@ -69,19 +103,116 @@ int main(void)
 
 	SysTick_Config(CLOCK_GetCoreSysClkFreq() / 1000U);
 
-	Error_t error = LDR_init();
+	Error_LDR_t error = LDR_init();
 
-	assert(!error);
+	if (error != ERROR_LDR_OK)
+		PRINTF("Fallo al inicializar el adc.\n\r");
 
+	/* Configura de can */
+	perifericos_init();
+	interrupt_init();
+
+	canMsg1.can_id = CAN_LDR_ID;
+	canMsg1.can_dlc = 2;
+//	canMsg1.data[0] = 10;
+//	canMsg1.data[1] = 22;
+//	canMsg1.data[2] = 32;
+//	canMsg1.data[3] = 16;
+//	canMsg1.data[4] = 26;
+//	canMsg1.data[5] = 78;
+//	canMsg1.data[6] = 69;
+//	canMsg1.data[7] = 5;
+//
 	while (1)
 	{
 		if (LDR_getConvComplete())
 		{
 			PRINTF("Valor del Adc: %d\n\r", LDR_UltimaConversion());
 			LDR_clearConvComplete();
+
+			canMsg1.data[1] = (LDR_UltimaConversion() & 0xff00) >> 8;
+			canMsg1.data[0] = (LDR_UltimaConversion() & 0x00ff);
+
+			canmsg_escritura();
 		}
+
 	}
 	return 0;
+}
+
+static void canmsg_escritura(void)
+{
+	ERROR_t estado;
+
+	estado = mcp2515_sendMessage(&canMsg1);
+
+	if (estado == ERROR_OK)
+	{
+		PRINTF("\nMensaje enviado\n\r");
+		PRINTF("ID\tDLC\tDATA\n\r");
+		PRINTF("%d\t%d\t", canMsg1.can_id, canMsg1.can_dlc);
+
+		for (uint8_t i = 0; i < 8; i++)
+		{
+			PRINTF("%d ", canMsg1.data[i]);
+		}
+		PRINTF("\n\r");
+	}
+	else
+	{
+		PRINTF("\nError al enviar\n\r");
+	}
+
+	return;
+}
+
+static void perifericos_init(void)
+{
+	ERROR_t error;
+
+	mcp2515_init();
+
+	error = mcp2515_reset();
+
+	if (error != ERROR_OK)
+		PRINTF("Fallo al resetear el modulo\n\r");
+
+	error = mcp2515_setBitrate(CAN_125KBPS, MCP_8MHZ);
+
+	if (error != ERROR_OK)
+		PRINTF("Fallo al setear el bit rate\n\r");
+
+	error = mcp2515_setNormalMode();
+	if (error != ERROR_OK)
+		PRINTF("Fallo al setear el modo normal\n\r");
+//	error = mcp2515_setLoopbackMode();
+//	if (error != ERROR_OK)
+//		PRINTF("Fallo al setear el loopback mode\n\r");
+
+	return;
+}
+
+static void interrupt_init(void)
+{
+	CLOCK_EnableClock(kCLOCK_PortA); // Por ejemplo, para el puerto A
+
+	port_pin_config_t config =
+	{ .pullSelect = kPORT_PullUp, .slewRate = kPORT_FastSlewRate,
+			.passiveFilterEnable = kPORT_PassiveFilterDisable, .driveStrength =
+					kPORT_LowDriveStrength, .mux = kPORT_MuxAsGpio };
+
+	PORT_SetPinConfig(PORTA, PIN_NUMBER, &config);
+	PORT_SetPinInterruptConfig(PORTA, PIN_NUMBER, kPORT_InterruptFallingEdge); // Configura interrupción por flanco descendente
+
+	NVIC_EnableIRQ(PORTA_IRQn); // Habilita la interrupción para el puerto A
+	NVIC_SetPriority(PORTA_IRQn, 2);
+
+	gpio_pin_config_t gpioConfig =
+	{ .pinDirection = kGPIO_DigitalInput, .outputLogic = 0U };
+
+	GPIO_PinInit(GPIOA, PIN_NUMBER, &gpioConfig);
+
+	return;
 }
 
 void SysTick_Handler(void)
@@ -102,3 +233,83 @@ void ADC16_IRQ_HANDLER_FUNC(void)
 	return;
 }
 
+void PORTA_IRQHandler(void)
+{
+#if USE_FREERTOS
+	BaseType_t xHigherPriorityTaskWoken = pdFALSE;
+#endif
+
+	// Obtiene el estado de las banderas de interrupción del puerto A
+	uint32_t interruptFlags = GPIO_GetPinsInterruptFlags(GPIOA);
+
+	if (interruptFlags & (1U << PIN_NUMBER))
+	{
+		// Código que se ejecutará cuando ocurra la interrupción
+
+		/*
+		 * @note
+		 * Se configuraron por defecto interrupciones para rx0, rx1, err, merr. En la
+		 * funcion de mcp2515_reset() se pueden configurar algunas mas.
+		 * */
+
+		/* Leemos las interrupciones generadas */
+		ERROR_t error = mcp2515_getInterrupts();
+		if (error != ERROR_OK)
+			PRINTF("Fallo al leer la interrupcion\n\r");
+
+		/* Detectamos las que nos sirvan */
+		if (mcp2515_getIntERRIF())
+		{
+			// Acciones ...
+			PRINTF("Error interrupt flag\n\r");
+
+			// Limpiamos la bandera
+			mcp2515_clearERRIF();
+		}
+
+		if (mcp2515_getIntMERRF())
+		{
+			// Acciones ...
+			PRINTF("Message error interrupt flag\n\r");
+
+			// Limpiamos la bandera
+			mcp2515_clearMERR();
+		}
+
+		if (mcp2515_getIntRX0IF() || mcp2515_getIntRX1IF())
+		{
+			// Acciones ...
+#if USE_FREERTOS
+			vTaskNotifyGiveFromISR(TaskRx_handler, &xHigherPriorityTaskWoken);
+#else
+			Rx_flag_mcp2515 = true;
+#endif
+
+			// La bandera se limpia en la funcion de recepcion
+			// mcp2515_readMessage().
+		}
+
+		/*
+		 * Descomentar si es necesario tener en cuenta dicha interrupcion.
+		 * Ademas debe habilitarse en la funcion de reset del mcp2515.
+		 * */
+		//    	if (mcp2515_getIntTX0IF() ||
+		//    		mcp2515_getIntTX1IF() ||
+		//			mcp2515_getIntTX2IF())
+		//    	{
+		//    		// Acciones ...
+		////    		PRINTF("Mensaje enviado\n\r");
+		//
+		//    		// Limpiamos la bandera
+		//    		mcp2515_clearTXInterrupts();
+		//    	}
+		// Limpia la bandera de interrupción
+		GPIO_ClearPinsInterruptFlags(GPIOA, 1U << PIN_NUMBER);
+	}
+
+#if USE_FREERTOS
+	portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+#endif
+
+	return;
+}

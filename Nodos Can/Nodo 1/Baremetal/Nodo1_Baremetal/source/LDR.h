@@ -26,16 +26,16 @@
 #define ADC16_IRQ_HANDLER_FUNC ADC0_IRQHandler
 
 typedef enum {
-	ERROR_OK = 0,
-	ERROR_INIT,
-	ERROR_READ,
-} Error_t;
+	ERROR_LDR_OK = 0,
+	ERROR_LDR_INIT,
+	ERROR_LDR_READ,
+} Error_LDR_t;
 
 /**
  * @brief Inicializa los perifericos correspondientes.
  * @return Estado de la inicializacion.
  */
-extern Error_t LDR_init(void);
+extern Error_LDR_t LDR_init(void);
 /**
  * @brief Lee el valor cargado en el registro una vez finalizada la
  * conversion.
@@ -53,7 +53,7 @@ extern uint16_t LDR_UltimaConversion(void);
  * de muestreo.
  * @return Verifica si pudo ser lanzada la conversion o hubo un fallo.
  */
-extern Error_t LDR_convertir(void);
+extern Error_LDR_t LDR_convertir(void);
 extern bool LDR_getConvComplete(void);
 extern void LDR_setConvComplete(void);
 extern void LDR_clearConvComplete(void);
