@@ -114,15 +114,7 @@ int main(void)
 
 	canMsg1.can_id = CAN_LDR_ID;
 	canMsg1.can_dlc = 2;
-//	canMsg1.data[0] = 10;
-//	canMsg1.data[1] = 22;
-//	canMsg1.data[2] = 32;
-//	canMsg1.data[3] = 16;
-//	canMsg1.data[4] = 26;
-//	canMsg1.data[5] = 78;
-//	canMsg1.data[6] = 69;
-//	canMsg1.data[7] = 5;
-//
+	
 	while (1)
 	{
 		if (LDR_getConvComplete())
