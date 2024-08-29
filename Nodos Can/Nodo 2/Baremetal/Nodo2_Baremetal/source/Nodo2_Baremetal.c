@@ -160,7 +160,12 @@ static void canmsg_escritura(void)
 
 	EstPerifericos_t perifericos;
 
-	perifericos.
+	perifericos.LED_ROJO = GPIO_ReadPinInput(BOARD_LED_RED_GPIO, BOARD_LED_RED_PIN);
+	perifericos.PULSADOR1 = GPIO_ReadPinInput(BOARD_SW1_GPIO, BOARD_SW1_PIN);
+	perifericos.PULSADOR2 = GPIO_ReadPinInput(BOARD_SW3_GPIO, BOARD_SW3_PIN);
+
+	canMsg1.data[0] = perifericos.data;
+	canMsg1.can_dlc = 1;
 
 	estado = mcp2515_sendMessage(&canMsg1);
 
