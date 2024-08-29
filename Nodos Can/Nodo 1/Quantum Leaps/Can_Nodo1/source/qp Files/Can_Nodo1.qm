@@ -27,73 +27,53 @@ For more QM examples for QP/C see:
 https://www.state-machine.com/qpc/exa.html</documentation>
  <!--${qpc}-->
  <framework name="qpc"/>
- <!--${Shared}-->
- <package name="Shared" stereotype="0x00">
-  <!--${Shared::BlinkySignals}-->
-  <attribute name="BlinkySignals" type="enum" visibility="0x04" properties="0x00">
-   <code>{
-    TIMEOUT_SIG = Q_USER_SIG,
-};</code>
-  </attribute>
-  <!--${Shared::AO_Blinky}-->
-  <attribute name="AO_Blinky" type="QActive * const" visibility="0x00" properties="0x00">
-   <code>= &amp;Blinky_inst.super;</code>
-  </attribute>
-  <!--${Shared::Blinky_ctor}-->
-  <operation name="Blinky_ctor" type="void" visibility="0x00" properties="0x01">
-   <documentation>The Blinky &quot;constructor&quot; is provided outside of the Blinky class, so that it can be used independently from the class. This is part of the &quot;opaque pointer&quot; design idiom.</documentation>
-   <code>Blinky * const me = &amp;Blinky_inst;
-QActive_ctor(&amp;me-&gt;super, Q_STATE_CAST(&amp;Blinky_initial));
-QTimeEvt_ctorX(&amp;me-&gt;timeEvt, &amp;me-&gt;super, TIMEOUT_SIG, 0U);</code>
-  </operation>
- </package>
  <!--${AOs}-->
  <package name="AOs" stereotype="0x02">
-  <!--${AOs::Blinky}-->
-  <class name="Blinky" superclass="qpc::QActive">
-   <!--${AOs::Blinky::timeEvt}-->
-   <attribute name="timeEvt" type="QTimeEvt" visibility="0x02" properties="0x00"/>
-   <!--${AOs::Blinky::inst}-->
-   <attribute name="inst" type="Blinky" visibility="0x00" properties="0x01"/>
-   <!--${AOs::Blinky::SM}-->
+  <!--${AOs::MEF_Temp}-->
+  <class name="MEF_Temp" superclass="qpc::QActive">
+   <!--${AOs::MEF_Temp::timeEvt_ReadTemp}-->
+   <attribute name="timeEvt_ReadTemp" type="QTimeEvt" visibility="0x02" properties="0x00"/>
+   <!--${AOs::MEF_Temp::SM}-->
    <statechart properties="0x03">
-    <documentation>Blinky state machine</documentation>
-    <!--${AOs::Blinky::SM::initial}-->
+    <documentation>Temperature state machine</documentation>
+    <!--${AOs::MEF_Temp::SM::initial}-->
     <initial target="../1">
-     <action>(void)par; // unused parameter
+     <action brief="inicio">(void)par; // unused parameter
 QTimeEvt_armX(&amp;me-&gt;timeEvt,
-BSP_TICKS_PER_SEC/2, BSP_TICKS_PER_SEC/2);</action>
-     <initial_glyph conn="2,3,5,1,20,4,-4">
-      <action box="0,-2,6,2"/>
+BSP_TICKS_PER_SEC, BSP_TICKS_PER_SEC/2);</action>
+     <initial_glyph conn="2,3,5,1,25,4,-4">
+      <action box="1,-2,6,2"/>
      </initial_glyph>
     </initial>
-    <!--${AOs::Blinky::SM::led_off}-->
-    <state name="led_off">
-     <entry>BSP_ledOff();</entry>
-     <!--${AOs::Blinky::SM::led_off::TIMEOUT}-->
-     <tran trig="TIMEOUT" target="../../2">
-      <tran_glyph conn="2,13,3,1,18,6,-2">
-       <action box="0,-2,8,2"/>
+    <!--${AOs::MEF_Temp::SM::Reset}-->
+    <state name="Reset">
+     <entry brief="Reset -&gt; Variables">TEMP_reset();
+
+</entry>
+     <!--${AOs::MEF_Temp::SM::Reset::RESET_TO_READ}-->
+     <tran trig="RESET_TO_READ" target="../../2">
+      <tran_glyph conn="12,15,2,0,7">
+       <action box="1,2,14,3"/>
       </tran_glyph>
      </tran>
-     <state_glyph node="2,5,16,10">
-      <entry box="1,2,12,4"/>
+     <state_glyph node="2,5,21,10">
+      <entry box="1,2,18,4"/>
      </state_glyph>
     </state>
-    <!--${AOs::Blinky::SM::led_on}-->
-    <state name="led_on">
-     <entry>BSP_ledOn();</entry>
-     <!--${AOs::Blinky::SM::led_on::TIMEOUT}-->
-     <tran trig="TIMEOUT" target="../../1">
-      <tran_glyph conn="2,25,3,1,20,-15,-4">
-       <action box="0,-2,8,2"/>
+    <!--${AOs::MEF_Temp::SM::Lectura}-->
+    <state name="Lectura">
+     <entry brief="Leer -&gt; Temperatura">TEMP_read();</entry>
+     <!--${AOs::MEF_Temp::SM::Lectura::TIMEOUT}-->
+     <tran trig="TIMEOUT" target="..">
+      <tran_glyph conn="23,30,1,1,7,-6,-7">
+       <action box="8,-5,8,2"/>
       </tran_glyph>
      </tran>
-     <state_glyph node="2,17,16,10">
-      <entry box="1,2,12,4"/>
+     <state_glyph node="2,22,21,10">
+      <entry box="1,2,18,3"/>
      </state_glyph>
     </state>
-    <state_diagram size="24,29"/>
+    <state_diagram size="40,34"/>
    </statechart>
   </class>
  </package>
@@ -110,8 +90,6 @@ void BSP_init(void);
 void BSP_start(void);
 void BSP_ledOn(void);
 void BSP_ledOff(void);
-
-$declare ${Shared}
 
 #endif // BSP_H_</text>
   </file>
@@ -194,18 +172,17 @@ void SysTick_Handler(void) {
   <file name="blinky.c">
    <text>#include &quot;qpc.h&quot;    // QP/C real-time embedded framework
 #include &quot;bsp.h&quot;    // Board Support Package interface
+#include &quot;Includes/Temp.h&quot;    // Archivo del periferico temperatura
 
 // ask QM to declare the Blinky class
-$declare ${AOs::Blinky}
-
-$define ${Shared}
-
-$define ${AOs::Blinky}</text>
+$declare ${AOs::MEF_Temp}
+</text>
   </file>
   <!--${.::main.c}-->
   <file name="main.c">
    <text>#include &quot;qpc.h&quot;                 // QP/C real-time embedded framework
 #include &quot;bsp.h&quot;                 // Board Support Package
+#include &quot;Includes/Temp.h&quot;       // Periferico de temperatura
 #include &lt;stdio.h&gt;
 #include &quot;board.h&quot;
 #include &quot;peripherals.h&quot;

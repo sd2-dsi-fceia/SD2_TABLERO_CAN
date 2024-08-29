@@ -38,18 +38,4 @@ void BSP_start(void);
 void BSP_ledOn(void);
 void BSP_ledOff(void);
 
-//$declare${Shared} vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
-
-//${Shared::BlinkySignals} ...................................................
-enum BlinkySignals {
-    TIMEOUT_SIG = Q_USER_SIG,
-};
-
-//${Shared::AO_Blinky} .......................................................
-extern QActive * const AO_Blinky;
-
-//${Shared::Blinky_ctor} .....................................................
-void Blinky_ctor(void);
-//$enddecl${Shared} ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
 #endif // BSP_H_

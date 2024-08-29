@@ -30,110 +30,23 @@
 //$endhead${.::blinky.c} ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 #include "qpc.h"    // QP/C real-time embedded framework
 #include "bsp.h"    // Board Support Package interface
+#include "Includes/Temp.h"    // Archivo del periferico temperatura
 
 // ask QM to declare the Blinky class
-//$declare${AOs::Blinky} vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+//$declare${AOs::MEF_Temp} vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 
-//${AOs::Blinky} .............................................................
-typedef struct Blinky {
+//${AOs::MEF_Temp} ...........................................................
+typedef struct {
 // protected:
     QActive super;
 
 // private:
-    QTimeEvt timeEvt;
-
-// public:
-} Blinky;
-
-extern Blinky Blinky_inst;
+    QTimeEvt timeEvt_ReadTemp;
+} MEF_Temp;
 
 // protected:
-static QState Blinky_initial(Blinky * const me, void const * const par);
-static QState Blinky_led_off(Blinky * const me, QEvt const * const e);
-static QState Blinky_led_on(Blinky * const me, QEvt const * const e);
-//$enddecl${AOs::Blinky} ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+static QState MEF_Temp_initial(MEF_Temp * const me, void const * const par);
+static QState MEF_Temp_Reset(MEF_Temp * const me, QEvt const * const e);
+static QState MEF_Temp_Lectura(MEF_Temp * const me, QEvt const * const e);
+//$enddecl${AOs::MEF_Temp} ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-//$skip${QP_VERSION} vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
-// Check for the minimum required QP version
-#if (QP_VERSION < 730U) || (QP_VERSION != ((QP_RELEASE^4294967295U) % 0x3E8U))
-#error qpc version 7.3.0 or higher required
-#endif
-//$endskip${QP_VERSION} ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-//$define${Shared} vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
-
-//${Shared::AO_Blinky} .......................................................
-QActive * const AO_Blinky = &Blinky_inst.super;
-
-//${Shared::Blinky_ctor} .....................................................
-void Blinky_ctor(void) {
-    Blinky * const me = &Blinky_inst;
-    QActive_ctor(&me->super, Q_STATE_CAST(&Blinky_initial));
-    QTimeEvt_ctorX(&me->timeEvt, &me->super, TIMEOUT_SIG, 0U);
-}
-//$enddef${Shared} ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-//$define${AOs::Blinky} vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
-
-//${AOs::Blinky} .............................................................
-Blinky Blinky_inst;
-
-//${AOs::Blinky::SM} .........................................................
-static QState Blinky_initial(Blinky * const me, void const * const par) {
-    //${AOs::Blinky::SM::initial}
-    (void)par; // unused parameter
-    QTimeEvt_armX(&me->timeEvt,
-    BSP_TICKS_PER_SEC/2, BSP_TICKS_PER_SEC/2);
-
-    QS_FUN_DICTIONARY(&Blinky_led_off);
-    QS_FUN_DICTIONARY(&Blinky_led_on);
-
-    return Q_TRAN(&Blinky_led_off);
-}
-
-//${AOs::Blinky::SM::led_off} ................................................
-static QState Blinky_led_off(Blinky * const me, QEvt const * const e) {
-    QState status_;
-    switch (e->sig) {
-        //${AOs::Blinky::SM::led_off}
-        case Q_ENTRY_SIG: {
-            BSP_ledOff();
-            status_ = Q_HANDLED();
-            break;
-        }
-        //${AOs::Blinky::SM::led_off::TIMEOUT}
-        case TIMEOUT_SIG: {
-            status_ = Q_TRAN(&Blinky_led_on);
-            break;
-        }
-        default: {
-            status_ = Q_SUPER(&QHsm_top);
-            break;
-        }
-    }
-    return status_;
-}
-
-//${AOs::Blinky::SM::led_on} .................................................
-static QState Blinky_led_on(Blinky * const me, QEvt const * const e) {
-    QState status_;
-    switch (e->sig) {
-        //${AOs::Blinky::SM::led_on}
-        case Q_ENTRY_SIG: {
-            BSP_ledOn();
-            status_ = Q_HANDLED();
-            break;
-        }
-        //${AOs::Blinky::SM::led_on::TIMEOUT}
-        case TIMEOUT_SIG: {
-            status_ = Q_TRAN(&Blinky_led_off);
-            break;
-        }
-        default: {
-            status_ = Q_SUPER(&QHsm_top);
-            break;
-        }
-    }
-    return status_;
-}
-//$enddef${AOs::Blinky} ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
