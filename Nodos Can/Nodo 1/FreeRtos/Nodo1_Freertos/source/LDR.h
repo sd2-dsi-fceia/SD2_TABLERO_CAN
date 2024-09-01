@@ -21,7 +21,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-#define TIEMPO_DE_MUESTREO_LDR	500	// En milisegundos
+#define TIEMPO_DE_MUESTREO_LDR	1000	// En milisegundos
 
 #define ADC16_IRQ_HANDLER_FUNC ADC0_IRQHandler
 

@@ -272,7 +272,7 @@ void PORTA_IRQHandler(void)
 		{
 			// Acciones ...
 #if USE_FREERTOS
-			vTaskNotifyGiveFromISR(TaskRx_handler, &xHigherPriorityTaskWoken);
+			vTaskNotifyGiveFromISR(TaskRxCan_Handle, &xHigherPriorityTaskWoken);
 #else
 			Rx_flag_mcp2515 = true;
 #endif

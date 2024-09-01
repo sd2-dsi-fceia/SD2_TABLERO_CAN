@@ -31,19 +31,21 @@
 #define CAN_NODO_2_DLC	1
 #define TIEMPO_ENVIAR_DATOS_BUSCAN 500
 
+#define __delay_ms(x)	vTaskDelay(pdMS_TO_TICKS(x))
+
 #define LUZ_MIN	500
 #define LUZ_MAX	1500
-#define LED_ON	GPIO_PinWrite(BOARD_LED_RED_GPIO, BOARD_LED_RED_PIN, true);
-#define LED_OFF	GPIO_PinWrite(BOARD_LED_RED_GPIO, BOARD_LED_RED_PIN, false);
+#define LED_ON	GPIO_ClearPinsOutput(BOARD_LED_RED_GPIO, BOARD_LED_RED_GPIO_PIN_MASK)
+#define LED_OFF	GPIO_SetPinsOutput(BOARD_LED_RED_GPIO, BOARD_LED_RED_GPIO_PIN_MASK)
 
 typedef union
 {
 	struct
 	{
-		unsigned LED_ROJO:1;
-		unsigned PULSADOR1:1;
-		unsigned PULSADOR2:1;
-		unsigned RESERVADO:5;
+		unsigned LED_ROJO :1;
+		unsigned PULSADOR1 :1;
+		unsigned PULSADOR2 :1;
+		unsigned RESERVADO :5;
 	};
 	uint8_t data;
 } EstPerifericos_t;
@@ -62,6 +64,10 @@ TaskHandle_t TaskNodo2_Handle;
  */
 static void taskRtos_Nodo2(void *pvParameters);
 /**
+ * @brief Tarea de escritura en el bus can del nodo 2.
+ */
+static void taskRtos_Nodo2_Write(void *pvParameters);
+/**
  * @brief Funcion de callback del timer.
  */
 static void timerRtos_DatosPerifericos(void *pvParameters);
@@ -74,12 +80,18 @@ extern void Nodo2_init(void)
 	PRINTF("\nNombre: Nodo 2\n\r");
 
 	BaseType_t status = xTaskCreate(taskRtos_Nodo2, "Task Nodo 2",
-	configMINIMAL_STACK_SIZE, NULL, 1, &TaskNodo2_Handle);
+	configMINIMAL_STACK_SIZE, NULL, 2, &TaskNodo2_Handle);
+	if (status == pdFALSE)
+		PRINTF("Fallo al crear la tarea.\n\r");
+
+	status = xTaskCreate(taskRtos_Nodo2_Write, "Task Nodo 2 Write",
+	configMINIMAL_STACK_SIZE, NULL, 1, NULL);
 	if (status == pdFALSE)
 		PRINTF("Fallo al crear la tarea.\n\r");
 
 	Timer1 = xTimerCreate("Muestro de adc",
-			pdMS_TO_TICKS(TIEMPO_ENVIAR_DATOS_BUSCAN), true, NULL, timerRtos_DatosPerifericos);
+			pdMS_TO_TICKS(TIEMPO_ENVIAR_DATOS_BUSCAN), true, NULL,
+			timerRtos_DatosPerifericos);
 	if (Timer1 == NULL)
 		PRINTF("Fallo al crear el timer.\n\r");
 
@@ -96,9 +108,13 @@ static void taskRtos_Nodo2(void *pvParameters)
 
 	canMsg_Nodo2_write.can_id = CAN_NODO_2_ID;	// Id del nodo 2.
 
+	BaseType_t status = xTimerStart(Timer1, portMAX_DELAY);
+	if (status != pdPASS)
+		PRINTF("\n\rFallo al inciar el timer.\n\r");
+
 	for (;;)
 	{
-		event_notify = ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
+		event_notify = ulTaskNotifyTake(pdFALSE, portMAX_DELAY);
 
 		if (event_notify > 0)
 		{
@@ -120,6 +136,49 @@ static void taskRtos_Nodo2(void *pvParameters)
 					LED_OFF;
 			}
 		}
+		__delay_ms(50);
+	}
+
+	vTaskDelete(NULL);
+
+	return;
+}
+
+static void taskRtos_Nodo2_Write(void *pvParameters)
+{
+	for (;;)
+	{
+		EstPerifericos_t perifericos =
+		{ .data = 0 };
+
+		perifericos.LED_ROJO = ~GPIO_ReadPinInput(BOARD_LED_RED_GPIO,
+		BOARD_LED_RED_PIN);
+		perifericos.PULSADOR1 = ~GPIO_ReadPinInput(BOARD_SW1_GPIO, BOARD_SW1_PIN);
+		perifericos.PULSADOR2 = ~GPIO_ReadPinInput(BOARD_SW3_GPIO, BOARD_SW3_PIN);
+
+		canMsg_Nodo2_write.data[0] = perifericos.data;
+		canMsg_Nodo2_write.can_dlc = CAN_NODO_2_DLC;
+
+		ERROR_t estado = mcp2515_sendMessage(&canMsg_Nodo2_write);
+		if (estado == ERROR_OK)
+		{
+					PRINTF("\nNodo 2.\n\r");
+					PRINTF("Mensaje enviado\n\r");
+					PRINTF("ID\tDLC\tDATA\n\r");
+					PRINTF("%d\t%d\t", canMsg_Nodo2_write.can_id, canMsg_Nodo2_write.can_dlc);
+
+					for (uint8_t i = 0; i < 8; i++)
+					{
+						PRINTF("%d ", canMsg_Nodo2_write.data[i]);
+					}
+					PRINTF("\n\r");
+		}
+		else
+		{
+			PRINTF("\nError al enviar\n\r");
+		}
+
+		__delay_ms(500);
 	}
 
 	vTaskDelete(NULL);
@@ -129,36 +188,16 @@ static void taskRtos_Nodo2(void *pvParameters)
 
 static void timerRtos_DatosPerifericos(void *pvParameters)
 {
-	ERROR_t estado;
-
-	EstPerifericos_t perifericos;
-
-	perifericos.LED_ROJO = GPIO_ReadPinInput(BOARD_LED_RED_GPIO, BOARD_LED_RED_PIN);
-	perifericos.PULSADOR1 = GPIO_ReadPinInput(BOARD_SW1_GPIO, BOARD_SW1_PIN);
-	perifericos.PULSADOR2 = GPIO_ReadPinInput(BOARD_SW3_GPIO, BOARD_SW3_PIN);
-
-	canMsg_Nodo2_write.data[0] = perifericos.data;
-	canMsg_Nodo2_write.can_dlc = CAN_NODO_2_DLC;
-
-	estado = mcp2515_sendMessage(&canMsg_Nodo2_write);
-
-	if (estado == ERROR_OK)
-	{
-		PRINTF("\nNodo 2.\n\r");
-		PRINTF("Mensaje enviado\n\r");
-		PRINTF("ID\tDLC\tDATA\n\r");
-		PRINTF("%d\t%d\t", canMsg_Nodo2_write.can_id, canMsg_Nodo2_write.can_dlc);
-
-		for (uint8_t i = 0; i < 8; i++)
-		{
-			PRINTF("%d ", canMsg_Nodo2_write.data[i]);
-		}
-		PRINTF("\n\r");
-	}
-	else
-	{
-		PRINTF("\nError al enviar\n\r");
-	}
+//	EstPerifericos_t perifericos =
+//	{ .data = 0 };
+//
+//	perifericos.LED_ROJO = ~GPIO_ReadPinInput(BOARD_LED_RED_GPIO,
+//	BOARD_LED_RED_PIN);
+//	perifericos.PULSADOR1 = ~GPIO_ReadPinInput(BOARD_SW1_GPIO, BOARD_SW1_PIN);
+//	perifericos.PULSADOR2 = ~GPIO_ReadPinInput(BOARD_SW3_GPIO, BOARD_SW3_PIN);
+//
+//	canMsg_Nodo2_write.data[0] = perifericos.data;
+//	canMsg_Nodo2_write.can_dlc = CAN_NODO_2_DLC;
 
 	return;
 }

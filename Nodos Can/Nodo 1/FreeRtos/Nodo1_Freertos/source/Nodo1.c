@@ -22,7 +22,9 @@
 #define CAN_NODO1_ID	10
 #define CAN_NODO1_DLC	2
 
-#define TASK_NODO1_STACK 	configMINIMAL_STACK_SIZE+20
+#define TASK_NODO1_STACK 	configMINIMAL_STACK_SIZE+120
+
+#define __delay_ms(x)	vTaskDelay(pdMS_TO_TICKS(x))
 
 TimerHandle_t TimerMuestreo;
 
@@ -31,10 +33,6 @@ TimerHandle_t TimerMuestreo;
  */
 struct can_frame canMsg_Nodo1;
 
-/**
- * @brief Inicializacion de perifericos.
- */
-static void perifericos_init(void);
 /**
  * @brief Tarea del Nodo 1.
  */
@@ -49,12 +47,13 @@ extern void Nodo1_init(void)
 	PRINTF("\nNombre: Nodo 1\n\r");
 
 	BaseType_t status = xTaskCreate(taskRtos_Nodo1, "Task Nodo 1",
-	configMINIMAL_STACK_SIZE, NULL, 1, NULL);
+	TASK_NODO1_STACK, NULL, 2, NULL);
 	if (status == pdFALSE)
 		PRINTF("Fallo al crear la tarea.\n\r");
 
 	TimerMuestreo = xTimerCreate("Muestro de adc",
-			pdMS_TO_TICKS(TIEMPO_DE_MUESTREO_LDR), true, NULL, timerRtos_LdrConversion);
+			pdMS_TO_TICKS(TIEMPO_DE_MUESTREO_LDR), pdTRUE, NULL,
+			timerRtos_LdrConversion);
 	if (TimerMuestreo == NULL)
 		PRINTF("Fallo al crear el timer.\n\r");
 
@@ -64,12 +63,8 @@ extern void Nodo1_init(void)
 static void taskRtos_Nodo1(void *pvParameters)
 {
 	Error_LDR_t error = LDR_init();
-
 	if (error != ERROR_LDR_OK)
 		PRINTF("Fallo al inicializar el adc.\n\r");
-
-	/* Configura de can */
-	perifericos_init();
 
 	canMsg_Nodo1.can_id = CAN_NODO1_ID;
 	canMsg_Nodo1.can_dlc = CAN_NODO1_DLC;
@@ -78,11 +73,14 @@ static void taskRtos_Nodo1(void *pvParameters)
 	if (status != pdPASS)
 		PRINTF("Fallo al inciar el timer.\n\r");
 
+	/* Espera a que inicie la tarea de alta prioridad */
+	__delay_ms(1000);
+
 	for (;;)
 	{
 		if (LDR_getConvComplete())
 		{
-			PRINTF("Valor del Adc: %d\n\r", LDR_UltimaConversion());
+			PRINTF("\n\rValor del Adc: %d\n\r", LDR_UltimaConversion());
 
 			LDR_clearConvComplete();
 
@@ -93,25 +91,28 @@ static void taskRtos_Nodo1(void *pvParameters)
 
 			estado = mcp2515_sendMessage(&canMsg_Nodo1);
 
-			if (estado == ERROR_OK)
-			{
-				PRINTF("\nNodo 1.\n\r");
-				PRINTF("Mensaje enviado\n\r");
-				PRINTF("ID\tDLC\tDATA\n\r");
-				PRINTF("%d\t%d\t", canMsg_Nodo1.can_id, canMsg_Nodo1.can_dlc);
-
-				for (uint8_t i = 0; i < 8; i++)
-				{
-					PRINTF("%d ", canMsg_Nodo1.data[i]);
-				}
-
-				PRINTF("\n\r");
-			}
-			else
-			{
-				PRINTF("\nError al enviar\n\r");
-			}
+//			if (estado == ERROR_OK)
+//			{
+//				PRINTF("\n\r----------------------");
+//				PRINTF("\n\rNodo 1.\n\r");
+//				PRINTF("Mensaje enviado\n\r");
+//				PRINTF("ID\tDLC\tDATA\n\r");
+//				PRINTF("%d\t%d\t", canMsg_Nodo1.can_id, canMsg_Nodo1.can_dlc);
+//
+//				for (uint8_t i = 0; i < 8; i++)
+//				{
+//					PRINTF("%d ", canMsg_Nodo1.data[i]);
+//				}
+//
+//				PRINTF("\n\r");
+//			}
+//			else
+//			{
+//				PRINTF("\nError al enviar\n\r");
+//			}
 		}
+
+		__delay_ms(50);
 	}
 
 	vTaskDelete(NULL);
@@ -124,32 +125,6 @@ extern canid_t Nodo1_id(void)
 	canid_t id = CAN_NODO1_ID;
 
 	return id;
-}
-
-static void perifericos_init(void)
-{
-	ERROR_t error;
-
-	mcp2515_init();
-
-	error = mcp2515_reset();
-
-	if (error != ERROR_OK)
-		PRINTF("Fallo al resetear el modulo\n\r");
-
-	error = mcp2515_setBitrate(CAN_125KBPS, MCP_8MHZ);
-
-	if (error != ERROR_OK)
-		PRINTF("Fallo al setear el bit rate\n\r");
-
-//	error = mcp2515_setNormalMode();
-//	if (error != ERROR_OK)
-//		PRINTF("Fallo al setear el modo normal\n\r");
-	error = mcp2515_setLoopbackMode();
-	if (error != ERROR_OK)
-		PRINTF("Fallo al setear el loopback mode\n\r");
-
-	return;
 }
 
 static void timerRtos_LdrConversion(TimerHandle_t xTimer)
