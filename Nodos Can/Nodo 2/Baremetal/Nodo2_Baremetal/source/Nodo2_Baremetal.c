@@ -33,9 +33,11 @@
  * @brief   Application entry point.
  */
 #include <stdio.h>
+
 #include "board.h"
 #include "peripherals.h"
 #include "pin_mux.h"
+
 #include "clock_config.h"
 #include "MKL46Z4.h"
 #include "fsl_debug_console.h"
@@ -49,10 +51,12 @@
 
 #define TIEMPO_DE_MUESTRA_ESTADOS	1000
 
+#define BOARD_LED_RED_GPIO_PIN_MASK (1U << 29U)
+
 #define LUZ_MIN	500
 #define LUZ_MAX	1500
-#define LED_ON	GPIO_PinWrite(BOARD_LED_RED_GPIO, BOARD_LED_RED_PIN, true);
-#define LED_OFF	GPIO_PinWrite(BOARD_LED_RED_GPIO, BOARD_LED_RED_PIN, false);
+#define LED_ON	GPIO_ClearPinsOutput(BOARD_LED_RED_GPIO,BOARD_LED_RED_GPIO_PIN_MASK)
+#define LED_OFF	GPIO_SetPinsOutput(BOARD_LED_RED_GPIO, BOARD_LED_RED_GPIO_PIN_MASK)
 
 uint16_t Delay1s = TIEMPO_DE_MUESTRA_ESTADOS;
 
@@ -73,10 +77,10 @@ typedef union
 {
 	struct
 	{
-		unsigned LED_ROJO:1;
-		unsigned PULSADOR1:1;
-		unsigned PULSADOR2:1;
-		unsigned RESERVADO:5;
+		unsigned LED_ROJO :1;
+		unsigned PULSADOR1 :1;
+		unsigned PULSADOR2 :1;
+		unsigned RESERVADO :5;
 	};
 	uint8_t data;
 } EstPerifericos_t;
@@ -139,6 +143,8 @@ int main(void)
 	canMsg1.can_id = CAN_NODO_2_ID;
 	canMsg1.can_dlc = 1;
 
+	LED_ON;
+
 	while (1)
 	{
 		if (Rx_flag_mcp2515)
@@ -158,11 +164,12 @@ static void canmsg_escritura(void)
 {
 	ERROR_t estado;
 
-	EstPerifericos_t perifericos;
+	EstPerifericos_t perifericos = {.data = 0};
 
-	perifericos.LED_ROJO = GPIO_ReadPinInput(BOARD_LED_RED_GPIO, BOARD_LED_RED_PIN);
-	perifericos.PULSADOR1 = GPIO_ReadPinInput(BOARD_SW1_GPIO, BOARD_SW1_PIN);
-	perifericos.PULSADOR2 = GPIO_ReadPinInput(BOARD_SW3_GPIO, BOARD_SW3_PIN);
+	perifericos.LED_ROJO = ~GPIO_ReadPinInput(BOARD_LED_RED_GPIO,
+	BOARD_LED_RED_PIN);
+	perifericos.PULSADOR1 = ~GPIO_ReadPinInput(BOARD_SW1_GPIO, BOARD_SW1_PIN);
+	perifericos.PULSADOR2 = ~GPIO_ReadPinInput(BOARD_SW3_GPIO, BOARD_SW3_PIN);
 
 	canMsg1.data[0] = perifericos.data;
 	canMsg1.can_dlc = 1;
@@ -183,7 +190,14 @@ static void canmsg_escritura(void)
 	}
 	else
 	{
-		PRINTF("\nError al enviar\n\r");
+		if (estado == ERROR_ALLTXBUSY)
+			PRINTF("\n\rError: buffers de transmision llenos.\n\r");
+		else if (estado == ERROR_FAILTX)
+			PRINTF("\n\rError: fallo al transmitir.\n\r");
+		else if (estado == ERROR_SPI_WRITE)
+			PRINTF("\n\rError: fallo en escritura de spi.\n\r");
+		else
+			PRINTF("\nError al enviar\n\r");
 	}
 
 	return;
@@ -225,7 +239,7 @@ static void canmsg_procesar(void)
 		adc_read = canMsgRead.data[1];
 		adc_read = (adc_read << 8) | canMsgRead.data[0];
 
-		if(adc_read > LUZ_MAX)
+		if (adc_read > LUZ_MAX)
 			LED_ON;
 		if (adc_read < LUZ_MIN)
 			LED_OFF;

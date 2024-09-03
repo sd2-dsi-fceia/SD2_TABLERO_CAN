@@ -8,15 +8,28 @@
 /**
  * @file Nodo 1
  * @author Zuliani, Agustin
+ * @brief Informacion sobre el Nodo 1.
+ *
+ * Nombre nodo: Nodo 1
+ * Tipo: Productor.
+ * Informacion: Envia datos de luz cada 1 segundo.
+ * Subcripciones: Ninguna.
+ * Subcriptos: Nodo 2 y nodo 3.
  */
 
 #include "Nodo1.h"
+
+#include <stdio.h>
+
 #include "FreeRTOS.h"
 #include "task.h"
 #include "timers.h"
-#include "mcp2515.h"
+
+#include "CanApi.h"
 #include "can.h"
+
 #include "LDR.h"
+
 #include "fsl_debug_console.h"
 
 #define CAN_NODO1_ID	10
@@ -26,7 +39,10 @@
 
 #define __delay_ms(x)	vTaskDelay(pdMS_TO_TICKS(x))
 
-TimerHandle_t TimerMuestreo;
+/**
+ * @brief Handle del temporizador.
+ */
+TimerHandle_t timer_AdcConversiones;
 
 /**
  * @brief Mensaje de tipo can.
@@ -39,6 +55,7 @@ struct can_frame canMsg_Nodo1;
 static void taskRtos_Nodo1(void *pvParameters);
 /**
  * @brief Timer por software.
+ * @param[in] xTimer No utilizado.
  */
 static void timerRtos_LdrConversion(TimerHandle_t xTimer);
 
@@ -51,10 +68,10 @@ extern void Nodo1_init(void)
 	if (status == pdFALSE)
 		PRINTF("Fallo al crear la tarea.\n\r");
 
-	TimerMuestreo = xTimerCreate("Muestro de adc",
+	timer_AdcConversiones = xTimerCreate("Muestro de adc",
 			pdMS_TO_TICKS(TIEMPO_DE_MUESTREO_LDR), pdTRUE, NULL,
 			timerRtos_LdrConversion);
-	if (TimerMuestreo == NULL)
+	if (timer_AdcConversiones == NULL)
 		PRINTF("Fallo al crear el timer.\n\r");
 
 	return;
@@ -69,50 +86,56 @@ static void taskRtos_Nodo1(void *pvParameters)
 	canMsg_Nodo1.can_id = CAN_NODO1_ID;
 	canMsg_Nodo1.can_dlc = CAN_NODO1_DLC;
 
-	BaseType_t status = xTimerStart(TimerMuestreo, portMAX_DELAY);
+	BaseType_t status = xTimerStart(timer_AdcConversiones, portMAX_DELAY);
 	if (status != pdPASS)
 		PRINTF("Fallo al inciar el timer.\n\r");
 
-	/* Espera a que inicie la tarea de alta prioridad */
-	__delay_ms(1000);
+	/* Espera que se de el evento de inicializacion. */
+	CAN_getEvent();
 
 	for (;;)
 	{
 		if (LDR_getConvComplete())
 		{
-			PRINTF("\n\rValor del Adc: %d\n\r", LDR_UltimaConversion());
+//			PRINTF("\n\rValor del Adc: %d\n\r", LDR_UltimaConversion());
 
 			LDR_clearConvComplete();
 
 			canMsg_Nodo1.data[1] = (LDR_UltimaConversion() & 0xff00) >> 8;
 			canMsg_Nodo1.data[0] = (LDR_UltimaConversion() & 0x00ff);
 
-			ERROR_t estado;
-
-			estado = mcp2515_sendMessage(&canMsg_Nodo1);
+			Error_Can_t statusTx = CAN_sendMsg(&canMsg_Nodo1,
+					pdMS_TO_TICKS(200));
+			if (statusTx != ERROR_CAN_OK)
+			{
+				if (statusTx == ERROR_CAN_QUEUETX)
+					PRINTF("\n\rError al enviar datos a la cola.\n\r");
+				else
+					PRINTF("\n\rError desconocido.\n\r");
+			}
 
 //			if (estado == ERROR_OK)
 //			{
-//				PRINTF("\n\r----------------------");
-//				PRINTF("\n\rNodo 1.\n\r");
-//				PRINTF("Mensaje enviado\n\r");
-//				PRINTF("ID\tDLC\tDATA\n\r");
-//				PRINTF("%d\t%d\t", canMsg_Nodo1.can_id, canMsg_Nodo1.can_dlc);
-//
-//				for (uint8_t i = 0; i < 8; i++)
-//				{
-//					PRINTF("%d ", canMsg_Nodo1.data[i]);
-//				}
-//
-//				PRINTF("\n\r");
+////				PRINTF("\n\r----------------------");
+////				PRINTF("\n\rNodo 1.\n\r");
+////				PRINTF("Mensaje enviado\n\r");
+////				PRINTF("ID\tDLC\tDATA\n\r");
+////				PRINTF("%d\t%d\t", canMsg_Nodo1.can_id, canMsg_Nodo1.can_dlc);
+////
+////				for (uint8_t i = 0; i < 8; i++)
+////				{
+////					PRINTF("%d ", canMsg_Nodo1.data[i]);
+////				}
+////
+////				PRINTF("\n\r");
 //			}
 //			else
 //			{
-//				PRINTF("\nError al enviar\n\r");
+//				PRINTF("\nError al enviar desde nodo 1.\n\r");
 //			}
 		}
 
-		__delay_ms(50);
+		__delay_ms(100);
 	}
 
 	vTaskDelete(NULL);

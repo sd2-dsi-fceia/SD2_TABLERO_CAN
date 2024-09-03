@@ -12,12 +12,14 @@
 
 #include "Nodo2.h"
 
+#include <stdio.h>
+
 #include "FreeRTOS.h"
 #include "task.h"
 #include "timers.h"
 
+#include "CanApi.h"
 #include "can.h"
-#include "mcp2515.h"
 
 #include "Nodo1.h"
 
@@ -54,9 +56,18 @@ typedef union
  * @brief Mensaje can del nodo 2 para escritura.
  */
 static struct can_frame canMsg_Nodo2_write;
+/**
+ * @brief Mensaje can del nodo 2 para lectura.
+ */
 static struct can_frame canMsg_Nodo2_read;
 
+/**
+ * @brief Handle del temporizador 1.
+ */
 TimerHandle_t Timer1;
+/**
+ * @brief Handle de la tarea del nodo 2.
+ */
 TaskHandle_t TaskNodo2_Handle;
 
 /**
@@ -71,9 +82,6 @@ static void taskRtos_Nodo2_Write(void *pvParameters);
  * @brief Funcion de callback del timer.
  */
 static void timerRtos_DatosPerifericos(void *pvParameters);
-
-extern BaseType_t receiveFromQueue(struct can_frame *dato);
-extern BaseType_t receiveFromQueue_Peek(struct can_frame *dato);
 
 extern void Nodo2_init(void)
 {
@@ -100,6 +108,8 @@ extern void Nodo2_init(void)
 
 static void taskRtos_Nodo2(void *pvParameters)
 {
+	NodoSubscriptions_t Subscripciones =
+	{ .IdSub = 10, .taskHandle = TaskNodo2_Handle, };
 	uint32_t event_notify;
 
 	/* Configuracion de los led y botones */
@@ -112,6 +122,19 @@ static void taskRtos_Nodo2(void *pvParameters)
 	if (status != pdPASS)
 		PRINTF("\n\rFallo al inciar el timer.\n\r");
 
+	Error_Can_t statusSub = CAN_Subscribe(Subscripciones.IdSub,
+			Subscripciones.taskHandle);
+	if (statusSub != ERROR_CAN_OK)
+	{
+		if (statusSub == ERROR_CAN_MEMORY)
+			PRINTF("\n\rError: no hay memoria suficiente.\n\r");
+		else
+			PRINTF("\n\rError desconocido.\n\r");
+	}
+
+	/* Espera el evento de sincronizacion. */
+	CAN_getEvent();
+
 	for (;;)
 	{
 		event_notify = ulTaskNotifyTake(pdFALSE, portMAX_DELAY);
@@ -119,13 +142,14 @@ static void taskRtos_Nodo2(void *pvParameters)
 		if (event_notify > 0)
 		{
 			/* Debe tomar los datos de la cola de datos */
-			BaseType_t status = receiveFromQueue_Peek(&canMsg_Nodo2_read);
-			if (status == pdFALSE)
-				PRINTF("Fallo al recivir datos de la cola.\n\r");
+			Error_Can_t statusRx = CAN_readMsg(&canMsg_Nodo2_read,
+					Subscripciones.IdSub, Subscripciones.taskHandle);
+			if (statusRx != ERROR_CAN_OK)
+				PRINTF("\n\r");
 
 			uint16_t adc_read;
 
-			if (canMsg_Nodo2_read.can_id == Nodo1_id())
+			if (canMsg_Nodo2_read.can_id == Subscripciones.IdSub)
 			{
 				adc_read = canMsg_Nodo2_read.data[1];
 				adc_read = (adc_read << 8) | canMsg_Nodo2_read.data[0];
@@ -146,39 +170,25 @@ static void taskRtos_Nodo2(void *pvParameters)
 
 static void taskRtos_Nodo2_Write(void *pvParameters)
 {
+	/* Espera el evento de sincronizacion. */
+	CAN_getEvent();
+
 	for (;;)
 	{
-		EstPerifericos_t perifericos =
-		{ .data = 0 };
-
-		perifericos.LED_ROJO = ~GPIO_ReadPinInput(BOARD_LED_RED_GPIO,
-		BOARD_LED_RED_PIN);
-		perifericos.PULSADOR1 = ~GPIO_ReadPinInput(BOARD_SW1_GPIO, BOARD_SW1_PIN);
-		perifericos.PULSADOR2 = ~GPIO_ReadPinInput(BOARD_SW3_GPIO, BOARD_SW3_PIN);
-
-		canMsg_Nodo2_write.data[0] = perifericos.data;
-		canMsg_Nodo2_write.can_dlc = CAN_NODO_2_DLC;
-
-		ERROR_t estado = mcp2515_sendMessage(&canMsg_Nodo2_write);
-		if (estado == ERROR_OK)
+		Error_Can_t statusTx = CAN_sendMsg(&canMsg_Nodo2_write,
+				pdMS_TO_TICKS(200));
+		if (statusTx != ERROR_CAN_OK)
 		{
-					PRINTF("\nNodo 2.\n\r");
-					PRINTF("Mensaje enviado\n\r");
-					PRINTF("ID\tDLC\tDATA\n\r");
-					PRINTF("%d\t%d\t", canMsg_Nodo2_write.can_id, canMsg_Nodo2_write.can_dlc);
-
-					for (uint8_t i = 0; i < 8; i++)
-					{
-						PRINTF("%d ", canMsg_Nodo2_write.data[i]);
-					}
-					PRINTF("\n\r");
-		}
-		else
-		{
-			PRINTF("\nError al enviar\n\r");
+			if (statusTx == ERROR_CAN_QUEUETX)
+				PRINTF("\n\rError al enviar datos a la cola.\n\r");
+			else
+				PRINTF("\n\rError desconocido.\n\r");
 		}
 
-		__delay_ms(500);
+		__delay_ms(1000);
+
+		GPIO_TogglePinsOutput(BOARD_LED_GREEN_GPIO,
+		BOARD_LED_GREEN_GPIO_PIN_MASK);
 	}
 
 	vTaskDelete(NULL);
@@ -188,16 +198,16 @@ static void taskRtos_Nodo2_Write(void *pvParameters)
 
 static void timerRtos_DatosPerifericos(void *pvParameters)
 {
-//	EstPerifericos_t perifericos =
-//	{ .data = 0 };
-//
-//	perifericos.LED_ROJO = ~GPIO_ReadPinInput(BOARD_LED_RED_GPIO,
-//	BOARD_LED_RED_PIN);
-//	perifericos.PULSADOR1 = ~GPIO_ReadPinInput(BOARD_SW1_GPIO, BOARD_SW1_PIN);
-//	perifericos.PULSADOR2 = ~GPIO_ReadPinInput(BOARD_SW3_GPIO, BOARD_SW3_PIN);
-//
-//	canMsg_Nodo2_write.data[0] = perifericos.data;
-//	canMsg_Nodo2_write.can_dlc = CAN_NODO_2_DLC;
+	EstPerifericos_t perifericos =
+	{ .data = 0 };
+
+	perifericos.LED_ROJO = ~GPIO_ReadPinInput(BOARD_LED_RED_GPIO,
+	BOARD_LED_RED_PIN);
+	perifericos.PULSADOR1 = ~GPIO_ReadPinInput(BOARD_SW1_GPIO, BOARD_SW1_PIN);
+	perifericos.PULSADOR2 = ~GPIO_ReadPinInput(BOARD_SW3_GPIO, BOARD_SW3_PIN);
+
+	canMsg_Nodo2_write.data[0] = perifericos.data;
+	canMsg_Nodo2_write.can_dlc = CAN_NODO_2_DLC;
 
 	return;
 }

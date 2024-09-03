@@ -12,11 +12,13 @@
 
 #include "Nodo3.h"
 
+#include <stdio.h>
+
 #include "FreeRTOS.h"
 #include "task.h"
 #include "timers.h"
 
-#include "mcp2515.h"
+#include "CanApi.h"
 #include "can.h"
 
 #include "Nodo1.h"
@@ -68,12 +70,13 @@ extern void Nodo3_init(void)
 	PRINTF("\nNombre: Nodo 3.\n\r");
 
 	BaseType_t status = xTaskCreate(taskRtos_Nodo3, "Task Nodo 3",
-	configMINIMAL_STACK_SIZE, NULL, 1, &TaskNodo3_Handle);
+	configMINIMAL_STACK_SIZE+100, NULL, 2, &TaskNodo3_Handle);
 	if (status == pdFALSE)
 		PRINTF("Fallo al crear la tarea.\n\r");
 
 	TimerSerial_Handle = xTimerCreate("Muestro de adc",
-			pdMS_TO_TICKS(TIEMPO_SALIDA_SERIE), true, NULL, timerRtos_DatosSerial);
+			pdMS_TO_TICKS(TIEMPO_SALIDA_SERIE), true, NULL,
+			timerRtos_DatosSerial);
 	if (TimerSerial_Handle == NULL)
 		PRINTF("Fallo al crear el timer.\n\r");
 
@@ -82,7 +85,42 @@ extern void Nodo3_init(void)
 
 static void taskRtos_Nodo3(void *pvParameters)
 {
+	static enum
+	{
+		NODO1 = 0, NODO2,
+	} NodoSubs;
+	NodoSubscriptions_t Subscripciones[2] =
+	{
+	{ .IdSub = 10, .taskHandle = TaskNodo3_Handle, },
+	{ .IdSub = 20, .taskHandle = TaskNodo3_Handle, }, };
 	uint32_t event_notify;
+
+	Error_Can_t statusSub = CAN_Subscribe(Subscripciones[NODO1].IdSub,
+			Subscripciones[NODO1].taskHandle);
+	if (statusSub != ERROR_CAN_OK)
+	{
+		if (statusSub == ERROR_CAN_MEMORY)
+			PRINTF("\n\rError: no hay memoria suficiente.\n\r");
+		else
+			PRINTF("\n\rError desconocido.\n\r");
+	}
+
+	statusSub = CAN_Subscribe(Subscripciones[NODO2].IdSub,
+			Subscripciones[NODO2].taskHandle);
+	if (statusSub != ERROR_CAN_OK)
+	{
+		if (statusSub == ERROR_CAN_MEMORY)
+			PRINTF("\n\rError: no hay memoria suficiente.\n\r");
+		else
+			PRINTF("\n\rError desconocido.\n\r");
+	}
+
+	/* Espera el evento de sincronizacion. */
+	CAN_getEvent();
+
+	BaseType_t status = xTimerStart(TimerSerial_Handle, portMAX_DELAY);
+	if (status != pdPASS)
+		PRINTF("Fallo al inciar el timer.\n\r");
 
 	for (;;)
 	{
@@ -91,17 +129,35 @@ static void taskRtos_Nodo3(void *pvParameters)
 		if (event_notify > 0)
 		{
 			/* Debe tomar los datos de la cola de datos */
-			BaseType_t status = receiveFromQueue(&canMsg_Nodo3_read);
-			if (status == pdFALSE)
-				PRINTF("Fallo al recivir datos de la cola.\n\r");
+			Error_Can_t statusRx = CAN_readMsg(&canMsg_Nodo3_read,
+					Subscripciones[NODO1].IdSub,
+					Subscripciones[NODO1].taskHandle);
+//			if (statusRx != ERROR_CAN_OK)
+//			{
+//				if (statusRx == ERROR_CAN_QUEUERX)
+//					PRINTF("\n\rError al leer desde la cola de datos.\n\r");
+//				else
+//					PRINTF("\n\rError no se encontro la cola de datos.\n\r");
+//			}
 
-			if (canMsg_Nodo3_read.can_id == Nodo1_id())
+			if (canMsg_Nodo3_read.can_id == Subscripciones[NODO1].IdSub)
 			{
 				adc_read = canMsg_Nodo3_read.data[1];
 				adc_read = (adc_read << 8) | canMsg_Nodo3_read.data[0];
 			}
 
-			if (canMsg_Nodo3_read.can_id == Nodo2_id())
+			statusRx = CAN_readMsg(&canMsg_Nodo3_read,
+					Subscripciones[NODO2].IdSub,
+					Subscripciones[NODO2].taskHandle);
+//			if (statusRx != ERROR_CAN_OK)
+//			{
+//				if (statusRx == ERROR_CAN_QUEUERX)
+//					PRINTF("\n\rError al leer desde la cola de datos.\n\r");
+//				else
+//					PRINTF("\n\rError desconocido.\n\r");
+//			}
+
+			if (canMsg_Nodo3_read.can_id == Subscripciones[NODO2].IdSub)
 			{
 				perifericos.data = canMsg_Nodo3_read.data[0];
 
@@ -120,8 +176,8 @@ static void taskRtos_Nodo3(void *pvParameters)
 static void timerRtos_DatosSerial(void *pvParameters)
 {
 	PRINTF("\nNodo 3.\n\r");
-	PRINTF("> Salida por consola\n\r");
-	PRINTF("> Led rojo: %d\n\r", estLedRojo);
+	PRINTF("Parametros de medidos:\n\r");
+	PRINTF("Led rojo: %d\n\r", estLedRojo);
 	PRINTF("Boton 1: %d\n\r", estSW1);
 	PRINTF("Boton 2: %d\n\r", estSW2);
 	PRINTF("Sensor de luz: %d\n\r", adc_read);
