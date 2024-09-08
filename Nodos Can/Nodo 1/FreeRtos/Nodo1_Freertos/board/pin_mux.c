@@ -17,7 +17,7 @@ pin_labels:
 - {pin_num: '35', pin_signal: TSI0_CH2/PTA1/UART0_RX/TPM2_CH0, label: 'J1[2]/D0/UART1_RX_TGTMCU', identifier: DEBUG_UART_RX}
 - {pin_num: '36', pin_signal: TSI0_CH3/PTA2/UART0_TX/TPM2_CH1, label: 'J1[4]/D1/UART1_TX_TGTMCU', identifier: DEBUG_UART_TX}
 - {pin_num: '96', pin_signal: LCD_P43/PTD3/SPI0_MISO/UART2_TX/TPM0_CH3/SPI0_MOSI/LCD_P43_Fault, label: 'J1[6]/D2'}
-- {pin_num: '42', pin_signal: PTA12/TPM1_CH0/I2S0_TXD0, label: 'J1[8]/D3'}
+- {pin_num: '42', pin_signal: PTA12/TPM1_CH0/I2S0_TXD0, label: 'J1[8]/D3', identifier: RELE1}
 - {pin_num: '38', pin_signal: TSI0_CH5/PTA4/I2C1_SDA/TPM0_CH1/NMI_b, label: 'J1[10]/D4'}
 - {pin_num: '39', pin_signal: PTA5/USB_CLKIN/TPM0_CH2/I2S0_TX_BCLK, label: 'J1[12]/D5'}
 - {pin_num: '84', pin_signal: LCD_P28/CMP0_IN2/PTC8/I2C0_SCL/TPM0_CH4/I2S0_MCLK/LCD_P28_Fault, label: 'J1[14]/D6'}
@@ -142,6 +142,7 @@ BOARD_InitPins:
 - options: {callFromInitBoot: 'true', prefix: BOARD_, coreID: core0, enableClock: 'true'}
 - pin_list:
   - {pin_num: '20', peripheral: ADC0, signal: 'SE, 3', pin_signal: ADC0_DP3/ADC0_SE3/PTE22/TPM2_CH0/UART2_TX}
+  - {pin_num: '42', peripheral: GPIOA, signal: 'GPIO, 12', pin_signal: PTA12/TPM1_CH0/I2S0_TXD0, direction: OUTPUT}
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
  */
 /* clang-format on */
@@ -154,8 +155,20 @@ BOARD_InitPins:
  * END ****************************************************************************************************************/
 void BOARD_InitPins(void)
 {
+    /* Port A Clock Gate Control: Clock enabled */
+    CLOCK_EnableClock(kCLOCK_PortA);
     /* Port E Clock Gate Control: Clock enabled */
     CLOCK_EnableClock(kCLOCK_PortE);
+
+    gpio_pin_config_t RELE1_config = {
+        .pinDirection = kGPIO_DigitalOutput,
+        .outputLogic = 0U
+    };
+    /* Initialize GPIO functionality on pin PTA12 (pin 42)  */
+    GPIO_PinInit(BOARD_RELE1_GPIO, BOARD_RELE1_PIN, &RELE1_config);
+
+    /* PORTA12 (pin 42) is configured as PTA12 */
+    PORT_SetPinMux(BOARD_RELE1_PORT, BOARD_RELE1_PIN, kPORT_MuxAsGpio);
 
     /* PORTE22 (pin 20) is configured as ADC0_SE3 */
     PORT_SetPinMux(BOARD_ADC_LIGHT_SNS_PORT, BOARD_ADC_LIGHT_SNS_PIN, kPORT_PinDisabledOrAnalog);

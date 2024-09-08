@@ -42,11 +42,9 @@
 #include "MKL46Z4.h"
 #include "fsl_debug_console.h"
 /* TODO: insert other include files here. */
-#include "spi.h"
-#include "mcp2515.h"
+#include "CanApi.h"
+#include "can.h"
 /* TODO: insert other definitions and declarations here. */
-#define PIN_NUMBER 17
-
 #define CAN_NODO_2_ID	20
 
 #define TIEMPO_DE_MUESTRA_ESTADOS	1000
@@ -58,20 +56,8 @@
 #define LED_ON	GPIO_ClearPinsOutput(BOARD_LED_RED_GPIO,BOARD_LED_RED_GPIO_PIN_MASK)
 #define LED_OFF	GPIO_SetPinsOutput(BOARD_LED_RED_GPIO, BOARD_LED_RED_GPIO_PIN_MASK)
 
-uint16_t Delay1s = TIEMPO_DE_MUESTRA_ESTADOS;
-
-/**
- * @brief Interrupcion por recepcion de datos del modulo can.
- *
- * Cuando se genera una interrupcion por recepcion se activa
- * la bandera y luego dicha bandera se detecta por polling en
- * el programa principal.
- *
- * @note Debe ser de tipo volatile para que no sea optimizada
- * por el compilador, dado que es una variable que se modifica
- * en una interrupcion.
- */
-volatile static bool Rx_flag_mcp2515 = false;
+static uint16_t Delay1s = TIEMPO_DE_MUESTRA_ESTADOS;
+static bool Rx_msgFlag = false;
 
 typedef union
 {
@@ -103,15 +89,16 @@ static void canmsg_escritura(void);
  * @brief Lectura del modulo can.
  */
 static void canmsg_lectura(void);
+/**
+ * @brief Procesa la informacion leida.
+ */
 static void canmsg_procesar(void);
 /**
- * @brief Inicializacion de perifericos.
+ * @brief Funcion de callback para nodo 1 (id = 10).
+ * @param[in] SubcriberId Id del nodo origen.
+ * @param[in] nodeId Id del nodo que se quiere recibir la informacion.
  */
-static void perifericos_init(void);
-/**
- * @brief Configuraciones de interrupcion.
- */
-static void interrupt_init(void);
+static void Callback_Nodo1(canid_t SubcriberId, canid_t nodeId);
 
 /*
  * @brief   Application entry point.
@@ -127,44 +114,45 @@ int main(void)
 	BOARD_InitDebugConsole();
 #endif
 
+	/* Configuracion de los led y botones */
+	BOARD_InitLEDs();
+	BOARD_InitButtons();
+
 	PRINTF("\nNombre: Nodo 2\n\r");
 	PRINTF("Descripcion: Este nodo se encarga de producir un "
-			"valor de los estados de sus perifericos y ademas"
-			"obtener datos del ldr proveniente de otro modulo"
-			"can. Ademas cuenta con un Id=20.\n\r");
+				"valor de los estados de sus perifericos y ademas"
+				"obtener datos del ldr proveniente de otro modulo"
+				"can. Ademas cuenta con un Id=20.\n\r");
 	PRINTF("Materia: Sistemas digitales 2\n\r");
 
 	SysTick_Config(CLOCK_GetCoreSysClkFreq() / 1000U);
 
 	/* Configura de can */
-	perifericos_init();
-	interrupt_init();
+	CAN_init();
 
 	canMsg1.can_id = CAN_NODO_2_ID;
 	canMsg1.can_dlc = 1;
 
 	LED_ON;
 
+	Error_Can_t error = CAN_Subscribe(54, 10, Callback_Nodo1);
+	assert(error != ERROR_CAN_MEMORY);
+
 	while (1)
 	{
-		if (Rx_flag_mcp2515)
-		{
-			canmsg_lectura();
-			canmsg_procesar();
-			Rx_flag_mcp2515 = false;
-		}
-
-		if (Delay1s == 0)
-			canmsg_escritura();
+		if (Rx_msgFlag) canmsg_lectura(), Rx_msgFlag = false;
+		if (Delay1s == 0) canmsg_escritura();
 	}
+
 	return 0;
 }
 
 static void canmsg_escritura(void)
 {
-	ERROR_t estado;
+	Error_Can_t estado;
 
-	EstPerifericos_t perifericos = {.data = 0};
+	EstPerifericos_t perifericos =
+	{ .data = 0 };
 
 	perifericos.LED_ROJO = ~GPIO_ReadPinInput(BOARD_LED_RED_GPIO,
 	BOARD_LED_RED_PIN);
@@ -174,11 +162,11 @@ static void canmsg_escritura(void)
 	canMsg1.data[0] = perifericos.data;
 	canMsg1.can_dlc = 1;
 
-	estado = mcp2515_sendMessage(&canMsg1);
+	estado = CAN_sendMsg(&canMsg1);
 
-	if (estado == ERROR_OK)
+	if (estado == ERROR_CAN_OK)
 	{
-		PRINTF("\nMensaje enviado\n\r");
+		PRINTF("\n\rMensaje enviado\n\r");
 		PRINTF("ID\tDLC\tDATA\n\r");
 		PRINTF("%d\t%d\t", canMsg1.can_id, canMsg1.can_dlc);
 
@@ -190,39 +178,46 @@ static void canmsg_escritura(void)
 	}
 	else
 	{
-		if (estado == ERROR_ALLTXBUSY)
-			PRINTF("\n\rError: buffers de transmision llenos.\n\r");
-		else if (estado == ERROR_FAILTX)
-			PRINTF("\n\rError: fallo al transmitir.\n\r");
-		else if (estado == ERROR_SPI_WRITE)
-			PRINTF("\n\rError: fallo en escritura de spi.\n\r");
-		else
-			PRINTF("\nError al enviar\n\r");
+		if (estado == ERROR_CAN_QUEUETX_FULL)
+		PRINTF("\n\rError: buffers de transmision llenos.\n\r");
 	}
+
+	return;
+}
+
+static void Callback_Nodo1(canid_t SubcriberId, canid_t nodeId)
+{
+	/*
+	 * RECOMENDACIONES DE USO DE CALLBACKS: Importante mantener
+	 * las funciones de callback lo mas cortas posible y evitar
+	 * el uso de rutinas que demoren tiempo como PRINTF.
+	 */
+	Error_Can_t error = CAN_readMsg(&canMsgRead, nodeId, SubcriberId);
+	if (error != ERROR_CAN_OK)
+	{
+		if (error == ERROR_CAN_NOT_FOUND)
+		PRINTF("\n\rError: no se encuentra el id del nodo destino.\n\r");
+		if (error == ERROR_CAN_QUEUERX_EMPTY)
+		PRINTF("\n\rError: no hay datos en el buffer.\n\r");
+	}
+
+	canmsg_procesar();
+
+	Rx_msgFlag = true;	// Solo utilizado para printear el mensaje en el loop infinito y no
+						// dentro de la callback.
 
 	return;
 }
 
 static void canmsg_lectura(void)
 {
-	ERROR_t estado;
+	PRINTF("\n\rMensaje de recepcion\n\r");
+	PRINTF("ID\tDLC\tDATA\n\r");
+	PRINTF("%d\t%d\t", canMsgRead.can_id, canMsgRead.can_dlc);
 
-	estado = mcp2515_readMessage(&canMsgRead);
-
-	if (estado != ERROR_NOMSG)
+	for (uint8_t i = 0; i < 8; i++)
 	{
-		PRINTF("\nMensaje de recepcion\n\r");
-		PRINTF("ID\tDLC\tDATA\n\r");
-		PRINTF("%d\t%d\t", canMsgRead.can_id, canMsgRead.can_dlc);
-
-		for (uint8_t i = 0; i < 8; i++)
-		{
-			PRINTF("%d ", canMsgRead.data[i]);
-		}
-	}
-	else
-	{
-		PRINTF("No hubo mensajes");
+		PRINTF("%d ", canMsgRead.data[i]);
 	}
 
 	PRINTF("\n\r");
@@ -240,154 +235,30 @@ static void canmsg_procesar(void)
 		adc_read = (adc_read << 8) | canMsgRead.data[0];
 
 		if (adc_read > LUZ_MAX)
-			LED_ON;
+		LED_ON;
 		if (adc_read < LUZ_MIN)
-			LED_OFF;
+		LED_OFF;
 	}
-
-	return;
-}
-
-static void perifericos_init(void)
-{
-	ERROR_t error;
-
-	mcp2515_init();
-
-	error = mcp2515_reset();
-
-	if (error != ERROR_OK)
-		PRINTF("Fallo al resetear el modulo\n\r");
-
-	error = mcp2515_setBitrate(CAN_125KBPS, MCP_8MHZ);
-
-	if (error != ERROR_OK)
-		PRINTF("Fallo al setear el bit rate\n\r");
-
-	error = mcp2515_setNormalMode();
-	if (error != ERROR_OK)
-		PRINTF("Fallo al setear el modo normal\n\r");
-//	error = mcp2515_setLoopbackMode();
-//	if (error != ERROR_OK)
-//		PRINTF("Fallo al setear el loopback mode\n\r");
-
-	/* Configuracion de los led y botones */
-	BOARD_InitLEDs();
-	BOARD_InitButtons();
-
-	return;
-}
-
-static void interrupt_init(void)
-{
-	CLOCK_EnableClock(kCLOCK_PortA); // Por ejemplo, para el puerto A
-
-	port_pin_config_t config =
-	{ .pullSelect = kPORT_PullUp, .slewRate = kPORT_FastSlewRate,
-			.passiveFilterEnable = kPORT_PassiveFilterDisable, .driveStrength =
-					kPORT_LowDriveStrength, .mux = kPORT_MuxAsGpio };
-
-	PORT_SetPinConfig(PORTA, PIN_NUMBER, &config);
-	PORT_SetPinInterruptConfig(PORTA, PIN_NUMBER, kPORT_InterruptFallingEdge); // Configura interrupción por flanco descendente
-
-	NVIC_EnableIRQ(PORTA_IRQn); // Habilita la interrupción para el puerto A
-	NVIC_SetPriority(PORTA_IRQn, 2);
-
-	gpio_pin_config_t gpioConfig =
-	{ .pinDirection = kGPIO_DigitalInput, .outputLogic = 0U };
-
-	GPIO_PinInit(GPIOA, PIN_NUMBER, &gpioConfig);
 
 	return;
 }
 
 void SysTick_Handler(void)
 {
-	if (Delay1s != 0)
-		Delay1s--;
-	else
-		Delay1s = TIEMPO_DE_MUESTRA_ESTADOS;
+	if (Delay1s != 0) Delay1s--;
+	else Delay1s = TIEMPO_DE_MUESTRA_ESTADOS;
 
-	return;
-}
-
-void PORTA_IRQHandler(void)
-{
-#if USE_FREERTOS
-	BaseType_t xHigherPriorityTaskWoken = pdFALSE;
-#endif
-
-	// Obtiene el estado de las banderas de interrupción del puerto A
-	uint32_t interruptFlags = GPIO_GetPinsInterruptFlags(GPIOA);
-
-	if (interruptFlags & (1U << PIN_NUMBER))
-	{
-		// Código que se ejecutará cuando ocurra la interrupción
-
-		/*
-		 * @note
-		 * Se configuraron por defecto interrupciones para rx0, rx1, err, merr. En la
-		 * funcion de mcp2515_reset() se pueden configurar algunas mas.
-		 * */
-
-		/* Leemos las interrupciones generadas */
-		ERROR_t error = mcp2515_getInterrupts();
-		if (error != ERROR_OK)
-			PRINTF("Fallo al leer la interrupcion\n\r");
-
-		/* Detectamos las que nos sirvan */
-		if (mcp2515_getIntERRIF())
-		{
-			// Acciones ...
-			PRINTF("Error interrupt flag\n\r");
-
-			// Limpiamos la bandera
-			mcp2515_clearERRIF();
-		}
-
-		if (mcp2515_getIntMERRF())
-		{
-			// Acciones ...
-			PRINTF("Message error interrupt flag\n\r");
-
-			// Limpiamos la bandera
-			mcp2515_clearMERR();
-		}
-
-		if (mcp2515_getIntRX0IF() || mcp2515_getIntRX1IF())
-		{
-			// Acciones ...
-#if USE_FREERTOS
-			vTaskNotifyGiveFromISR(TaskRxCan_Handle, &xHigherPriorityTaskWoken);
-#else
-			Rx_flag_mcp2515 = true;
-#endif
-
-			// La bandera se limpia en la funcion de recepcion
-			// mcp2515_readMessage().
-		}
-
-		/*
-		 * Descomentar si es necesario tener en cuenta dicha interrupcion.
-		 * Ademas debe habilitarse en la funcion de reset del mcp2515.
-		 * */
-		//    	if (mcp2515_getIntTX0IF() ||
-		//    		mcp2515_getIntTX1IF() ||
-		//			mcp2515_getIntTX2IF())
-		//    	{
-		//    		// Acciones ...
-		////    		PRINTF("Mensaje enviado\n\r");
-		//
-		//    		// Limpiamos la bandera
-		//    		mcp2515_clearTXInterrupts();
-		//    	}
-		// Limpia la bandera de interrupción
-		GPIO_ClearPinsInterruptFlags(GPIOA, 1U << PIN_NUMBER);
-	}
-
-#if USE_FREERTOS
-	portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
-#endif
+	/*
+	 * Si el spi es lento esto puede demorar por lo que se recomienda
+	 * quitar CAN_eventTx de la rutina del systick. Se esta utilizando
+	 * solo para prueba.
+	 *
+	 * En entorno de depuracion ambas funciones generan una señal de error
+	 * si no hay eventos disponibles por lo que pueden utilizarse para verificar.
+	 * En este caso no vamos a utilizarlas.
+	 */
+	CAN_eventTx();
+	CAN_eventRx();
 
 	return;
 }

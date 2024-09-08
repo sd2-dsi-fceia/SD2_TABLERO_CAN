@@ -125,11 +125,11 @@ int main(void)
 
 	while (1)
 	{
-		if (Rx_flag_mcp2515)
-		{
+//		if (Rx_flag_mcp2515)
+//		{
 			canmsg_lectura();
 			Rx_flag_mcp2515 = false;
-		}
+//		}
 		if (Delay1s == 0)
 			canmsg_procesar();
 	}
@@ -144,7 +144,7 @@ static void canmsg_lectura(void)
 
 	if (estado != ERROR_NOMSG)
 	{
-		PRINTF("\nMensaje de recepcion\n\r");
+		PRINTF("\n\rMensaje de recepcion\n\r");
 		PRINTF("ID\tDLC\tDATA\n\r");
 		PRINTF("%d\t%d\t", canMsgRead.can_id, canMsgRead.can_dlc);
 
@@ -155,10 +155,10 @@ static void canmsg_lectura(void)
 	}
 	else
 	{
-		PRINTF("No hubo mensajes");
+//		PRINTF("No hubo mensajes");
 	}
 
-	PRINTF("\n\r");
+//	PRINTF("\n\r");
 
 	if (canMsgRead.can_id == 10)
 	{

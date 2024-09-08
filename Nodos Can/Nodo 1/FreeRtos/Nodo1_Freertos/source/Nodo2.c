@@ -40,6 +40,11 @@
 #define LED_ON	GPIO_ClearPinsOutput(BOARD_LED_RED_GPIO, BOARD_LED_RED_GPIO_PIN_MASK)
 #define LED_OFF	GPIO_SetPinsOutput(BOARD_LED_RED_GPIO, BOARD_LED_RED_GPIO_PIN_MASK)
 
+#define RELE_MIN	500
+#define RELE_MAX	3000
+#define RELE_ON		GPIO_SetPinsOutput(BOARD_RELE1_GPIO, BOARD_RELE1_GPIO_PIN_MASK)
+#define RELE_OFF	GPIO_ClearPinsOutput(BOARD_RELE1_GPIO, BOARD_RELE1_GPIO_PIN_MASK)
+
 typedef union
 {
 	struct
@@ -132,6 +137,9 @@ static void taskRtos_Nodo2(void *pvParameters)
 			PRINTF("\n\rError desconocido.\n\r");
 	}
 
+	RELE_OFF;
+	LED_OFF;
+
 	/* Espera el evento de sincronizacion. */
 	CAN_getEvent();
 
@@ -156,8 +164,14 @@ static void taskRtos_Nodo2(void *pvParameters)
 
 				if (adc_read > LUZ_MAX)
 					LED_ON;
-				if (adc_read < LUZ_MIN)
+				else if (adc_read < LUZ_MIN)
 					LED_OFF;
+
+				/* Estado del rele. */
+				if (adc_read > RELE_MAX)
+					RELE_ON;
+				else if (adc_read < RELE_MIN)
+					RELE_OFF;
 			}
 		}
 		__delay_ms(50);
