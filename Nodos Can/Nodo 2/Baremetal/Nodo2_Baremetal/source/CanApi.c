@@ -48,6 +48,12 @@
 #define CAN_INTERRUPT			canmsg_interrupt
 #define CAN_PROCESS_RECEIVE 	canmsg_receive
 
+#if	TIMEOUT_ENABLE
+#define CAN_callbackTIMEOUT		callbackTimeout
+
+extern void callbackTimeout(void);
+#endif
+
 // Recepcion
 #define QUEUE_RECEIVE_LENGTH	5
 #define QUEUE_RECEIVE_SIZE		sizeof(canMsg_Receive)
@@ -117,7 +123,11 @@ static uint8_t EventTx = 0;
 /**
  * @brief Tiempo de transmision de mensajes can.
  */
-#define TIMER_TRANSMISION_PERIOD_MS	pdMS_TO_TICKS(200)
+#define TIMER_PERIOD_MS	100
+#define TIMER_TIMEOUT	5000
+
+static uint16_t timerXtransfer = TIMER_PERIOD_MS;
+static uint16_t timerTimeout = TIMER_TIMEOUT;
 
 /**
  * @brief Funcion de procesamiento de interrupcion.
@@ -265,7 +275,7 @@ extern Error_Can_t CAN_eventTx(void)
 {
 	if (EventTx == 0) return ERROR_CAN_NO_EVENT_TX;
 
-	ERROR_t status = mcp2515_sendMessage(&bufferTx[writeIndex]);
+	ERROR_t status = mcp2515_sendMessage(&bufferTx[writeIndex - 1]);
 	if (status != ERROR_OK) return ERROR_CAN_FAILTX;	// Fallo al transmitir
 
 	writeIndex--;
@@ -284,6 +294,36 @@ extern Error_Can_t CAN_eventRx(void)
 	EventRx--;
 
 	return ERROR_CAN_OK;
+}
+
+extern bool CAN_getTimer(void)
+{
+	if (timerXtransfer != 0) timerXtransfer--;
+	else
+	{
+		timerXtransfer = TIMER_PERIOD_MS;
+		return true;
+	}
+
+#if TIMEOUT_ENABLE
+	if (EventRx)
+	{
+		timerTimeout = TIMER_TIMEOUT;
+	}
+	else
+	{
+		if (timerTimeout != 0)
+			timerTimeout--;
+
+		else
+		{
+			CAN_callbackTIMEOUT();	// Ejecuta el callback si se termina el timeout
+			return false;
+		}
+	}
+#endif
+
+	return false;
 }
 
 /*

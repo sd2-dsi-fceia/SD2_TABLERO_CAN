@@ -10,7 +10,9 @@
 
 #include "can.h"
 
-#define INIT_COMPLETE_EVENT (1 << 0)  // Bit del evento que representa la inicialización completa
+#include <stdbool.h>
+
+#define TIMEOUT_ENABLE	1
 
 /**
  * @brief Tipo de funcion callback.
@@ -75,5 +77,9 @@ extern Error_Can_t CAN_eventTx(void);
  * siempre y cuando las funciones de callback sean cortas.
  */
 extern Error_Can_t CAN_eventRx(void);
+/**
+ * @brief Procesa las unidades de tiempo de can.
+ */
+extern bool CAN_getTimer(void);
 
 #endif /* CANAPI_H_ */

@@ -84,21 +84,26 @@ struct can_frame canMsgRead =
 /**
  * @brief Escritura del modulo can.
  */
-static void canmsg_escritura(void);
+static void canmsg_writeToBus(void);
 /**
  * @brief Lectura del modulo can.
  */
-static void canmsg_lectura(void);
+static void serialPort(void);
 /**
  * @brief Procesa la informacion leida.
  */
-static void canmsg_procesar(void);
+static void canmsg_sensorLuz(void);
 /**
  * @brief Funcion de callback para nodo 1 (id = 10).
  * @param[in] SubcriberId Id del nodo origen.
  * @param[in] nodeId Id del nodo que se quiere recibir la informacion.
  */
 static void Callback_Nodo1(canid_t SubcriberId, canid_t nodeId);
+
+/**
+ * @brief Funcion de callback si termina el timeout.
+ */
+extern void callbackTimeout(void);
 
 /*
  * @brief   Application entry point.
@@ -135,19 +140,19 @@ int main(void)
 
 	LED_ON;
 
-	Error_Can_t error = CAN_Subscribe(54, 10, Callback_Nodo1);
+	Error_Can_t error = CAN_Subscribe(54, canMsg1.can_id, Callback_Nodo1);
 	assert(error != ERROR_CAN_MEMORY);
 
 	while (1)
 	{
-		if (Rx_msgFlag) canmsg_lectura(), Rx_msgFlag = false;
-		if (Delay1s == 0) canmsg_escritura();
+		if (Rx_msgFlag) serialPort(), Rx_msgFlag = false;
+		if (Delay1s == 0) canmsg_writeToBus();
 	}
 
 	return 0;
 }
 
-static void canmsg_escritura(void)
+static void canmsg_writeToBus(void)
 {
 	Error_Can_t estado;
 
@@ -201,7 +206,7 @@ static void Callback_Nodo1(canid_t SubcriberId, canid_t nodeId)
 		PRINTF("\n\rError: no hay datos en el buffer.\n\r");
 	}
 
-	canmsg_procesar();
+	canmsg_sensorLuz();
 
 	Rx_msgFlag = true;	// Solo utilizado para printear el mensaje en el loop infinito y no
 						// dentro de la callback.
@@ -209,7 +214,7 @@ static void Callback_Nodo1(canid_t SubcriberId, canid_t nodeId)
 	return;
 }
 
-static void canmsg_lectura(void)
+static void serialPort(void)
 {
 	PRINTF("\n\rMensaje de recepcion\n\r");
 	PRINTF("ID\tDLC\tDATA\n\r");
@@ -225,7 +230,7 @@ static void canmsg_lectura(void)
 	return;
 }
 
-static void canmsg_procesar(void)
+static void canmsg_sensorLuz(void)
 {
 	uint16_t adc_read;
 
@@ -257,8 +262,19 @@ void SysTick_Handler(void)
 	 * si no hay eventos disponibles por lo que pueden utilizarse para verificar.
 	 * En este caso no vamos a utilizarlas.
 	 */
-	CAN_eventTx();
-	CAN_eventRx();
+	if (CAN_getTimer())
+	{
+		CAN_eventTx();
+		CAN_eventRx();
+	}
+
+	return;
+}
+
+extern void callbackTimeout(void)
+{
+	// Acciones si sucede esto
+	CAN_init();	// Reinicio el modulo si fuese necesario
 
 	return;
 }

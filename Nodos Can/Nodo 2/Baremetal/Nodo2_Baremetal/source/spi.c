@@ -70,7 +70,7 @@ extern void spi_init(void)
 	 * masterConfig.baudRate_Bps = 500000U;
 	 */
 	SPI_MasterGetDefaultConfig(&masterConfig);
-	masterConfig.baudRate_Bps = 400000;
+	masterConfig.baudRate_Bps = 500000;
 
 	sourceClock = SPI_MASTER_CLK_FREQ;
 
