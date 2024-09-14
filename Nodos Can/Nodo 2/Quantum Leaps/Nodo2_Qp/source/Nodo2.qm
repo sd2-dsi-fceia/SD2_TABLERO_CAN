@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model version="6.1.1" links="1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.state-machine.com/qm/qm.xsd">
+ <documentation>Blinky example</documentation>
+ <!--${qpc}-->
+ <framework name="qpc"/>
+ <!--${AOs}-->
+ <package name="AOs" stereotype="0x02">
+  <!--${AOs::Blinky}-->
+  <class name="Blinky" superclass="qpc::QActive">
+   <!--${AOs::Blinky::timeEvt}-->
+   <attribute name="timeEvt" type="QTimeEvt" visibility="0x02" properties="0x00"/>
+   <!--${AOs::Blinky::inst}-->
+   <attribute name="inst" type="Blinky" visibility="0x02" properties="0x01"/>
+   <!--${AOs::Blinky::ctor}-->
+   <operation name="ctor" type="void" visibility="0x02" properties="0x00">
+    <documentation>Constructor</documentation>
+    <code>/* Crea el objet activo. */
+QActive_ctor(&amp;me-&gt;super, Q_STATE_CAST(&amp;Blinky_initial));
+/* Crea el evento de tiempo. */
+QTimeEvt_ctorX(&amp;me-&gt;timeEvt, &amp;me-&gt;super, CAN_SIG, 0U);</code>
+   </operation>
+   <!--${AOs::Blinky::SM}-->
+   <statechart properties="0x03">
+    <documentation>Blinky state machine</documentation>
+    <!--${AOs::Blinky::SM::initial}-->
+    <initial target="../1">
+     <action brief="init">(void)par; // unused parameter
+// Inicializo el constructor del timer
+QTimeEvt_armX(&amp;me-&gt;timeEvt,
+TIEMPO_DE_MUESTRA_ESTADOS, TIEMPO_DE_MUESTRA_ESTADOS);
+
+// Inicializacion de Nodo 2
+BSP_initMsg();
+
+/* Inicialziacion del nodo 2. */
+Nodo2_init();</action>
+     <initial_glyph conn="2,3,5,0,17,7">
+      <action box="1,-3,6,2"/>
+     </initial_glyph>
+    </initial>
+    <!--${AOs::Blinky::SM::Escritura}-->
+    <state name="Escritura">
+     <documentation>Escribe en la salida del puerto serie y en el modulo can.</documentation>
+     <entry>BSP_ledOff(); // Acciones que se ejecutan en el entry</entry>
+     <!--${AOs::Blinky::SM::Escritura::SERIE}-->
+     <tran trig="SERIE">
+      <action brief="Salida puerto serie">/* Escritura en el puerto serie. */
+Nodo2_serialPort();</action>
+      <tran_glyph conn="7,19,3,-1,22">
+       <action box="0,-2,19,2"/>
+      </tran_glyph>
+     </tran>
+     <!--${AOs::Blinky::SM::Escritura::CAN}-->
+     <tran trig="CAN">
+      <action brief="Salida por can">/* Escritura en el modulo can. */
+Nodo2_writeToBus();</action>
+      <tran_glyph conn="7,22,3,-1,22">
+       <action box="0,-2,16,2"/>
+      </tran_glyph>
+     </tran>
+     <state_glyph node="7,10,29,14">
+      <entry box="1,2,11,4"/>
+     </state_glyph>
+    </state>
+    <state_diagram size="54,34"/>
+   </statechart>
+  </class>
+  <!--${AOs::setSerieEvt}-->
+  <operation name="setSerieEvt" type="void" visibility="0x00" properties="0x00">
+   <documentation>Genera el evento serie</documentation>
+   <code>// Crear un evento sin parámetros de tipo EVENTO_SIMPLE_SIG
+//QEvt *evento = Q_NEW(QEvt, SERIE_SIG);
+SerieEvt *evento = Q_NEW(SerieEvt, SERIE_SIG);
+
+// Postear el evento a la máquina de estados activa
+//QACTIVE_POST((QActive *)&amp;Blinky_inst.super, &amp;Blinky_inst.evento.super, 0);
+QACTIVE_POST(AO_Blinky, &amp;evento-&gt;super, 0);</code>
+  </operation>
+  <!--${AOs::SerieEvt}-->
+  <class name="SerieEvt" superclass="qpc::QEvt"/>
+ </package>
+ <!--${.}-->
+ <directory name=".">
+  <!--${.::blinky.c}-->
+  <file name="blinky.c">
+   <text>#include &quot;blinky.h&quot;
+#include &quot;qpc.h&quot;
+
+#include &quot;fsl_debug_console.h&quot;
+
+//#include &quot;safe_std.h&quot; // portable &quot;safe&quot; &lt;stdio.h&gt;/&lt;string.h&gt; facilities
+#include &lt;stdlib.h&gt; // for exit()
+
+//Q_DEFINE_THIS_FILE
+
+#ifdef Q_SPY
+    #error Simple Blinky Application does not provide Spy build configuration
+#endif
+
+//..........................................................................
+Q_NORETURN Q_onError(char const * const module, int_t const id) {
+    PRINTF(&quot;\n\rERROR in %s:%d&quot;, module, id);
+    exit(-1);
+}
+//..........................................................................
+void assert_failed(char const * const module, int_t const id); // prototype
+void assert_failed(char const * const module, int_t const id) {
+    Q_onError(module, id);
+}
+//..........................................................................
+void QF_onStartup(void) {}
+//..........................................................................
+void QF_onCleanup(void) {}
+//............................................................................
+void QV_onIdle(void) { /* entered with interrupts DISABLED, see NOTE01 */
+#if defined NDEBUG
+     /* Put the CPU and peripherals to the low-power mode */
+    QV_CPU_SLEEP(); /* atomically go to sleep and enable interrupts */
+#else
+    QF_INT_ENABLE(); /* just enable interrupts */
+#endif
+}
+//..........................................................................
+void QF_onClockTick(void) {
+    QTIMEEVT_TICK_X(0U, (void *)0);  // clock tick processing
+}
+//..........................................................................
+void BSP_ledOff(void) {
+    PRINTF(&quot;\n\r%s\n&quot;, &quot;LED OFF&quot;);
+}
+//..........................................................................
+void BSP_ledOn(void) {
+    PRINTF(&quot;\n\r%s\n&quot;, &quot;LED ON&quot;);
+}
+//..........................................................................
+void BSP_initMsg(void)
+{
+    PRINTF(&quot;\nNombre: Nodo 2\n\r&quot;);
+    PRINTF(&quot;Descripcion: Este nodo se encarga de producir un &quot;
+                &quot;valor de los estados de sus perifericos y ademas&quot;
+                &quot;obtener datos del ldr proveniente de otro modulo&quot;
+                &quot;can. Ademas cuenta con un Id=20.\n\r&quot;);
+    PRINTF(&quot;Materia: Sistemas digitales 2\n\r&quot;);
+
+    return;
+}</text>
+  </file>
+  <!--${.::main.c}-->
+  <file name="main.c">
+   <text>#include &lt;stdio.h&gt;
+#include &quot;board.h&quot;
+#include &quot;peripherals.h&quot;
+#include &quot;pin_mux.h&quot;
+#include &quot;clock_config.h&quot;
+#include &quot;MKL46Z4.h&quot;
+#include &quot;fsl_debug_console.h&quot;
+
+#include &quot;qpc.h&quot;          // QP/C real-time embedded framework
+#include &quot;blinky.h&quot;          // Board Support Package
+
+#include &quot;CanApi.h&quot;
+#include &quot;can.h&quot;
+
+#include &quot;Nodo_2.h&quot;
+
+enum BlinkySignals {
+    SERIE_SIG = Q_USER_SIG,
+    CAN_SIG,
+    MAX_SIG,
+};
+
+
+/* Declaraciones de qp. */
+$declare ${AOs::SerieEvt}
+$declare ${AOs::Blinky}
+
+//............................................................................
+QActive * const AO_Blinky = &amp;Blinky_inst.super;
+static QF_MPOOL_EL(SerieEvt) poolSto[10];  // Cambia el tamaño según sea necesario
+
+int main() {
+    /* Init board hardware. */
+    BOARD_InitBootPins();
+    BOARD_InitBootClocks();
+    BOARD_InitBootPeripherals();
+#ifndef BOARD_INIT_DEBUG_CONSOLE_PERIPHERAL
+    /* Init FSL debug console. */
+    BOARD_InitDebugConsole();
+#endif
+
+    /* Inicializacion de pines. */
+    BOARD_InitLEDs();
+    BOARD_InitButtons();
+
+    /* Configuracion del systick. */
+    SysTick_Config(CLOCK_GetCoreSysClkFreq() / 1000U);
+
+    QF_init(); // initialize the framework
+    QF_poolInit(poolSto, sizeof(poolSto), sizeof(SerieEvt));
+
+    Blinky_ctor(&amp;Blinky_inst); // explicitly call the &quot;constructor&quot;
+    static QEvt const *blinky_queueSto[10];
+    QACTIVE_START(AO_Blinky,
+                  1U, // priority
+                  blinky_queueSto, Q_DIM(blinky_queueSto),
+                  (void *)0, 0U, // no stack
+                  (void *)0);    // no initialization parameter
+    return QF_run(); // run the QF application
+}
+//..........................................................................
+void SysTick_Handler(void) {
+    QTIMEEVT_TICK_X(0U, &amp;l_SysTick_Handler); // time events at rate 0
+
+    Nodo2_xtransfer();
+}
+
+//================ ask QM to define the Blinky class ================
+$define ${AOs::Blinky}
+$define ${AOs::setSerieEvt}</text>
+  </file>
+  <!--${.::blinky.h}-->
+  <file name="blinky.h">
+   <text>#ifndef BSP_H_
+#define BSP_H_
+
+#define BSP_TICKS_PER_SEC    500
+
+void BSP_ledOn(void);
+void BSP_ledOff(void);
+void BSP_initMsg(void);
+
+#endif // BSP_H_</text>
+  </file>
+  <!--${.::Nodo_2.c}-->
+  <file name="Nodo_2.c" properties="external"/>
+  <!--${.::Nodo_2.h}-->
+  <file name="Nodo_2.h" properties="external"/>
+ </directory>
+</model>
