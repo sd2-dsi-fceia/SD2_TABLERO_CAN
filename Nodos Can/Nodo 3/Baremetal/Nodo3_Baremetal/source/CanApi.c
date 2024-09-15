@@ -332,6 +332,7 @@ extern bool CAN_getTimer(void)
 		else
 		{
 			CAN_callbackTIMEOUT();	// Ejecuta el callback si se termina el timeout
+			timerTimeout = TIMER_TIMEOUT/2;
 			return false;
 		}
 	}

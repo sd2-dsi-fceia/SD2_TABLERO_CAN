@@ -80,6 +80,7 @@ struct can_frame canMsg1;
  */
 struct can_frame canMsgRead =
 { .can_dlc = 0, .can_id = 0, };
+static uint16_t TimeoutError = 0;
 
 /**
  * @brief Procesa la informacion leida.
@@ -108,7 +109,7 @@ extern void Nodo2_init(void)
 		PRINTF("\n\rError: al configurar la mascara.\n\r");
 	}
 
-	result = CAN_setFilter(RXF0, false, 20); // Filtro para ID 20, no extendido (ID estándar)
+	result = CAN_setFilter(RXF0, false, 10); // Filtro para ID 20, no extendido (ID estándar)
 	if (result != ERROR_CAN_OK) {
 		PRINTF("\n\rError: al configurar el filtro.\n\r");
 	}
@@ -118,7 +119,7 @@ extern void Nodo2_init(void)
 	canMsg1.can_dlc = 1;
 
 	/* Crea una subscripcion. */
-	Error_Can_t error = CAN_Subscribe(54, canMsg1.can_id, Callback_Nodo1);
+	Error_Can_t error = CAN_Subscribe(10, canMsg1.can_id, Callback_Nodo1);
 	assert(error != ERROR_CAN_MEMORY);
 
 	return;
@@ -202,6 +203,22 @@ extern void callbackTimeout(void)
 {
 	// Acciones si sucede esto
 	CAN_init();	// Reinicio el modulo si fuese necesario
+
+	/* Configuro los filtros y mascaras para la recepcion. */
+	Error_Can_t result = CAN_setMask(MASK0, false, 0x7FF); // Máscara 0x7FF, no extendido (ID estándar)
+	if (result != ERROR_CAN_OK) {
+		PRINTF("\n\rError: al configurar la mascara.\n\r");
+	}
+
+	result = CAN_setFilter(RXF0, false, 10); // Filtro para ID 20, no extendido (ID estándar)
+	if (result != ERROR_CAN_OK) {
+		PRINTF("\n\rError: al configurar el filtro.\n\r");
+	}
+
+	LED_GREEN_TOGGLE();
+
+	TimeoutError++;
+	PRINTF("\n\rError por timeout numero %d",TimeoutError);
 
 	return;
 }
