@@ -127,7 +127,7 @@ static uint8_t Modo_can = MODE_NORMAL;
 /**
  * @brief Tiempo de transmision de mensajes can.
  */
-#define TIMER_PERIOD_MS	100
+#define TIMER_PERIOD_MS	50
 #define TIMER_TIMEOUT	5000
 
 static uint16_t timerXtransfer = TIMER_PERIOD_MS;
@@ -332,7 +332,7 @@ extern bool CAN_getTimer(void)
 		else
 		{
 			CAN_callbackTIMEOUT();	// Ejecuta el callback si se termina el timeout
-			timerTimeout = TIMER_TIMEOUT/2;
+//			timerTimeout = TIMER_TIMEOUT/2;
 			return false;
 		}
 	}

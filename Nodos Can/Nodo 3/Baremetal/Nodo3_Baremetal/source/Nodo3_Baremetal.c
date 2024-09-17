@@ -190,11 +190,11 @@ static void Callback_Nodo2(canid_t SubcriberId, canid_t nodeId)
 //---------------------------------------------------------------------------------------
 static void canmsg_procesar(void)
 {
-	PRINTF("\n\r> Salida por consola\n\r");
-	PRINTF("> Led rojo: %d\n\r", estLedRojo);
-	PRINTF("Boton 1: %d\n\r", estSW1);
-	PRINTF("Boton 2: %d\n\r", estSW2);
-	PRINTF("Sensor de luz: %d\n\r", adc_read);
+//	PRINTF("\n\r> Salida por consola\n\r");
+	PRINTF("Led rojo: %d\r\n", estLedRojo);
+	PRINTF("Boton 1: %d\r\n", estSW1);
+	PRINTF("Boton 2: %d\r\n", estSW2);
+	PRINTF("Sensor de luz: %d\r\n", adc_read);
 
 	return;
 }
