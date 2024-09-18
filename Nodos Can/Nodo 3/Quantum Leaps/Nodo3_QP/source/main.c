@@ -30,11 +30,48 @@
 //$endhead${.::main.c} ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 #include "qpc.h"                 // QP/C real-time embedded framework
 #include "bsp.h"                 // Board Support Package
+#include "Nodo3_QP.h"            // Archivo del nodo 3
+
+#include <stdio.h>
+#include "board.h"
+#include "peripherals.h"
+#include "pin_mux.h"
+#include "clock_config.h"
+#include "MKL46Z4.h"
+#include "fsl_debug_console.h"
 
 //............................................................................
 int main() {
+    /* Init board hardware. */
+    BOARD_InitBootPins();
+    BOARD_InitBootClocks();
+    BOARD_InitBootPeripherals();
+#ifndef BOARD_INIT_DEBUG_CONSOLE_PERIPHERAL
+    /* Init FSL debug console. */
+    BOARD_InitDebugConsole();
+#endif
+
+    /* Configuracion de los led y botones */
+    BOARD_InitLEDs();
+    BOARD_InitButtons();
+
+    /* Incializamos todos los parametros de can. */
+    Nodo3_reset_can();
+
+    SysTick_Config(CLOCK_GetCoreSysClkFreq() / 1000U);
+
     QF_init();       // initialize the framework and the underlying RT kernel
     BSP_init();      // initialize the BSP
     BSP_start();     // start the AOs/Threads
     return QF_run(); // run the QF application
 }
+//............................................................................
+void SysTick_Handler(void)
+{
+    QF_TICK_X(0U, (void *)0); // QF clock tick processing for rate 0
+
+    Nodo3_xtransfer();
+
+    return;
+}
+

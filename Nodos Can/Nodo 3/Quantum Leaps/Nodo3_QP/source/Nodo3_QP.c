@@ -29,4 +29,171 @@
 // <info@state-machine.com>
 //
 //$endhead${.::Nodo3_QP.c} ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-else
+#include "Nodo3_QP.h"
+
+#include <stdio.h>
+#include "board.h"
+#include "peripherals.h"
+#include "pin_mux.h"
+#include "clock_config.h"
+#include "MKL46Z4.h"
+#include "fsl_debug_console.h"
+
+#include "can.h"
+#include "CanApi.h"
+
+#include "Nodo3_SM.h"
+
+#define CAN_ID_NODO_1	10
+#define CAN_ID_NODO_2	20
+#define CAN_ID_NODO_3	30
+
+typedef union
+{
+	struct
+	{
+		unsigned LED_ROJO :1;
+		unsigned PULSADOR1 :1;
+		unsigned PULSADOR2 :1;
+		unsigned RESERVADO :5;
+	};
+	uint8_t data;
+} EstPerifericos_t;
+
+/**
+ * @brief Mensaje de lectura.
+ */
+struct can_frame canMsgRead =
+{ .can_dlc = 0, .can_id = 0, };
+
+static uint16_t adc_read;
+static EstPerifericos_t perifericos;
+static bool estSW1, estSW2, estLedRojo;
+static bool EvtErrorRx = false;
+
+/**
+ * @brief Funcion callback para nodo 1.
+ */
+static void Callback_Nodo1(canid_t SubcriberId, canid_t nodeId);
+/**
+ * @brief Funcion callback para nodo 2.
+ */
+static void Callback_Nodo2(canid_t SubcriberId, canid_t nodeId);
+/**
+ * @brief Reset del error de rx.
+ */
+static void reset_error(void);
+/**
+ * @brief Funcion de callback para timeout.
+ */
+extern void callbackTimeout(void);
+
+//.......................................................................................
+extern void Nodo3_reset_can(void)
+{
+	/* Inicializamos el can. */
+	CAN_init();
+
+	/* Configuro los filtros y mascaras para la recepcion. */
+	Error_Can_t result = CAN_setMask(MASK0, false, 0x7FF); // Máscara 0x7FF, no extendido (ID estándar)
+	if (result != ERROR_CAN_OK)
+	{
+		PRINTF("\n\rError: al configurar la mascara.\n\r");
+	}
+
+	result = CAN_setFilter(RXF0, false, CAN_ID_NODO_1); // Filtro para ID 10, no extendido (ID estándar)
+	if (result != ERROR_CAN_OK)
+	{
+		PRINTF("\n\rError: al configurar el filtro.\n\r");
+	}
+
+	result = CAN_setFilter(RXF1, false, CAN_ID_NODO_2); // Filtro para ID 20, no extendido (ID estándar)
+	if (result != ERROR_CAN_OK)
+	{
+		PRINTF("\n\rError: al configurar el filtro.\n\r");
+	}
+
+	/* Creamos las subscriones a los distintos nodos. */
+	Error_Can_t error = CAN_Subscribe(CAN_ID_NODO_1, CAN_ID_NODO_3,
+			Callback_Nodo1);
+	assert(error != ERROR_CAN_MEMORY);
+
+	error = CAN_Subscribe(CAN_ID_NODO_2, CAN_ID_NODO_3, Callback_Nodo2);
+	assert(error != ERROR_CAN_MEMORY);
+
+	return;
+}
+//.......................................................................................
+extern void Nodo3_salidaSerie(void)
+{
+	PRINTF("Led rojo: %d\r\n", estLedRojo);
+	PRINTF("Boton 1: %d\r\n", estSW1);
+	PRINTF("Boton 2: %d\r\n", estSW2);
+	PRINTF("Sensor de luz: %d\r\n", adc_read);
+
+	return;
+}
+//.......................................................................................
+extern void callbackTimeout(void)
+{
+	Nodo3_reset_can();
+
+	if (!EvtErrorRx)
+	{
+		setEvt_Timeout();	// Genera el evento de error en la SM.
+		EvtErrorRx = true;
+	}
+
+	return;
+}
+//.......................................................................................
+extern void Nodo3_xtransfer(void)
+{
+	if (CAN_getTimer())
+	{
+		CAN_eventTx();
+		CAN_eventRx();
+	}
+
+	return;
+}
+//.......................................................................................
+static void Callback_Nodo1(canid_t SubcriberId, canid_t nodeId)
+{
+	CAN_readMsg(&canMsgRead, nodeId, SubcriberId);
+
+	adc_read = canMsgRead.data[1];
+	adc_read = (adc_read << 8) | canMsgRead.data[0];
+
+	/* Reinicio el reset. */
+	reset_error();
+
+	return;
+}
+//.......................................................................................
+static void Callback_Nodo2(canid_t SubcriberId, canid_t nodeId)
+{
+	CAN_readMsg(&canMsgRead, nodeId, SubcriberId);
+
+	perifericos.data = canMsgRead.data[0];
+
+	estLedRojo = perifericos.LED_ROJO;
+	estSW1 = perifericos.PULSADOR1;
+	estSW2 = perifericos.PULSADOR2;
+
+	/* Reinicio el reset. */
+	reset_error();
+
+	return;
+}
+//.......................................................................................
+static void reset_error(void)
+{
+	if (EvtErrorRx)
+	{
+		setEvt_ResetCan();
+		EvtErrorRx = false;
+	}
+
+	return;
+}

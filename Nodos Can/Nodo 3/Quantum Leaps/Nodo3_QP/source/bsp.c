@@ -34,47 +34,84 @@
 #include <stdio.h>  // for printf()/fprintf()
 #include <stdlib.h> // for exit()
 
+#include "board.h"
+#include "peripherals.h"
+#include "clock_config.h"
+#include "MKL46Z4.h"
+#include "pin_mux.h"
+#include "fsl_debug_console.h"
 
+void assert_failed(char const * const module, int_t const id); // prototype
 
 //............................................................................
 void BSP_init(void)   {
-    PRINTF("Simple Blinky example\n"
-           "QP/C version: %s\n"
-           "Press Ctrl-C to quit...\n",
-           QP_VERSION_STR);
+    // Sin acciones por aca. ;)
+    PRINTF("\n\rNombre: Nodo 3\n\r");
+    PRINTF("Descripcion: Este nodo se encarga de recibir"
+            "datos desde el modulo can y luego msotrar"
+            "en un puerto serie dicho resultados.\n\r");
+    PRINTF("Materia: Sistemas digitales 2\n\r");
+    PRINTF("\n\r");
 }
 //............................................................................
+#define MAX_POOL_SIZE    15
+static QF_MPOOL_EL(QEvt) smlPoolSto[MAX_POOL_SIZE];
+
 void BSP_start(void) {
-    // no need to initialize event pools
+    // Need to initialize event pools for events
     //static QF_MPOOL_EL(QEvt) smlPoolSto[10];
     //QF_poolInit(smlPoolSto, sizeof(smlPoolSto), sizeof(smlPoolSto[0]));
+    QF_poolInit(smlPoolSto, sizeof(smlPoolSto), sizeof(QEvt));
 
     // no need to initialize publish-subscribe
     //QActive_psInit(subscrSto, Q_DIM(subscrSto));
 
     // instantiate and start AOs/threads...
 
-    static QEvt const *blinkyQueueSto[10];
-    Blinky_ctor();
-    QACTIVE_START(AO_Blinky,
+    static QEvt const *Nodo3QueueSto[15];
+
+    Nodo3_ctor();
+
+    QACTIVE_START(AO_Nodo3,
         1U,                          // QP prio. of the AO
-        blinkyQueueSto,              // event queue storage
-        Q_DIM(blinkyQueueSto),       // queue length [events]
+        Nodo3QueueSto,              // event queue storage
+        Q_DIM(Nodo3QueueSto),       // queue length [events]
         (void *)0, 0U,               // no stack storage
         (void *)0);                  // no initialization param
 }
 //............................................................................
-void BSP_ledOff(void) { PRINTF("LED OFF\n"); }
+void BSP_ledOff(void) {
+    //PRINTF("LED OFF\n");
+    LED_RED_OFF();
+}
 //............................................................................
-void BSP_ledOn(void)  { PRINTF("LED ON\n");  }
+void BSP_ledOn(void)  {
+    //PRINTF("LED ON\n");
+    LED_RED_ON();
+}
 
 // callback functions needed by the framework --------------------------------
 void QF_onStartup(void) {}
+//............................................................................
 void QF_onCleanup(void) {}
+//............................................................................
 void QF_onClockTick(void) {
-    QF_TICK_X(0U, (void *)0); // QF clock tick processing for rate 0
+    //QF_TICK_X(0U, (void *)0); // QF clock tick processing for rate 0
 }
 void Q_onError(char const * const module, int id) {
     PRINTF("Assertion failed in %s:%d", module, id);
     exit(-1);
+}
+//............................................................................
+void QV_onIdle(void) { /* entered with interrupts DISABLED, see NOTE01 */
+#if defined NDEBUG
+     /* Put the CPU and peripherals to the low-power mode */
+    QV_CPU_SLEEP(); /* atomically go to sleep and enable interrupts */
+#else
+    QF_INT_ENABLE(); /* just enable interrupts */
+#endif
+}
+//............................................................................
+void assert_failed(char const * const module, int_t const id) {
+    Q_onError(module, id);
 }
