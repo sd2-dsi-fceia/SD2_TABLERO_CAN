@@ -31,7 +31,9 @@
 #ifndef BSP_H_
 #define BSP_H_
 
-#define BSP_TICKS_PER_SEC    100U
+#define BSP_TICKS_PER_SEC    500U
+#define BSP_TICKS_300MS      300U
+#define BSP_TICKS_3S         3000U
 
 void BSP_init(void);
 void BSP_start(void);
@@ -40,19 +42,19 @@ void BSP_ledOff(void);
 
 //$declare${Shared} vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 
-//${Shared::BlinkySignals} ...................................................
-enum BlinkySignals {
+//${Shared::Nodo3Signals} ....................................................
+enum Nodo3Signals {
     TIMEOUT_SIG = Q_USER_SIG,
     TIMEOUT_RX_SIG,
     TIME_300MS_SIG,
     RESET_CAN_SIG,
 };
 
-//${Shared::AO_Blinky} .......................................................
-extern QActive * const AO_Blinky;
+//${Shared::AO_Nodo3} ........................................................
+extern QActive * const AO_Nodo3;
 
-//${Shared::Blinky_ctor} .....................................................
-void Blinky_ctor(void);
+//${Shared::Nodo3_ctor} ......................................................
+void Nodo3_ctor(void);
 //$enddecl${Shared} ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 #endif // BSP_H_
