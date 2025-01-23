@@ -54,8 +54,19 @@ extern uint16_t LDR_UltimaConversion(void);
  * @return Verifica si pudo ser lanzada la conversion o hubo un fallo.
  */
 extern Error_LDR_t LDR_convertir(void);
+/**
+ * @brief Obtiene el estado de la conversion.
+ *
+ * @return Estado de la conversion.
+ */
 extern bool LDR_getConvComplete(void);
+/**
+ * @brief Setea el fin de la conversion.
+ */
 extern void LDR_setConvComplete(void);
+/**
+ * @brief Limpia la bandera de conversion completa.
+ */
 extern void LDR_clearConvComplete(void);
 
 #endif /* LDR_H_ */
