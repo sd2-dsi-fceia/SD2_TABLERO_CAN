@@ -139,8 +139,6 @@ static void canmsg_escritura(void) {
 static void perifericos_init(void) {
 	ERROR_t error;
 
-	mcp2515_init();	// Configura los pines del spi
-
 	error = mcp2515_reset();	// Configura el modulo
 
 	if (error != ERROR_OK)

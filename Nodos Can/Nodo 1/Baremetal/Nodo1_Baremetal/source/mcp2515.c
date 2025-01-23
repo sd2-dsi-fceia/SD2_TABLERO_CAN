@@ -807,6 +807,8 @@ static void endSPI(void)
 
 extern ERROR_t mcp2515_reset(void)
 {
+	mcp2515_init();	// Configura los pines del spi
+
 	ERROR_t error;
 	INSTRUCTION_t inst = INSTRUCTION_RESET;
 
