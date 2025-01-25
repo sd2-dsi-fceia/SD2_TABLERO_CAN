@@ -9,9 +9,7 @@ En este repositorio se encuentran todos los ejemplos brindados para trabajar en 
 
 **Tabla de Contenidos**
 
-[TOCM]
-
-[TOC]
+[Nodos Can Baremetal](#nodos-can-baremetal)
 
 # Nodos Can Baremetal
 
