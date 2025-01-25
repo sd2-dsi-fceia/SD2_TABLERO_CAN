@@ -27,9 +27,9 @@ En este ejemplo se tienen tres nodos en donde se evaluarán como se interconecta
 
 ## Esquema de nodos
 
-```seq
-Nodo 1->Nodo 2: Intensidad de luz
-Nodo 1->Nodo 3: Intensidad de luz
-Nodo 2->Nodo 3: Estado periféricos
-Note right of Nodo 3: Salida de datos \npor pantalla
-```
+```mermaid
+graph LR
+    Nodo1 --> Nodo2["Intensidad de luz"]
+    Nodo1 --> Nodo3["Intensidad de luz"]
+    Nodo2 --> Nodo3["Estado periféricos"]
+    Note["Salida de datos por pantalla"] --> Nodo3
