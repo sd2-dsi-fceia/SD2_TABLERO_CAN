@@ -29,8 +29,8 @@ En este ejemplo se tienen tres nodos en donde se evaluarán como se interconecta
 
 ```mermaid
 graph LR
-    Nodo1 --> Nodo2["Intensidad de luz"]
-    Nodo1 --> Nodo3["Intensidad de luz"]
-    Nodo2 --> Nodo3["Estado periféricos"]
+    Nodo1->Nodo2["Intensidad de luz"]
+    Nodo1->Nodo3["Intensidad de luz"]
+    Nodo2->Nodo3["Estado periféricos"]
     Note["Salida de datos por pantalla"] --> Nodo3
 ```
