@@ -141,7 +141,7 @@ void BOARD_InitBootPins(void)
 BOARD_InitPins:
 - options: {callFromInitBoot: 'true', prefix: BOARD_, coreID: core0, enableClock: 'true'}
 - pin_list:
-  - {pin_num: '47', peripheral: GPIOA, signal: 'GPIO, 17', pin_signal: PTA17/SPI0_MISO/SPI0_MOSI/I2S0_MCLK, direction: INPUT, gpio_interrupt: kPORT_InterruptFallingEdge,
+  - {pin_num: '47', peripheral: GPIOA, signal: 'GPIO, 17', pin_signal: PTA17/SPI0_MISO/SPI0_MOSI/I2S0_MCLK, direction: INPUT, gpio_interrupt: kPORT_InterruptLogicZero,
     pull_select: up, pull_enable: enable}
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
  */
@@ -168,8 +168,8 @@ void BOARD_InitPins(void)
     /* PORTA17 (pin 47) is configured as PTA17 */
     PORT_SetPinMux(BOARD_INT_CAN_PORT, BOARD_INT_CAN_PIN, kPORT_MuxAsGpio);
 
-    /* Interrupt configuration on PORTA17 (pin 47): Interrupt on falling edge */
-    PORT_SetPinInterruptConfig(BOARD_INT_CAN_PORT, BOARD_INT_CAN_PIN, kPORT_InterruptFallingEdge);
+    /* Interrupt configuration on PORTA17 (pin 47): Interrupt when logic zero */
+    PORT_SetPinInterruptConfig(BOARD_INT_CAN_PORT, BOARD_INT_CAN_PIN, kPORT_InterruptLogicZero);
 
     PORTA->PCR[17] = ((PORTA->PCR[17] &
                        /* Mask bits to zero which are setting */
@@ -186,10 +186,6 @@ void BOARD_InitPins(void)
 BOARD_InitACCEL:
 - options: {prefix: BOARD_, coreID: core0, enableClock: 'true'}
 - pin_list:
-  - {pin_num: '32', peripheral: I2C0, signal: SDA, pin_signal: PTE25/TPM0_CH1/I2C0_SDA, identifier: ACCEL_SDA, slew_rate: fast, pull_select: down, pull_enable: disable}
-  - {pin_num: '31', peripheral: I2C0, signal: SCL, pin_signal: PTE24/TPM0_CH0/I2C0_SCL, identifier: ACCEL_SCL, slew_rate: fast, pull_select: down, pull_enable: disable}
-  - {pin_num: '81', peripheral: GPIOC, signal: 'GPIO, 5', pin_signal: LCD_P25/PTC5/LLWU_P9/SPI0_SCK/LPTMR0_ALT2/I2S0_RXD0/CMP0_OUT/LCD_P25_Fault, identifier: ACCEL_INT1,
-    direction: INPUT, slew_rate: fast, pull_select: up, pull_enable: enable}
   - {pin_num: '94', peripheral: GPIOD, signal: 'GPIO, 1', pin_signal: LCD_P41/ADC0_SE5b/PTD1/SPI0_SCK/TPM0_CH1/LCD_P41_Fault, identifier: ACCEL_INT2, direction: INPUT,
     slew_rate: fast, pull_select: up, pull_enable: enable}
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
@@ -204,19 +200,8 @@ BOARD_InitACCEL:
  * END ****************************************************************************************************************/
 void BOARD_InitACCEL(void)
 {
-    /* Port C Clock Gate Control: Clock enabled */
-    CLOCK_EnableClock(kCLOCK_PortC);
     /* Port D Clock Gate Control: Clock enabled */
     CLOCK_EnableClock(kCLOCK_PortD);
-    /* Port E Clock Gate Control: Clock enabled */
-    CLOCK_EnableClock(kCLOCK_PortE);
-
-    gpio_pin_config_t ACCEL_INT1_config = {
-        .pinDirection = kGPIO_DigitalInput,
-        .outputLogic = 0U
-    };
-    /* Initialize GPIO functionality on pin PTC5 (pin 81)  */
-    GPIO_PinInit(BOARD_ACCEL_INT1_GPIO, BOARD_ACCEL_INT1_PIN, &ACCEL_INT1_config);
 
     gpio_pin_config_t ACCEL_INT2_config = {
         .pinDirection = kGPIO_DigitalInput,
@@ -224,19 +209,6 @@ void BOARD_InitACCEL(void)
     };
     /* Initialize GPIO functionality on pin PTD1 (pin 94)  */
     GPIO_PinInit(BOARD_ACCEL_INT2_GPIO, BOARD_ACCEL_INT2_PIN, &ACCEL_INT2_config);
-
-    const port_pin_config_t ACCEL_INT1 = {/* Internal pull-up resistor is enabled */
-                                          kPORT_PullUp,
-                                          /* Fast slew rate is configured */
-                                          kPORT_FastSlewRate,
-                                          /* Passive filter is disabled */
-                                          kPORT_PassiveFilterDisable,
-                                          /* Low drive strength is configured */
-                                          kPORT_LowDriveStrength,
-                                          /* Pin is configured as PTC5 */
-                                          kPORT_MuxAsGpio};
-    /* PORTC5 (pin 81) is configured as PTC5 */
-    PORT_SetPinConfig(BOARD_ACCEL_INT1_PORT, BOARD_ACCEL_INT1_PIN, &ACCEL_INT1);
 
     const port_pin_config_t ACCEL_INT2 = {/* Internal pull-up resistor is enabled */
                                           kPORT_PullUp,
@@ -250,32 +222,6 @@ void BOARD_InitACCEL(void)
                                           kPORT_MuxAsGpio};
     /* PORTD1 (pin 94) is configured as PTD1 */
     PORT_SetPinConfig(BOARD_ACCEL_INT2_PORT, BOARD_ACCEL_INT2_PIN, &ACCEL_INT2);
-
-    const port_pin_config_t ACCEL_SCL = {/* Internal pull-up/down resistor is disabled */
-                                         kPORT_PullDisable,
-                                         /* Fast slew rate is configured */
-                                         kPORT_FastSlewRate,
-                                         /* Passive filter is disabled */
-                                         kPORT_PassiveFilterDisable,
-                                         /* Low drive strength is configured */
-                                         kPORT_LowDriveStrength,
-                                         /* Pin is configured as I2C0_SCL */
-                                         kPORT_MuxAlt5};
-    /* PORTE24 (pin 31) is configured as I2C0_SCL */
-    PORT_SetPinConfig(BOARD_ACCEL_SCL_PORT, BOARD_ACCEL_SCL_PIN, &ACCEL_SCL);
-
-    const port_pin_config_t ACCEL_SDA = {/* Internal pull-up/down resistor is disabled */
-                                         kPORT_PullDisable,
-                                         /* Fast slew rate is configured */
-                                         kPORT_FastSlewRate,
-                                         /* Passive filter is disabled */
-                                         kPORT_PassiveFilterDisable,
-                                         /* Low drive strength is configured */
-                                         kPORT_LowDriveStrength,
-                                         /* Pin is configured as I2C0_SDA */
-                                         kPORT_MuxAlt5};
-    /* PORTE25 (pin 32) is configured as I2C0_SDA */
-    PORT_SetPinConfig(BOARD_ACCEL_SDA_PORT, BOARD_ACCEL_SDA_PIN, &ACCEL_SDA);
 }
 
 /* clang-format off */
@@ -481,11 +427,7 @@ void BOARD_InitLEDs(void)
  * TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
 BOARD_InitTouch:
 - options: {prefix: BOARD_, coreID: core0, enableClock: 'true'}
-- pin_list:
-  - {pin_num: '62', peripheral: TSI0, signal: 'CH, 9', pin_signal: LCD_P12/TSI0_CH9/PTB16/SPI1_MOSI/UART0_RX/TPM_CLKIN0/SPI1_MISO/LCD_P12_Fault, slew_rate: fast,
-    pull_select: down, pull_enable: disable}
-  - {pin_num: '63', peripheral: TSI0, signal: 'CH, 10', pin_signal: LCD_P13/TSI0_CH10/PTB17/SPI1_MISO/UART0_TX/TPM_CLKIN1/SPI1_MOSI/LCD_P13_Fault, slew_rate: fast,
-    pull_select: down, pull_enable: disable}
+- pin_list: []
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
  */
 /* clang-format on */
@@ -498,34 +440,6 @@ BOARD_InitTouch:
  * END ****************************************************************************************************************/
 void BOARD_InitTouch(void)
 {
-    /* Port B Clock Gate Control: Clock enabled */
-    CLOCK_EnableClock(kCLOCK_PortB);
-
-    const port_pin_config_t TSI_ELECTRODE_1 = {/* Internal pull-up/down resistor is disabled */
-                                               kPORT_PullDisable,
-                                               /* Fast slew rate is configured */
-                                               kPORT_FastSlewRate,
-                                               /* Passive filter is disabled */
-                                               kPORT_PassiveFilterDisable,
-                                               /* Low drive strength is configured */
-                                               kPORT_LowDriveStrength,
-                                               /* Pin is configured as TSI0_CH9 */
-                                               kPORT_PinDisabledOrAnalog};
-    /* PORTB16 (pin 62) is configured as TSI0_CH9 */
-    PORT_SetPinConfig(BOARD_TSI_ELECTRODE_1_PORT, BOARD_TSI_ELECTRODE_1_PIN, &TSI_ELECTRODE_1);
-
-    const port_pin_config_t TSI_ELECTRODE_2 = {/* Internal pull-up/down resistor is disabled */
-                                               kPORT_PullDisable,
-                                               /* Fast slew rate is configured */
-                                               kPORT_FastSlewRate,
-                                               /* Passive filter is disabled */
-                                               kPORT_PassiveFilterDisable,
-                                               /* Low drive strength is configured */
-                                               kPORT_LowDriveStrength,
-                                               /* Pin is configured as TSI0_CH10 */
-                                               kPORT_PinDisabledOrAnalog};
-    /* PORTB17 (pin 63) is configured as TSI0_CH10 */
-    PORT_SetPinConfig(BOARD_TSI_ELECTRODE_2_PORT, BOARD_TSI_ELECTRODE_2_PIN, &TSI_ELECTRODE_2);
 }
 
 /* clang-format off */
@@ -557,19 +471,7 @@ void BOARD_InitUSB(void)
  * TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
 BOARD_InitSegment_LCD:
 - options: {prefix: BOARD_, coreID: core0, enableClock: 'true'}
-- pin_list:
-  - {pin_num: '61', peripheral: LCD, signal: 'P, 11', pin_signal: LCD_P11/PTB11/SPI1_SCK/LCD_P11_Fault, slew_rate: slow, pull_select: down, pull_enable: disable}
-  - {pin_num: '60', peripheral: LCD, signal: 'P, 10', pin_signal: LCD_P10/PTB10/SPI1_PCS0/LCD_P10_Fault, slew_rate: slow, pull_select: down, pull_enable: disable}
-  - {pin_num: '92', peripheral: LCD, signal: 'P, 38', pin_signal: LCD_P38/PTC18/LCD_P38_Fault, slew_rate: slow, pull_select: down, pull_enable: disable}
-  - {pin_num: '6', peripheral: LCD, signal: 'P, 53', pin_signal: LCD_P53/PTE5/LCD_P53_Fault, slew_rate: slow, pull_select: down, pull_enable: disable}
-  - {pin_num: '58', peripheral: LCD, signal: 'P, 8', pin_signal: LCD_P8/PTB8/SPI1_PCS0/EXTRG_IN/LCD_P8_Fault, slew_rate: slow, pull_select: down, pull_enable: disable}
-  - {pin_num: '57', peripheral: LCD, signal: 'P, 7', pin_signal: LCD_P7/PTB7/LCD_P7_Fault, slew_rate: slow, pull_select: down, pull_enable: disable}
-  - {pin_num: '67', peripheral: LCD, signal: 'P, 17', pin_signal: LCD_P17/PTB21/LCD_P17_Fault, slew_rate: slow, pull_select: down, pull_enable: disable}
-  - {pin_num: '91', peripheral: LCD, signal: 'P, 37', pin_signal: LCD_P37/PTC17/LCD_P37_Fault, slew_rate: slow, pull_select: down, pull_enable: disable}
-  - {pin_num: '68', peripheral: LCD, signal: 'P, 18', pin_signal: LCD_P18/PTB22/LCD_P18_Fault, slew_rate: slow, pull_select: down, pull_enable: disable}
-  - {pin_num: '69', peripheral: LCD, signal: 'P, 19', pin_signal: LCD_P19/PTB23/LCD_P19_Fault, slew_rate: slow, pull_select: down, pull_enable: disable}
-  - {pin_num: '5', peripheral: LCD, signal: 'P, 52', pin_signal: LCD_P52/PTE4/SPI1_PCS0/LCD_P52_Fault, slew_rate: slow, pull_select: down, pull_enable: disable}
-  - {pin_num: '93', peripheral: LCD, signal: 'P, 40', pin_signal: LCD_P40/PTD0/SPI0_PCS0/TPM0_CH0/LCD_P40_Fault, slew_rate: slow, pull_select: down, pull_enable: disable}
+- pin_list: []
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
  */
 /* clang-format on */
@@ -582,170 +484,6 @@ BOARD_InitSegment_LCD:
  * END ****************************************************************************************************************/
 void BOARD_InitSegment_LCD(void)
 {
-    /* Port B Clock Gate Control: Clock enabled */
-    CLOCK_EnableClock(kCLOCK_PortB);
-    /* Port C Clock Gate Control: Clock enabled */
-    CLOCK_EnableClock(kCLOCK_PortC);
-    /* Port D Clock Gate Control: Clock enabled */
-    CLOCK_EnableClock(kCLOCK_PortD);
-    /* Port E Clock Gate Control: Clock enabled */
-    CLOCK_EnableClock(kCLOCK_PortE);
-
-    const port_pin_config_t LCD_11 = {/* Internal pull-up/down resistor is disabled */
-                                      kPORT_PullDisable,
-                                      /* Slow slew rate is configured */
-                                      kPORT_SlowSlewRate,
-                                      /* Passive filter is disabled */
-                                      kPORT_PassiveFilterDisable,
-                                      /* Low drive strength is configured */
-                                      kPORT_LowDriveStrength,
-                                      /* Pin is configured as LCD_P10 */
-                                      kPORT_PinDisabledOrAnalog};
-    /* PORTB10 (pin 60) is configured as LCD_P10 */
-    PORT_SetPinConfig(BOARD_LCD_11_PORT, BOARD_LCD_11_PIN, &LCD_11);
-
-    const port_pin_config_t LCD_12 = {/* Internal pull-up/down resistor is disabled */
-                                      kPORT_PullDisable,
-                                      /* Slow slew rate is configured */
-                                      kPORT_SlowSlewRate,
-                                      /* Passive filter is disabled */
-                                      kPORT_PassiveFilterDisable,
-                                      /* Low drive strength is configured */
-                                      kPORT_LowDriveStrength,
-                                      /* Pin is configured as LCD_P11 */
-                                      kPORT_PinDisabledOrAnalog};
-    /* PORTB11 (pin 61) is configured as LCD_P11 */
-    PORT_SetPinConfig(BOARD_LCD_12_PORT, BOARD_LCD_12_PIN, &LCD_12);
-
-    const port_pin_config_t LCD_06 = {/* Internal pull-up/down resistor is disabled */
-                                      kPORT_PullDisable,
-                                      /* Slow slew rate is configured */
-                                      kPORT_SlowSlewRate,
-                                      /* Passive filter is disabled */
-                                      kPORT_PassiveFilterDisable,
-                                      /* Low drive strength is configured */
-                                      kPORT_LowDriveStrength,
-                                      /* Pin is configured as LCD_P17 */
-                                      kPORT_PinDisabledOrAnalog};
-    /* PORTB21 (pin 67) is configured as LCD_P17 */
-    PORT_SetPinConfig(BOARD_LCD_06_PORT, BOARD_LCD_06_PIN, &LCD_06);
-
-    const port_pin_config_t LCD_04 = {/* Internal pull-up/down resistor is disabled */
-                                      kPORT_PullDisable,
-                                      /* Slow slew rate is configured */
-                                      kPORT_SlowSlewRate,
-                                      /* Passive filter is disabled */
-                                      kPORT_PassiveFilterDisable,
-                                      /* Low drive strength is configured */
-                                      kPORT_LowDriveStrength,
-                                      /* Pin is configured as LCD_P18 */
-                                      kPORT_PinDisabledOrAnalog};
-    /* PORTB22 (pin 68) is configured as LCD_P18 */
-    PORT_SetPinConfig(BOARD_LCD_04_PORT, BOARD_LCD_04_PIN, &LCD_04);
-
-    const port_pin_config_t LCD_03 = {/* Internal pull-up/down resistor is disabled */
-                                      kPORT_PullDisable,
-                                      /* Slow slew rate is configured */
-                                      kPORT_SlowSlewRate,
-                                      /* Passive filter is disabled */
-                                      kPORT_PassiveFilterDisable,
-                                      /* Low drive strength is configured */
-                                      kPORT_LowDriveStrength,
-                                      /* Pin is configured as LCD_P19 */
-                                      kPORT_PinDisabledOrAnalog};
-    /* PORTB23 (pin 69) is configured as LCD_P19 */
-    PORT_SetPinConfig(BOARD_LCD_03_PORT, BOARD_LCD_03_PIN, &LCD_03);
-
-    const port_pin_config_t LCD_07 = {/* Internal pull-up/down resistor is disabled */
-                                      kPORT_PullDisable,
-                                      /* Slow slew rate is configured */
-                                      kPORT_SlowSlewRate,
-                                      /* Passive filter is disabled */
-                                      kPORT_PassiveFilterDisable,
-                                      /* Low drive strength is configured */
-                                      kPORT_LowDriveStrength,
-                                      /* Pin is configured as LCD_P7 */
-                                      kPORT_PinDisabledOrAnalog};
-    /* PORTB7 (pin 57) is configured as LCD_P7 */
-    PORT_SetPinConfig(BOARD_LCD_07_PORT, BOARD_LCD_07_PIN, &LCD_07);
-
-    const port_pin_config_t LCD_08 = {/* Internal pull-up/down resistor is disabled */
-                                      kPORT_PullDisable,
-                                      /* Slow slew rate is configured */
-                                      kPORT_SlowSlewRate,
-                                      /* Passive filter is disabled */
-                                      kPORT_PassiveFilterDisable,
-                                      /* Low drive strength is configured */
-                                      kPORT_LowDriveStrength,
-                                      /* Pin is configured as LCD_P8 */
-                                      kPORT_PinDisabledOrAnalog};
-    /* PORTB8 (pin 58) is configured as LCD_P8 */
-    PORT_SetPinConfig(BOARD_LCD_08_PORT, BOARD_LCD_08_PIN, &LCD_08);
-
-    const port_pin_config_t LCD_05 = {/* Internal pull-up/down resistor is disabled */
-                                      kPORT_PullDisable,
-                                      /* Slow slew rate is configured */
-                                      kPORT_SlowSlewRate,
-                                      /* Passive filter is disabled */
-                                      kPORT_PassiveFilterDisable,
-                                      /* Low drive strength is configured */
-                                      kPORT_LowDriveStrength,
-                                      /* Pin is configured as LCD_P37 */
-                                      kPORT_PinDisabledOrAnalog};
-    /* PORTC17 (pin 91) is configured as LCD_P37 */
-    PORT_SetPinConfig(BOARD_LCD_05_PORT, BOARD_LCD_05_PIN, &LCD_05);
-
-    const port_pin_config_t LCD_10 = {/* Internal pull-up/down resistor is disabled */
-                                      kPORT_PullDisable,
-                                      /* Slow slew rate is configured */
-                                      kPORT_SlowSlewRate,
-                                      /* Passive filter is disabled */
-                                      kPORT_PassiveFilterDisable,
-                                      /* Low drive strength is configured */
-                                      kPORT_LowDriveStrength,
-                                      /* Pin is configured as LCD_P38 */
-                                      kPORT_PinDisabledOrAnalog};
-    /* PORTC18 (pin 92) is configured as LCD_P38 */
-    PORT_SetPinConfig(BOARD_LCD_10_PORT, BOARD_LCD_10_PIN, &LCD_10);
-
-    const port_pin_config_t LCD_01 = {/* Internal pull-up/down resistor is disabled */
-                                      kPORT_PullDisable,
-                                      /* Slow slew rate is configured */
-                                      kPORT_SlowSlewRate,
-                                      /* Passive filter is disabled */
-                                      kPORT_PassiveFilterDisable,
-                                      /* Low drive strength is configured */
-                                      kPORT_LowDriveStrength,
-                                      /* Pin is configured as LCD_P40 */
-                                      kPORT_PinDisabledOrAnalog};
-    /* PORTD0 (pin 93) is configured as LCD_P40 */
-    PORT_SetPinConfig(BOARD_LCD_01_PORT, BOARD_LCD_01_PIN, &LCD_01);
-
-    const port_pin_config_t LCD_02 = {/* Internal pull-up/down resistor is disabled */
-                                      kPORT_PullDisable,
-                                      /* Slow slew rate is configured */
-                                      kPORT_SlowSlewRate,
-                                      /* Passive filter is disabled */
-                                      kPORT_PassiveFilterDisable,
-                                      /* Low drive strength is configured */
-                                      kPORT_LowDriveStrength,
-                                      /* Pin is configured as LCD_P52 */
-                                      kPORT_PinDisabledOrAnalog};
-    /* PORTE4 (pin 5) is configured as LCD_P52 */
-    PORT_SetPinConfig(BOARD_LCD_02_PORT, BOARD_LCD_02_PIN, &LCD_02);
-
-    const port_pin_config_t LCD_09 = {/* Internal pull-up/down resistor is disabled */
-                                      kPORT_PullDisable,
-                                      /* Slow slew rate is configured */
-                                      kPORT_SlowSlewRate,
-                                      /* Passive filter is disabled */
-                                      kPORT_PassiveFilterDisable,
-                                      /* Low drive strength is configured */
-                                      kPORT_LowDriveStrength,
-                                      /* Pin is configured as LCD_P53 */
-                                      kPORT_PinDisabledOrAnalog};
-    /* PORTE5 (pin 6) is configured as LCD_P53 */
-    PORT_SetPinConfig(BOARD_LCD_09_PORT, BOARD_LCD_09_PIN, &LCD_09);
 }
 
 /* clang-format off */
@@ -784,8 +522,6 @@ void BOARD_InitOSC(void)
 BOARD_InitMAG:
 - options: {prefix: BOARD_, coreID: core0, enableClock: 'true'}
 - pin_list:
-  - {pin_num: '32', peripheral: I2C0, signal: SDA, pin_signal: PTE25/TPM0_CH1/I2C0_SDA, identifier: MAG_SDA, slew_rate: fast, pull_select: down, pull_enable: disable}
-  - {pin_num: '31', peripheral: I2C0, signal: SCL, pin_signal: PTE24/TPM0_CH0/I2C0_SCL, identifier: MAG_SCL, slew_rate: fast, pull_select: down, pull_enable: disable}
   - {pin_num: '94', peripheral: GPIOD, signal: 'GPIO, 1', pin_signal: LCD_P41/ADC0_SE5b/PTD1/SPI0_SCK/TPM0_CH1/LCD_P41_Fault, identifier: MAG_INT2, direction: INPUT,
     slew_rate: fast, pull_select: up, pull_enable: enable}
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
@@ -802,8 +538,6 @@ void BOARD_InitMAG(void)
 {
     /* Port D Clock Gate Control: Clock enabled */
     CLOCK_EnableClock(kCLOCK_PortD);
-    /* Port E Clock Gate Control: Clock enabled */
-    CLOCK_EnableClock(kCLOCK_PortE);
 
     gpio_pin_config_t MAG_INT2_config = {
         .pinDirection = kGPIO_DigitalInput,
@@ -824,32 +558,6 @@ void BOARD_InitMAG(void)
                                         kPORT_MuxAsGpio};
     /* PORTD1 (pin 94) is configured as PTD1 */
     PORT_SetPinConfig(BOARD_MAG_INT2_PORT, BOARD_MAG_INT2_PIN, &MAG_INT2);
-
-    const port_pin_config_t MAG_SCL = {/* Internal pull-up/down resistor is disabled */
-                                       kPORT_PullDisable,
-                                       /* Fast slew rate is configured */
-                                       kPORT_FastSlewRate,
-                                       /* Passive filter is disabled */
-                                       kPORT_PassiveFilterDisable,
-                                       /* Low drive strength is configured */
-                                       kPORT_LowDriveStrength,
-                                       /* Pin is configured as I2C0_SCL */
-                                       kPORT_MuxAlt5};
-    /* PORTE24 (pin 31) is configured as I2C0_SCL */
-    PORT_SetPinConfig(BOARD_MAG_SCL_PORT, BOARD_MAG_SCL_PIN, &MAG_SCL);
-
-    const port_pin_config_t MAG_SDA = {/* Internal pull-up/down resistor is disabled */
-                                       kPORT_PullDisable,
-                                       /* Fast slew rate is configured */
-                                       kPORT_FastSlewRate,
-                                       /* Passive filter is disabled */
-                                       kPORT_PassiveFilterDisable,
-                                       /* Low drive strength is configured */
-                                       kPORT_LowDriveStrength,
-                                       /* Pin is configured as I2C0_SDA */
-                                       kPORT_MuxAlt5};
-    /* PORTE25 (pin 32) is configured as I2C0_SDA */
-    PORT_SetPinConfig(BOARD_MAG_SDA_PORT, BOARD_MAG_SDA_PIN, &MAG_SDA);
 }
 /***********************************************************************************************************************
  * EOF

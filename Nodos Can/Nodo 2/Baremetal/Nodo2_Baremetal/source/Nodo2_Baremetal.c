@@ -42,7 +42,7 @@
 #include "MKL46Z4.h"
 #include "fsl_debug_console.h"
 /* TODO: insert other include files here. */
-#include "CanApi.h"
+#include "mcp2515.h"
 #include "can.h"
 /* TODO: insert other definitions and declarations here. */
 #define CAN_NODO_2_ID	20
@@ -59,10 +59,8 @@
 static uint16_t Delay1s = TIEMPO_DE_MUESTRA_ESTADOS;
 static bool Rx_msgFlag = false;
 
-typedef union
-{
-	struct
-	{
+typedef union {
+	struct {
 		unsigned LED_ROJO :1;
 		unsigned PULSADOR1 :1;
 		unsigned PULSADOR2 :1;
@@ -78,13 +76,26 @@ struct can_frame canMsg1;
 /**
  * @brief Mensaje de lectura.
  */
-struct can_frame canMsgRead =
-{ .can_dlc = 0, .can_id = 0, };
+struct can_frame canMsgRead = { .can_dlc = 0, .can_id = 0, };
 
+// DECLARACION DE FUNCIONES.
+//..........................................................................................
+/**
+ * @brief Inicializacion de todos los perifericos.
+ */
+static void init(void);
 /**
  * @brief Escritura del modulo can.
  */
 static void canmsg_writeToBus(void);
+/**
+ * @brief Lectura de los mensajes can.
+ */
+static void canmsg_readFromBus(void);
+/**
+ * @brief Procesa la interrupcion del MCP2515.
+ */
+static void canmsg_interrupt(void);
 /**
  * @brief Lectura del modulo can.
  */
@@ -93,27 +104,46 @@ static void serialPort(void);
  * @brief Procesa la informacion leida.
  */
 static void canmsg_sensorLuz(void);
-/**
- * @brief Funcion de callback para nodo 1 (id = 10).
- * @param[in] SubcriberId Id del nodo origen.
- * @param[in] nodeId Id del nodo que se quiere recibir la informacion.
- */
-static void Callback_Nodo1(canid_t SubcriberId, canid_t nodeId);
+//..........................................................................................
 
-/**
- * @brief Funcion de callback si termina el timeout.
- */
-extern void callbackTimeout(void);
+// CUERPO DE FUNCIONES.
+//..........................................................................................
+int main(void) {
+	/* Inicializacion */
+	init();
 
-/*
- * @brief   Application entry point.
- */
-int main(void)
-{
+	/* Inicializacion en el puerto serie. */
+	PRINTF("\nNombre: Nodo 2\n\r");
+	PRINTF("Descripcion: Este nodo se encarga de producir un "
+			"valor de los estados de sus perifericos y ademas"
+			"obtener datos del ldr proveniente de otro modulo"
+			"can. Ademas cuenta con un Id=20.\n\r");
+
+	/* Velocidad del SysTick en 1ms */
+	SysTick_Config(CLOCK_GetCoreSysClkFreq() / 1000U);
+
+	LED_ON;
+
+	while (1) {
+//		if (Rx_msgFlag) {
+//			canmsg_readFromBus();
+//		}
+
+		if (Delay1s == 0)
+			canmsg_writeToBus();
+	}
+
+	return 0;
+}
+//..........................................................................................
+static void init(void) {
 	/* Init board hardware. */
 	BOARD_InitBootPins();
+	CLOCK_EnableClock(kCLOCK_PortB);
+	CLOCK_EnableClock(kCLOCK_PortC);
+	CLOCK_EnableClock(kCLOCK_PortD);
 	BOARD_InitBootClocks();
-	BOARD_InitBootPeripherals();
+//	BOARD_InitBootPeripherals();
 #ifndef BOARD_INIT_DEBUG_CONSOLE_PERIPHERAL
 	/* Init FSL debug console. */
 	BOARD_InitDebugConsole();
@@ -123,105 +153,102 @@ int main(void)
 	BOARD_InitLEDs();
 	BOARD_InitButtons();
 
-	PRINTF("\nNombre: Nodo 2\n\r");
-	PRINTF("Descripcion: Este nodo se encarga de producir un "
-				"valor de los estados de sus perifericos y ademas"
-				"obtener datos del ldr proveniente de otro modulo"
-				"can. Ademas cuenta con un Id=20.\n\r");
-	PRINTF("Materia: Sistemas digitales 2\n\r");
+	/* Inicializa el modulo mcp2515. */
+	ERROR_t status = mcp2515_reset();
+	assert(status == ERROR_OK);	// Detiene el programa si hubo algún error al incializar
 
-	SysTick_Config(CLOCK_GetCoreSysClkFreq() / 1000U);
+	status = mcp2515_setBitrate(CAN_125KBPS, MCP_8MHZ);
+	assert(status == ERROR_OK);
 
-	/* Configura de can */
-	CAN_init();
+	/* Configurar las mascaras y filtros para una ID=10 */
+	/*
+	 * Nota: Dentro de las siguientes dos funciones de configuracion
+	 * de filtro y mascara se configura en el mcp el modo de configuracion
+	 * por ende es necesario volver a ponerlo en modo de operacion normal
+	 * para que pueda enviar y recibir datos. En conclusión conviene
+	 * primero configurar el filtro y mascara y luego ponerlo en modo
+	 * de operacion normal.
+	 * */
+#define MASK0_ID10		0x00F
+#define FILTER0_ID10	0x00A
+
+	mcp2515_setFilterMask(MASK0, false, MASK0_ID10);
+	mcp2515_setFilterMask(MASK1, false, MASK0_ID10);
+
+	mcp2515_setFilter(RXF0, false, FILTER0_ID10);
+	mcp2515_setFilter(RXF1, false, FILTER0_ID10);
+
+	status = mcp2515_setNormalMode();
+	assert(status == ERROR_OK);
+
+	mcp2515_clearInterrupts();
 
 	canMsg1.can_id = CAN_NODO_2_ID;
 	canMsg1.can_dlc = 1;
 
-	LED_ON;
+	/*
+	 * Lo ponemos al final debido a que habillita la interrupcion
+	 * del pin gpio.
+	 */
+	BOARD_InitBootPeripherals();
 
-	Error_Can_t error = CAN_Subscribe(54, canMsg1.can_id, Callback_Nodo1);
-	assert(error != ERROR_CAN_MEMORY);
-
-	while (1)
-	{
-		if (Rx_msgFlag) serialPort(), Rx_msgFlag = false;
-		if (Delay1s == 0) canmsg_writeToBus();
-	}
-
-	return 0;
+	return;
 }
+//..........................................................................................
+static void canmsg_writeToBus(void) {
+	ERROR_t estado;
+	EstPerifericos_t perifericos = { .data = 0 };
 
-static void canmsg_writeToBus(void)
-{
-	Error_Can_t estado;
-
-	EstPerifericos_t perifericos =
-	{ .data = 0 };
-
+	// Lectura de los estados de los perifericos
 	perifericos.LED_ROJO = ~GPIO_ReadPinInput(BOARD_LED_RED_GPIO,
 	BOARD_LED_RED_PIN);
 	perifericos.PULSADOR1 = ~GPIO_ReadPinInput(BOARD_SW1_GPIO, BOARD_SW1_PIN);
 	perifericos.PULSADOR2 = ~GPIO_ReadPinInput(BOARD_SW3_GPIO, BOARD_SW3_PIN);
 
+	// Armamos el mensaje
 	canMsg1.data[0] = perifericos.data;
 	canMsg1.can_dlc = 1;
 
-	estado = CAN_sendMsg(&canMsg1);
+	// Envio de mensaje al bus can
+	estado = mcp2515_sendMessage(&canMsg1);
 
-	if (estado == ERROR_CAN_OK)
-	{
+	// Verificacion
+	if (estado == ERROR_OK) {
 		PRINTF("\n\rMensaje enviado\n\r");
 		PRINTF("ID\tDLC\tDATA\n\r");
 		PRINTF("%d\t%d\t", canMsg1.can_id, canMsg1.can_dlc);
 
-		for (uint8_t i = 0; i < 8; i++)
-		{
+		for (uint8_t i = 0; i < 8; i++) {
 			PRINTF("%d ", canMsg1.data[i]);
 		}
 		PRINTF("\n\r");
-	}
-	else
-	{
-		if (estado == ERROR_CAN_QUEUETX_FULL)
-		PRINTF("\n\rError: buffers de transmision llenos.\n\r");
+	} else {
+		PRINTF("Error al enviar el mensaje.\n\r");
 	}
 
 	return;
 }
-
-static void Callback_Nodo1(canid_t SubcriberId, canid_t nodeId)
-{
-	/*
-	 * RECOMENDACIONES DE USO DE CALLBACKS: Importante mantener
-	 * las funciones de callback lo mas cortas posible y evitar
-	 * el uso de rutinas que demoren tiempo como PRINTF.
-	 */
-	Error_Can_t error = CAN_readMsg(&canMsgRead, nodeId, SubcriberId);
-	if (error != ERROR_CAN_OK)
-	{
-		if (error == ERROR_CAN_NOT_FOUND)
-		PRINTF("\n\rError: no se encuentra el id del nodo destino.\n\r");
-		if (error == ERROR_CAN_QUEUERX_EMPTY)
-		PRINTF("\n\rError: no hay datos en el buffer.\n\r");
-	}
+//..........................................................................................
+static void canmsg_readFromBus(void) {
+	// Recibe el mensaje
+	ERROR_t status = mcp2515_readMessage(&canMsgRead);
+	if (status != ERROR_OK)
+		PRINTF("Error al recibir el mensaje.\n\r");
 
 	canmsg_sensorLuz();
+	serialPort();
 
-	Rx_msgFlag = true;	// Solo utilizado para printear el mensaje en el loop infinito y no
-						// dentro de la callback.
+	Rx_msgFlag = false;
 
 	return;
 }
-
-static void serialPort(void)
-{
+//..........................................................................................
+static void serialPort(void) {
 	PRINTF("\n\rMensaje de recepcion\n\r");
 	PRINTF("ID\tDLC\tDATA\n\r");
 	PRINTF("%d\t%d\t", canMsgRead.can_id, canMsgRead.can_dlc);
 
-	for (uint8_t i = 0; i < 8; i++)
-	{
+	for (uint8_t i = 0; i < 8; i++) {
 		PRINTF("%d ", canMsgRead.data[i]);
 	}
 
@@ -229,52 +256,90 @@ static void serialPort(void)
 
 	return;
 }
-
-static void canmsg_sensorLuz(void)
-{
+//..........................................................................................
+static void canmsg_sensorLuz(void) {
 	uint16_t adc_read;
 
-	if (canMsgRead.can_id == 10)
-	{
+	if (canMsgRead.can_id == 10) {
 		adc_read = canMsgRead.data[1];
 		adc_read = (adc_read << 8) | canMsgRead.data[0];
 
 		if (adc_read > LUZ_MAX)
-		LED_ON;
+			LED_ON;
 		if (adc_read < LUZ_MIN)
-		LED_OFF;
+			LED_OFF;
 	}
 
 	return;
 }
+//..........................................................................................
+void SysTick_Handler(void) {
+	if (Delay1s != 0)
+		Delay1s--;
+	else
+		Delay1s = TIEMPO_DE_MUESTRA_ESTADOS;
 
-void SysTick_Handler(void)
-{
-	if (Delay1s != 0) Delay1s--;
-	else Delay1s = TIEMPO_DE_MUESTRA_ESTADOS;
+	return;
+}
+//..........................................................................................
+static void canmsg_interrupt(void) {
+	// Leemos las interrupciones generadas
+	ERROR_t error = mcp2515_getInterrupts();
 
-	/*
-	 * Si el spi es lento esto puede demorar por lo que se recomienda
-	 * quitar CAN_eventTx de la rutina del systick. Se esta utilizando
-	 * solo para prueba.
-	 *
-	 * En entorno de depuracion ambas funciones generan una señal de error
-	 * si no hay eventos disponibles por lo que pueden utilizarse para verificar.
-	 * En este caso no vamos a utilizarlas.
-	 */
-	if (CAN_getTimer())
-	{
-		CAN_eventTx();
-		CAN_eventRx();
+	if (error != ERROR_OK) {
+		PRINTF("Fallo al leer la interrupcion\n\r");
+		return;
+	}
+
+	// Detectamos las interrupciones relevantes
+	if (mcp2515_getIntERRIF()) {
+		PRINTF("Error interrupt flag\n\r");
+		mcp2515_clearERRIF();
+		return;
+	}
+
+	if (mcp2515_getIntMERRF()) {
+		PRINTF("Message error interrupt flag\n\r");
+		mcp2515_clearMERR();
+		return;
+	}
+
+	if (mcp2515_getIntRX0IF() || mcp2515_getIntRX1IF()) {
+		canmsg_readFromBus();
+		Rx_msgFlag = true;	// Leemos en el while
+		// La bandera de interrupcion debe limpiarse luego de leer
 	}
 
 	return;
 }
+//..........................................................................................
+/* PORTA_IRQn interrupt handler */
+void GPIOA_IRQHANDLER(void) {
+  /* Get pin flags */
+  uint32_t pin_flags = GPIO_PortGetInterruptFlags(GPIOA);
 
-extern void callbackTimeout(void)
-{
-	// Acciones si sucede esto
-	CAN_init();	// Reinicio el modulo si fuese necesario
+  /* Place your interrupt code here */
+  canmsg_interrupt();
 
-	return;
+  /* Clear pin flags */
+  GPIO_PortClearInterruptFlags(GPIOA, pin_flags);
+
+  /* Add for ARM errata 838869, affects Cortex-M4, Cortex-M4F
+     Store immediate overlapping exception return operation might vector to incorrect interrupt. */
+  #if defined __CORTEX_M && (__CORTEX_M == 4U)
+    __DSB();
+  #endif
 }
+
+//..........................................................................................
+//void PORTA_IRQHandler(void) {
+//	// Obtiene el estado de las banderas de interrupción del puerto A
+//	uint32_t interruptFlags = GPIO_GetPinsInterruptFlags(GPIOA);
+//
+//	if (interruptFlags & BOARD_INT_CAN_PIN_MASK) {
+//		canmsg_interrupt();
+//		GPIO_ClearPinsInterruptFlags(GPIOA, BOARD_INT_CAN_PIN_MASK);
+//	}
+//
+//	return;
+//}

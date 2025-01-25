@@ -87,7 +87,8 @@ instance:
 - peripheral: 'NVIC'
 - config_sets:
   - nvic:
-    - interrupt_table: []
+    - interrupt_table:
+      - 0: []
     - interrupts: []
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
 /* clang-format on */
@@ -95,6 +96,37 @@ instance:
 /* Empty initialization function (commented out)
 static void NVIC_init(void) {
 } */
+
+/***********************************************************************************************************************
+ * GPIOA initialization code
+ **********************************************************************************************************************/
+/* clang-format off */
+/* TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
+instance:
+- name: 'GPIOA'
+- type: 'gpio'
+- mode: 'GPIO'
+- custom_name_enabled: 'false'
+- type_id: 'gpio_f970a92e447fa4793838db25a2947ed7'
+- functional_group: 'BOARD_InitPeripherals'
+- peripheral: 'GPIOA'
+- config_sets:
+  - fsl_gpio:
+    - enable_irq: 'true'
+    - port_interrupt:
+      - IRQn: 'PORTA_IRQn'
+      - enable_interrrupt: 'enabled'
+      - enable_priority: 'false'
+      - priority: '0'
+      - enable_custom_name: 'false'
+ * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
+/* clang-format on */
+
+static void GPIOA_init(void) {
+  /* Make sure, the clock gate for port A is enabled (e. g. in pin_mux.c) */
+  /* Enable interrupt PORTA_IRQn request in the NVIC. */
+  EnableIRQ(GPIOA_IRQN);
+}
 
 /***********************************************************************************************************************
  * BOARD_InitButtonsPeripheral functional group
@@ -143,7 +175,8 @@ instance:
 - peripheral: 'NVIC'
 - config_sets:
   - nvic:
-    - interrupt_table: []
+    - interrupt_table:
+      - 0: []
     - interrupts: []
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
 /* clang-format on */
@@ -228,7 +261,8 @@ instance:
 - peripheral: 'NVIC'
 - config_sets:
   - nvic:
-    - interrupt_table: []
+    - interrupt_table:
+      - 0: []
     - interrupts: []
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
 /* clang-format on */
@@ -351,7 +385,8 @@ instance:
 - peripheral: 'NVIC'
 - config_sets:
   - nvic:
-    - interrupt_table: []
+    - interrupt_table:
+      - 0: []
     - interrupts: []
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
 /* clang-format on */
@@ -445,7 +480,8 @@ instance:
 - peripheral: 'NVIC'
 - config_sets:
   - nvic:
-    - interrupt_table: []
+    - interrupt_table:
+      - 0: []
     - interrupts: []
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
 /* clang-format on */
@@ -483,9 +519,17 @@ instance:
       - enableRx: 'false'
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
 /* clang-format on */
+const lpsci_config_t BOARD_LPSCI_1_config = {
+  .baudRate_Bps = 115200UL,
+  .parityMode = kLPSCI_ParityDisabled,
+  .stopBitCount = kLPSCI_OneStopBit,
+  .idleLineType = kLPSCI_IdleLineStartBit,
+  .enableTx = false,
+  .enableRx = false
+};
 
 static void BOARD_LPSCI_1_init(void) {
-  /* Configuration of the component LPSCI_1 of functional group BOARD_InitDEBUG_UARTPeripheral is not valid. */
+  LPSCI_Init(BOARD_LPSCI_1_PERIPHERAL, &BOARD_LPSCI_1_config, BOARD_LPSCI_1_CLOCK_SOURCE);
 }
 
 /***********************************************************************************************************************
@@ -503,7 +547,8 @@ instance:
 - peripheral: 'NVIC'
 - config_sets:
   - nvic:
-    - interrupt_table: []
+    - interrupt_table:
+      - 0: []
     - interrupts: []
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
 /* clang-format on */
@@ -518,6 +563,7 @@ static void BOARD_NVIC_4_init(void) {
 void BOARD_InitPeripherals(void)
 {
   /* Initialize components */
+  GPIOA_init();
 }
 
 void BOARD_InitButtonsPeripheral(void)

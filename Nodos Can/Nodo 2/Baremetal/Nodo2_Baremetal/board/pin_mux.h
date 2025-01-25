@@ -45,38 +45,6 @@ void BOARD_InitBootPins(void);
  */
 void BOARD_InitPins(void);
 
-/*! @name PORTE25 (number 32), U2[6]/U10[6]/I2C0_SDA
-  @{ */
-
-/* Symbols to be used with PORT driver */
-#define BOARD_ACCEL_SDA_PORT PORTE                /*!<@brief PORT peripheral base pointer */
-#define BOARD_ACCEL_SDA_PIN 25U                   /*!<@brief PORT pin number */
-#define BOARD_ACCEL_SDA_PIN_MASK (1U << 25U)      /*!<@brief PORT pin mask */
-                                                  /* @} */
-
-/*! @name PORTE24 (number 31), U2[7]/U10[4]/I2C0_SDA
-  @{ */
-
-/* Symbols to be used with PORT driver */
-#define BOARD_ACCEL_SCL_PORT PORTE                /*!<@brief PORT peripheral base pointer */
-#define BOARD_ACCEL_SCL_PIN 24U                   /*!<@brief PORT pin number */
-#define BOARD_ACCEL_SCL_PIN_MASK (1U << 24U)      /*!<@brief PORT pin mask */
-                                                  /* @} */
-
-/*! @name PORTC5 (number 81), U10[11]/INT1_ACCEL
-  @{ */
-
-/* Symbols to be used with GPIO driver */
-#define BOARD_ACCEL_INT1_FGPIO FGPIOC             /*!<@brief FGPIO peripheral base pointer */
-#define BOARD_ACCEL_INT1_GPIO GPIOC               /*!<@brief GPIO peripheral base pointer */
-#define BOARD_ACCEL_INT1_GPIO_PIN_MASK (1U << 5U) /*!<@brief GPIO pin mask */
-
-/* Symbols to be used with PORT driver */
-#define BOARD_ACCEL_INT1_PORT PORTC               /*!<@brief PORT peripheral base pointer */
-#define BOARD_ACCEL_INT1_PIN 5U                   /*!<@brief PORT pin number */
-#define BOARD_ACCEL_INT1_PIN_MASK (1U << 5U)      /*!<@brief PORT pin mask */
-                                                  /* @} */
-
 /*! @name PORTD1 (number 94), U2[9]/U10[9]/INT2_ACCEL
   @{ */
 
@@ -193,24 +161,6 @@ void BOARD_InitButtons(void);
  */
 void BOARD_InitLEDs(void);
 
-/*! @name PORTB16 (number 62), E1/TSI_ELECTRODE1
-  @{ */
-
-/* Symbols to be used with PORT driver */
-#define BOARD_TSI_ELECTRODE_1_PORT PORTB                /*!<@brief PORT peripheral base pointer */
-#define BOARD_TSI_ELECTRODE_1_PIN 16U                   /*!<@brief PORT pin number */
-#define BOARD_TSI_ELECTRODE_1_PIN_MASK (1U << 16U)      /*!<@brief PORT pin mask */
-                                                        /* @} */
-
-/*! @name PORTB17 (number 63), E1/TSI_ELECTRODE2
-  @{ */
-
-/* Symbols to be used with PORT driver */
-#define BOARD_TSI_ELECTRODE_2_PORT PORTB                /*!<@brief PORT peripheral base pointer */
-#define BOARD_TSI_ELECTRODE_2_PIN 17U                   /*!<@brief PORT pin number */
-#define BOARD_TSI_ELECTRODE_2_PIN_MASK (1U << 17U)      /*!<@brief PORT pin mask */
-                                                        /* @} */
-
 /*!
  * @brief Configures pin routing and optionally pin electrical features.
  *
@@ -238,114 +188,6 @@ void BOARD_InitTouch(void);
  *
  */
 void BOARD_InitUSB(void);
-
-/*! @name PORTB11 (number 61), DS1[12]/LCD-12
-  @{ */
-
-/* Symbols to be used with PORT driver */
-#define BOARD_LCD_12_PORT PORTB                /*!<@brief PORT peripheral base pointer */
-#define BOARD_LCD_12_PIN 11U                   /*!<@brief PORT pin number */
-#define BOARD_LCD_12_PIN_MASK (1U << 11U)      /*!<@brief PORT pin mask */
-                                               /* @} */
-
-/*! @name PORTB10 (number 60), DS1[11]/LCD-11
-  @{ */
-
-/* Symbols to be used with PORT driver */
-#define BOARD_LCD_11_PORT PORTB                /*!<@brief PORT peripheral base pointer */
-#define BOARD_LCD_11_PIN 10U                   /*!<@brief PORT pin number */
-#define BOARD_LCD_11_PIN_MASK (1U << 10U)      /*!<@brief PORT pin mask */
-                                               /* @} */
-
-/*! @name PORTC18 (number 92), DS1[10]/LCD-10
-  @{ */
-
-/* Symbols to be used with PORT driver */
-#define BOARD_LCD_10_PORT PORTC                /*!<@brief PORT peripheral base pointer */
-#define BOARD_LCD_10_PIN 18U                   /*!<@brief PORT pin number */
-#define BOARD_LCD_10_PIN_MASK (1U << 18U)      /*!<@brief PORT pin mask */
-                                               /* @} */
-
-/*! @name PORTE5 (number 6), DS1[9]/LCD-09
-  @{ */
-
-/* Symbols to be used with PORT driver */
-#define BOARD_LCD_09_PORT PORTE               /*!<@brief PORT peripheral base pointer */
-#define BOARD_LCD_09_PIN 5U                   /*!<@brief PORT pin number */
-#define BOARD_LCD_09_PIN_MASK (1U << 5U)      /*!<@brief PORT pin mask */
-                                              /* @} */
-
-/*! @name PORTB8 (number 58), DS1[8]/LCD-08
-  @{ */
-
-/* Symbols to be used with PORT driver */
-#define BOARD_LCD_08_PORT PORTB               /*!<@brief PORT peripheral base pointer */
-#define BOARD_LCD_08_PIN 8U                   /*!<@brief PORT pin number */
-#define BOARD_LCD_08_PIN_MASK (1U << 8U)      /*!<@brief PORT pin mask */
-                                              /* @} */
-
-/*! @name PORTB7 (number 57), DS1[7]/LCD-07
-  @{ */
-
-/* Symbols to be used with PORT driver */
-#define BOARD_LCD_07_PORT PORTB               /*!<@brief PORT peripheral base pointer */
-#define BOARD_LCD_07_PIN 7U                   /*!<@brief PORT pin number */
-#define BOARD_LCD_07_PIN_MASK (1U << 7U)      /*!<@brief PORT pin mask */
-                                              /* @} */
-
-/*! @name PORTB21 (number 67), DS1[6]/LCD-06
-  @{ */
-
-/* Symbols to be used with PORT driver */
-#define BOARD_LCD_06_PORT PORTB                /*!<@brief PORT peripheral base pointer */
-#define BOARD_LCD_06_PIN 21U                   /*!<@brief PORT pin number */
-#define BOARD_LCD_06_PIN_MASK (1U << 21U)      /*!<@brief PORT pin mask */
-                                               /* @} */
-
-/*! @name PORTC17 (number 91), DS1[5]/LCD-05
-  @{ */
-
-/* Symbols to be used with PORT driver */
-#define BOARD_LCD_05_PORT PORTC                /*!<@brief PORT peripheral base pointer */
-#define BOARD_LCD_05_PIN 17U                   /*!<@brief PORT pin number */
-#define BOARD_LCD_05_PIN_MASK (1U << 17U)      /*!<@brief PORT pin mask */
-                                               /* @} */
-
-/*! @name PORTB22 (number 68), DS1[4]/LCD-04
-  @{ */
-
-/* Symbols to be used with PORT driver */
-#define BOARD_LCD_04_PORT PORTB                /*!<@brief PORT peripheral base pointer */
-#define BOARD_LCD_04_PIN 22U                   /*!<@brief PORT pin number */
-#define BOARD_LCD_04_PIN_MASK (1U << 22U)      /*!<@brief PORT pin mask */
-                                               /* @} */
-
-/*! @name PORTB23 (number 69), DS1[3]/LCD-03
-  @{ */
-
-/* Symbols to be used with PORT driver */
-#define BOARD_LCD_03_PORT PORTB                /*!<@brief PORT peripheral base pointer */
-#define BOARD_LCD_03_PIN 23U                   /*!<@brief PORT pin number */
-#define BOARD_LCD_03_PIN_MASK (1U << 23U)      /*!<@brief PORT pin mask */
-                                               /* @} */
-
-/*! @name PORTE4 (number 5), DS1[2]/LCD-02
-  @{ */
-
-/* Symbols to be used with PORT driver */
-#define BOARD_LCD_02_PORT PORTE               /*!<@brief PORT peripheral base pointer */
-#define BOARD_LCD_02_PIN 4U                   /*!<@brief PORT pin number */
-#define BOARD_LCD_02_PIN_MASK (1U << 4U)      /*!<@brief PORT pin mask */
-                                              /* @} */
-
-/*! @name PORTD0 (number 93), DS1[1]/LCD-01
-  @{ */
-
-/* Symbols to be used with PORT driver */
-#define BOARD_LCD_01_PORT PORTD               /*!<@brief PORT peripheral base pointer */
-#define BOARD_LCD_01_PIN 0U                   /*!<@brief PORT pin number */
-#define BOARD_LCD_01_PIN_MASK (1U << 0U)      /*!<@brief PORT pin mask */
-                                              /* @} */
 
 /*!
  * @brief Configures pin routing and optionally pin electrical features.
@@ -376,24 +218,6 @@ void BOARD_InitSegment_LCD(void);
  *
  */
 void BOARD_InitOSC(void);
-
-/*! @name PORTE25 (number 32), U2[6]/U10[6]/I2C0_SDA
-  @{ */
-
-/* Symbols to be used with PORT driver */
-#define BOARD_MAG_SDA_PORT PORTE                /*!<@brief PORT peripheral base pointer */
-#define BOARD_MAG_SDA_PIN 25U                   /*!<@brief PORT pin number */
-#define BOARD_MAG_SDA_PIN_MASK (1U << 25U)      /*!<@brief PORT pin mask */
-                                                /* @} */
-
-/*! @name PORTE24 (number 31), U2[7]/U10[4]/I2C0_SDA
-  @{ */
-
-/* Symbols to be used with PORT driver */
-#define BOARD_MAG_SCL_PORT PORTE                /*!<@brief PORT peripheral base pointer */
-#define BOARD_MAG_SCL_PIN 24U                   /*!<@brief PORT pin number */
-#define BOARD_MAG_SCL_PIN_MASK (1U << 24U)      /*!<@brief PORT pin mask */
-                                                /* @} */
 
 /*! @name PORTD1 (number 94), U2[9]/U10[9]/INT2_ACCEL
   @{ */
