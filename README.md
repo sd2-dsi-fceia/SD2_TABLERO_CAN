@@ -29,8 +29,8 @@ En este ejemplo se tienen tres nodos en donde se evaluarán como se interconecta
 
 ```mermaid
 sequenceDiagram
-    Nodo 1->Nodo 2: Intensidad de luz
-    Nodo 1->Nodo 3: Intensidad de luz
-    Nodo 2->Nodo 3: Estado periféricos
-    Note right of Nodo 3: Salida de datos \npor pantalla
+    Nodo 1->>Nodo 2: Intensidad de luz
+    Nodo 1->>Nodo 3: Intensidad de luz
+    Nodo 2->>Nodo 3: Estado periféricos
+    Note right of Nodo 3: Salida de datos <br/>por pantalla
 ```
