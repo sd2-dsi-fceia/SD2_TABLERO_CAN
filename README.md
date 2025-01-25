@@ -10,7 +10,8 @@ En este repositorio se encuentran todos los ejemplos brindados para trabajar en 
 **Tabla de Contenidos**
 
 - [Nodos Can Baremetal](#nodos-can-baremetal)
-    - [Descripción](##descripción)
+    - [Descripción](#descripción)
+    - [Esquema de nodos](#esquema-de-nodos)
 # Nodos Can Baremetal
 
 ## Descripción
