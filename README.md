@@ -33,3 +33,4 @@ graph LR
     Nodo1 --> Nodo3["Intensidad de luz"]
     Nodo2 --> Nodo3["Estado periféricos"]
     Note["Salida de datos por pantalla"] --> Nodo3
+```
