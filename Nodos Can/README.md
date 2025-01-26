@@ -5,4 +5,8 @@ Para realizar dicha comunicación can nos basamos en el módulo MCP2515 junto co
 
 > Módulo MCP2515 shield Arduino
 
+## Esquema eléctrico del módulo
+
+![Esquema Electrico](https://github.com/Agustin586/Ejemplos-SD2/blob/main/image/Nodos%20can/esquematico.png)
+
 ## Nodo 1
