@@ -3,4 +3,6 @@ Para realizar dicha comunicación can nos basamos en el módulo MCP2515 junto co
 
 ![MCP2515](https://github.com/Agustin586/Ejemplos-SD2/blob/main/image/Nodos%20can/mcp2515.png)
 
+> Módulo MCP2515 shield Arduino
+
 ## Nodo 1
