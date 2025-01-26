@@ -25,5 +25,3 @@ Destacamos los pines que se conectan al módulo.
 ![KL46Z Headers](https://github.com/Agustin586/Ejemplos-SD2/blob/main/image/Nodos%20can/frdm-kl46z_headers.png)
 
 > Pinout de la KL46Z
-
-## Nodo 1
