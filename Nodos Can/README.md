@@ -9,4 +9,21 @@ Para realizar dicha comunicación can nos basamos en el módulo MCP2515 junto co
 
 ![Esquema Electrico](https://github.com/Agustin586/Ejemplos-SD2/blob/main/image/Nodos%20can/esquematico.png)
 
+> Esquema eléctrico del módulo CAN
+
+## Conexión a la KL46Z
+Destacamos los pines que se conectan al módulo.
+
+* MISO: PTE19
+* MOSI: PTE18
+* SCK: PTE17
+* CS: PTE16
+* INT: PTA17
+
+**Diagrama de la KL46Z**
+
+![KL46Z Headers](https://github.com/Agustin586/Ejemplos-SD2/blob/main/image/Nodos%20can/frdm-kl46z_headers.png)
+
+> Pinout de la KL46Z
+
 ## Nodo 1
