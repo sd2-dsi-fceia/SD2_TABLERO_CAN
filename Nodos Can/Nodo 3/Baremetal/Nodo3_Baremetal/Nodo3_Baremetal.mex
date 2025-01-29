@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding= "UTF-8" ?>
-<configuration name="MKL46Z256xxx4" xsi:schemaLocation="http://mcuxpresso.nxp.com/XSD/mex_configuration_12 http://mcuxpresso.nxp.com/XSD/mex_configuration_12.xsd" uuid="6b351097-fb46-45ee-9ff2-d8cc4e64d8c6" version="12" xmlns="http://mcuxpresso.nxp.com/XSD/mex_configuration_12" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<configuration name="MKL46Z256xxx4" xsi:schemaLocation="http://mcuxpresso.nxp.com/XSD/mex_configuration_12 http://mcuxpresso.nxp.com/XSD/mex_configuration_12.xsd" uuid="9a3e7de2-d0e6-4ef9-aad8-c52aeee39bb6" version="12" xmlns="http://mcuxpresso.nxp.com/XSD/mex_configuration_12" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
    <common>
       <processor>MKL46Z256xxx4</processor>
       <package>MKL46Z256VLL4</package>
@@ -8,7 +8,7 @@
       <cores selected="core0">
          <core name="Cortex-M0P" id="core0" description="M0P core"/>
       </cores>
-      <description>Configuration imported from Nodo1_Baremetal</description>
+      <description>Configuration imported from Nodo3_Baremetal</description>
    </common>
    <preferences>
       <validate_boot_init_only>true</validate_boot_init_only>
@@ -43,7 +43,7 @@
                <pin_label pin_num="1" pin_signal="LCD_P48/PTE0/SPI1_MISO/UART1_TX/RTC_CLKOUT/CMP0_OUT/I2C1_SDA/LCD_P48_Fault" label="J2[18]/D14"/>
                <pin_label pin_num="2" pin_signal="LCD_P49/PTE1/SPI1_MOSI/UART1_RX/SPI1_MISO/I2C1_SCL/LCD_P49_Fault" label="J2[20]/D15"/>
                <pin_label pin_num="59" pin_signal="LCD_P9/PTB9/SPI1_SCK/LCD_P9_Fault" label="J2[17]"/>
-               <pin_label pin_num="47" pin_signal="PTA17/SPI0_MISO/SPI0_MOSI/I2S0_MCLK" label="J2[15]"/>
+               <pin_label pin_num="47" pin_signal="PTA17/SPI0_MISO/SPI0_MOSI/I2S0_MCLK" label="J2[15]" identifier="INTERRUPT"/>
                <pin_label pin_num="46" pin_signal="PTA16/SPI0_MOSI/SPI0_MISO/I2S0_RX_FS/I2S0_RXD0" label="J2[13]"/>
                <pin_label pin_num="45" pin_signal="PTA15/SPI0_SCK/UART0_RX/I2S0_RXD0" label="J2[11]"/>
                <pin_label pin_num="44" pin_signal="PTA14/SPI0_PCS0/UART0_TX/I2S0_RX_BCLK/I2S0_TXD0" label="J2[9]"/>
@@ -138,7 +138,7 @@
                   <enableClock>true</enableClock>
                </options>
                <dependencies>
-                  <dependency resourceType="Peripheral" resourceId="ADC0" description="Peripheral ADC0 is not initialized" problem_level="1" source="Pins:BOARD_InitPins">
+                  <dependency resourceType="Peripheral" resourceId="GPIOA" description="Peripheral GPIOA is not initialized" problem_level="1" source="Pins:BOARD_InitPins">
                      <feature name="initialized" evaluation="equal">
                         <data>true</data>
                      </feature>
@@ -153,9 +153,20 @@
                         <data>true</data>
                      </feature>
                   </dependency>
+                  <dependency resourceType="SWComponent" resourceId="platform.drivers.gpio" description="Pins initialization requires the GPIO Driver in the project." problem_level="2" source="Pins:BOARD_InitPins">
+                     <feature name="enabled" evaluation="equal" configuration="core0">
+                        <data>true</data>
+                     </feature>
+                  </dependency>
                </dependencies>
                <pins>
-                  <pin peripheral="ADC0" signal="SE, 3" pin_num="20" pin_signal="ADC0_DP3/ADC0_SE3/PTE22/TPM2_CH0/UART2_TX"/>
+                  <pin peripheral="GPIOA" signal="GPIO, 17" pin_num="47" pin_signal="PTA17/SPI0_MISO/SPI0_MOSI/I2S0_MCLK">
+                     <pin_features>
+                        <pin_feature name="direction" value="INPUT"/>
+                        <pin_feature name="gpio_interrupt" value="kPORT_InterruptLogicZero"/>
+                        <pin_feature name="pull_enable" value="enable"/>
+                     </pin_features>
+                  </pin>
                </pins>
             </function>
             <function name="BOARD_InitACCEL">
@@ -166,63 +177,13 @@
                   <enableClock>true</enableClock>
                </options>
                <dependencies>
-                  <dependency resourceType="Peripheral" resourceId="I2C0" description="Peripheral I2C0 is not initialized" problem_level="1" source="Pins:BOARD_InitACCEL">
-                     <feature name="initialized" evaluation="equal">
-                        <data>true</data>
-                     </feature>
-                  </dependency>
                   <dependency resourceType="SWComponent" resourceId="platform.drivers.common" description="Pins initialization requires the COMMON Driver in the project." problem_level="2" source="Pins:BOARD_InitACCEL">
                      <feature name="enabled" evaluation="equal" configuration="core0">
                         <data>true</data>
                      </feature>
                   </dependency>
-                  <dependency resourceType="SWComponent" resourceId="platform.drivers.port" description="Pins initialization requires the PORT Driver in the project." problem_level="2" source="Pins:BOARD_InitACCEL">
-                     <feature name="enabled" evaluation="equal" configuration="core0">
-                        <data>true</data>
-                     </feature>
-                  </dependency>
-                  <dependency resourceType="SWComponent" resourceId="platform.drivers.gpio" description="Pins initialization requires the GPIO Driver in the project." problem_level="2" source="Pins:BOARD_InitACCEL">
-                     <feature name="enabled" evaluation="equal" configuration="core0">
-                        <data>true</data>
-                     </feature>
-                  </dependency>
                </dependencies>
-               <pins>
-                  <pin peripheral="I2C0" signal="SDA" pin_num="32" pin_signal="PTE25/TPM0_CH1/I2C0_SDA">
-                     <pin_features>
-                        <pin_feature name="identifier" value="ACCEL_SDA"/>
-                        <pin_feature name="slew_rate" value="fast"/>
-                        <pin_feature name="pull_select" value="down"/>
-                        <pin_feature name="pull_enable" value="disable"/>
-                     </pin_features>
-                  </pin>
-                  <pin peripheral="I2C0" signal="SCL" pin_num="31" pin_signal="PTE24/TPM0_CH0/I2C0_SCL">
-                     <pin_features>
-                        <pin_feature name="identifier" value="ACCEL_SCL"/>
-                        <pin_feature name="slew_rate" value="fast"/>
-                        <pin_feature name="pull_select" value="down"/>
-                        <pin_feature name="pull_enable" value="disable"/>
-                     </pin_features>
-                  </pin>
-                  <pin peripheral="GPIOC" signal="GPIO, 5" pin_num="81" pin_signal="LCD_P25/PTC5/LLWU_P9/SPI0_SCK/LPTMR0_ALT2/I2S0_RXD0/CMP0_OUT/LCD_P25_Fault">
-                     <pin_features>
-                        <pin_feature name="identifier" value="ACCEL_INT1"/>
-                        <pin_feature name="direction" value="INPUT"/>
-                        <pin_feature name="slew_rate" value="fast"/>
-                        <pin_feature name="pull_select" value="up"/>
-                        <pin_feature name="pull_enable" value="enable"/>
-                     </pin_features>
-                  </pin>
-                  <pin peripheral="GPIOD" signal="GPIO, 1" pin_num="94" pin_signal="LCD_P41/ADC0_SE5b/PTD1/SPI0_SCK/TPM0_CH1/LCD_P41_Fault">
-                     <pin_features>
-                        <pin_feature name="identifier" value="ACCEL_INT2"/>
-                        <pin_feature name="direction" value="INPUT"/>
-                        <pin_feature name="slew_rate" value="fast"/>
-                        <pin_feature name="pull_select" value="up"/>
-                        <pin_feature name="pull_enable" value="enable"/>
-                     </pin_features>
-                  </pin>
-               </pins>
+               <pins/>
             </function>
             <function name="BOARD_InitDEBUG_UART">
                <description>Configures pin routing and optionally pin electrical features.</description>
@@ -364,38 +325,13 @@
                   <enableClock>true</enableClock>
                </options>
                <dependencies>
-                  <dependency resourceType="Peripheral" resourceId="TSI0" description="Peripheral TSI0 is not initialized" problem_level="1" source="Pins:BOARD_InitTouch">
-                     <feature name="initialized" evaluation="equal">
-                        <data>true</data>
-                     </feature>
-                  </dependency>
                   <dependency resourceType="SWComponent" resourceId="platform.drivers.common" description="Pins initialization requires the COMMON Driver in the project." problem_level="2" source="Pins:BOARD_InitTouch">
                      <feature name="enabled" evaluation="equal" configuration="core0">
                         <data>true</data>
                      </feature>
                   </dependency>
-                  <dependency resourceType="SWComponent" resourceId="platform.drivers.port" description="Pins initialization requires the PORT Driver in the project." problem_level="2" source="Pins:BOARD_InitTouch">
-                     <feature name="enabled" evaluation="equal" configuration="core0">
-                        <data>true</data>
-                     </feature>
-                  </dependency>
                </dependencies>
-               <pins>
-                  <pin peripheral="TSI0" signal="CH, 9" pin_num="62" pin_signal="LCD_P12/TSI0_CH9/PTB16/SPI1_MOSI/UART0_RX/TPM_CLKIN0/SPI1_MISO/LCD_P12_Fault">
-                     <pin_features>
-                        <pin_feature name="slew_rate" value="fast"/>
-                        <pin_feature name="pull_select" value="down"/>
-                        <pin_feature name="pull_enable" value="disable"/>
-                     </pin_features>
-                  </pin>
-                  <pin peripheral="TSI0" signal="CH, 10" pin_num="63" pin_signal="LCD_P13/TSI0_CH10/PTB17/SPI1_MISO/UART0_TX/TPM_CLKIN1/SPI1_MOSI/LCD_P13_Fault">
-                     <pin_features>
-                        <pin_feature name="slew_rate" value="fast"/>
-                        <pin_feature name="pull_select" value="down"/>
-                        <pin_feature name="pull_enable" value="disable"/>
-                     </pin_features>
-                  </pin>
-               </pins>
+               <pins/>
             </function>
             <function name="BOARD_InitUSB">
                <description>Configures pin routing and optionally pin electrical features.</description>
@@ -431,108 +367,13 @@
                   <enableClock>true</enableClock>
                </options>
                <dependencies>
-                  <dependency resourceType="Peripheral" resourceId="LCD" description="Peripheral LCD is not initialized" problem_level="1" source="Pins:BOARD_InitSegment_LCD">
-                     <feature name="initialized" evaluation="equal">
-                        <data>true</data>
-                     </feature>
-                  </dependency>
                   <dependency resourceType="SWComponent" resourceId="platform.drivers.common" description="Pins initialization requires the COMMON Driver in the project." problem_level="2" source="Pins:BOARD_InitSegment_LCD">
                      <feature name="enabled" evaluation="equal" configuration="core0">
                         <data>true</data>
                      </feature>
                   </dependency>
-                  <dependency resourceType="SWComponent" resourceId="platform.drivers.port" description="Pins initialization requires the PORT Driver in the project." problem_level="2" source="Pins:BOARD_InitSegment_LCD">
-                     <feature name="enabled" evaluation="equal" configuration="core0">
-                        <data>true</data>
-                     </feature>
-                  </dependency>
                </dependencies>
-               <pins>
-                  <pin peripheral="LCD" signal="P, 11" pin_num="61" pin_signal="LCD_P11/PTB11/SPI1_SCK/LCD_P11_Fault">
-                     <pin_features>
-                        <pin_feature name="slew_rate" value="slow"/>
-                        <pin_feature name="pull_select" value="down"/>
-                        <pin_feature name="pull_enable" value="disable"/>
-                     </pin_features>
-                  </pin>
-                  <pin peripheral="LCD" signal="P, 10" pin_num="60" pin_signal="LCD_P10/PTB10/SPI1_PCS0/LCD_P10_Fault">
-                     <pin_features>
-                        <pin_feature name="slew_rate" value="slow"/>
-                        <pin_feature name="pull_select" value="down"/>
-                        <pin_feature name="pull_enable" value="disable"/>
-                     </pin_features>
-                  </pin>
-                  <pin peripheral="LCD" signal="P, 38" pin_num="92" pin_signal="LCD_P38/PTC18/LCD_P38_Fault">
-                     <pin_features>
-                        <pin_feature name="slew_rate" value="slow"/>
-                        <pin_feature name="pull_select" value="down"/>
-                        <pin_feature name="pull_enable" value="disable"/>
-                     </pin_features>
-                  </pin>
-                  <pin peripheral="LCD" signal="P, 53" pin_num="6" pin_signal="LCD_P53/PTE5/LCD_P53_Fault">
-                     <pin_features>
-                        <pin_feature name="slew_rate" value="slow"/>
-                        <pin_feature name="pull_select" value="down"/>
-                        <pin_feature name="pull_enable" value="disable"/>
-                     </pin_features>
-                  </pin>
-                  <pin peripheral="LCD" signal="P, 8" pin_num="58" pin_signal="LCD_P8/PTB8/SPI1_PCS0/EXTRG_IN/LCD_P8_Fault">
-                     <pin_features>
-                        <pin_feature name="slew_rate" value="slow"/>
-                        <pin_feature name="pull_select" value="down"/>
-                        <pin_feature name="pull_enable" value="disable"/>
-                     </pin_features>
-                  </pin>
-                  <pin peripheral="LCD" signal="P, 7" pin_num="57" pin_signal="LCD_P7/PTB7/LCD_P7_Fault">
-                     <pin_features>
-                        <pin_feature name="slew_rate" value="slow"/>
-                        <pin_feature name="pull_select" value="down"/>
-                        <pin_feature name="pull_enable" value="disable"/>
-                     </pin_features>
-                  </pin>
-                  <pin peripheral="LCD" signal="P, 17" pin_num="67" pin_signal="LCD_P17/PTB21/LCD_P17_Fault">
-                     <pin_features>
-                        <pin_feature name="slew_rate" value="slow"/>
-                        <pin_feature name="pull_select" value="down"/>
-                        <pin_feature name="pull_enable" value="disable"/>
-                     </pin_features>
-                  </pin>
-                  <pin peripheral="LCD" signal="P, 37" pin_num="91" pin_signal="LCD_P37/PTC17/LCD_P37_Fault">
-                     <pin_features>
-                        <pin_feature name="slew_rate" value="slow"/>
-                        <pin_feature name="pull_select" value="down"/>
-                        <pin_feature name="pull_enable" value="disable"/>
-                     </pin_features>
-                  </pin>
-                  <pin peripheral="LCD" signal="P, 18" pin_num="68" pin_signal="LCD_P18/PTB22/LCD_P18_Fault">
-                     <pin_features>
-                        <pin_feature name="slew_rate" value="slow"/>
-                        <pin_feature name="pull_select" value="down"/>
-                        <pin_feature name="pull_enable" value="disable"/>
-                     </pin_features>
-                  </pin>
-                  <pin peripheral="LCD" signal="P, 19" pin_num="69" pin_signal="LCD_P19/PTB23/LCD_P19_Fault">
-                     <pin_features>
-                        <pin_feature name="slew_rate" value="slow"/>
-                        <pin_feature name="pull_select" value="down"/>
-                        <pin_feature name="pull_enable" value="disable"/>
-                     </pin_features>
-                  </pin>
-                  <pin peripheral="LCD" signal="P, 52" pin_num="5" pin_signal="LCD_P52/PTE4/SPI1_PCS0/LCD_P52_Fault">
-                     <pin_features>
-                        <pin_feature name="slew_rate" value="slow"/>
-                        <pin_feature name="pull_select" value="down"/>
-                        <pin_feature name="pull_enable" value="disable"/>
-                     </pin_features>
-                  </pin>
-                  <pin peripheral="LCD" signal="P, 40" pin_num="93" pin_signal="LCD_P40/PTD0/SPI0_PCS0/TPM0_CH0/LCD_P40_Fault">
-                     <pin_features>
-                        <pin_feature name="slew_rate" value="slow"/>
-                        <pin_feature name="pull_select" value="down"/>
-                        <pin_feature name="pull_enable" value="disable"/>
-                     </pin_features>
-                  </pin>
-               </pins>
+               <pins/>
             </function>
             <function name="BOARD_InitOSC">
                <description>Configures pin routing and optionally pin electrical features.</description>
@@ -583,54 +424,13 @@
                   <enableClock>true</enableClock>
                </options>
                <dependencies>
-                  <dependency resourceType="Peripheral" resourceId="I2C0" description="Peripheral I2C0 is not initialized" problem_level="1" source="Pins:BOARD_InitMAG">
-                     <feature name="initialized" evaluation="equal">
-                        <data>true</data>
-                     </feature>
-                  </dependency>
                   <dependency resourceType="SWComponent" resourceId="platform.drivers.common" description="Pins initialization requires the COMMON Driver in the project." problem_level="2" source="Pins:BOARD_InitMAG">
                      <feature name="enabled" evaluation="equal" configuration="core0">
                         <data>true</data>
                      </feature>
                   </dependency>
-                  <dependency resourceType="SWComponent" resourceId="platform.drivers.port" description="Pins initialization requires the PORT Driver in the project." problem_level="2" source="Pins:BOARD_InitMAG">
-                     <feature name="enabled" evaluation="equal" configuration="core0">
-                        <data>true</data>
-                     </feature>
-                  </dependency>
-                  <dependency resourceType="SWComponent" resourceId="platform.drivers.gpio" description="Pins initialization requires the GPIO Driver in the project." problem_level="2" source="Pins:BOARD_InitMAG">
-                     <feature name="enabled" evaluation="equal" configuration="core0">
-                        <data>true</data>
-                     </feature>
-                  </dependency>
                </dependencies>
-               <pins>
-                  <pin peripheral="I2C0" signal="SDA" pin_num="32" pin_signal="PTE25/TPM0_CH1/I2C0_SDA">
-                     <pin_features>
-                        <pin_feature name="identifier" value="MAG_SDA"/>
-                        <pin_feature name="slew_rate" value="fast"/>
-                        <pin_feature name="pull_select" value="down"/>
-                        <pin_feature name="pull_enable" value="disable"/>
-                     </pin_features>
-                  </pin>
-                  <pin peripheral="I2C0" signal="SCL" pin_num="31" pin_signal="PTE24/TPM0_CH0/I2C0_SCL">
-                     <pin_features>
-                        <pin_feature name="identifier" value="MAG_SCL"/>
-                        <pin_feature name="slew_rate" value="fast"/>
-                        <pin_feature name="pull_select" value="down"/>
-                        <pin_feature name="pull_enable" value="disable"/>
-                     </pin_features>
-                  </pin>
-                  <pin peripheral="GPIOD" signal="GPIO, 1" pin_num="94" pin_signal="LCD_P41/ADC0_SE5b/PTD1/SPI0_SCK/TPM0_CH1/LCD_P41_Fault">
-                     <pin_features>
-                        <pin_feature name="identifier" value="MAG_INT2"/>
-                        <pin_feature name="direction" value="INPUT"/>
-                        <pin_feature name="slew_rate" value="fast"/>
-                        <pin_feature name="pull_select" value="up"/>
-                        <pin_feature name="pull_enable" value="enable"/>
-                     </pin_features>
-                  </pin>
-               </pins>
+               <pins/>
             </function>
          </functions_list>
       </pins>
@@ -694,6 +494,7 @@
                   <setting id="MCG_C2_OSC_MODE_CFG" value="ModeOscHighGain" locked="false"/>
                   <setting id="MCG_C2_RANGE0_CFG" value="Very_high" locked="false"/>
                   <setting id="MCG_C2_RANGE0_FRDIV_CFG" value="Very_high" locked="false"/>
+                  <setting id="MCG_C5_PLLCLKEN0_CFG" value="Enabled" locked="false"/>
                   <setting id="SIM.OUTDIV1.scale" value="1" locked="true"/>
                   <setting id="SIM.PLLFLLSEL.sel" value="SIM.MCGPLLCLK_DIV2" locked="false"/>
                   <setting id="SIM.UART0SRCSEL.sel" value="SIM.PLLFLLSEL" locked="false"/>
@@ -794,20 +595,45 @@
             <processor_version>12.0.0</processor_version>
          </peripherals_profile>
          <functional_groups>
-            <functional_group name="BOARD_InitPeripherals" uuid="2787d0d3-490b-4de2-b6bb-fafba1228e94" called_from_default_init="true" id_prefix="" core="core0">
+            <functional_group name="BOARD_InitPeripherals" uuid="bc1b8f92-0c7b-48c9-9d25-63a4760b9a61" called_from_default_init="true" id_prefix="" core="core0">
                <description></description>
                <options/>
-               <dependencies/>
+               <dependencies>
+                  <dependency resourceType="SWComponent" resourceId="platform.drivers.port" description="The fsl_port driver is missing in the project  (required for the GPIO driver)." problem_level="2" source="Peripherals:BOARD_InitPeripherals">
+                     <feature name="enabled" evaluation="equal">
+                        <data type="Boolean">true</data>
+                     </feature>
+                  </dependency>
+                  <dependency resourceType="SWComponent" resourceId="platform.drivers.port" description="The compatible version of the fsl_port driver is not available in the project  (required for the GPIO driver)." problem_level="1" source="Peripherals:BOARD_InitPeripherals">
+                     <feature name="version" evaluation="compatible">
+                        <data type="Version">2.0.0</data>
+                     </feature>
+                  </dependency>
+               </dependencies>
                <instances>
-                  <instance name="NVIC" uuid="b30eb25b-b5dd-4f06-b525-c5927a96976e" type="nvic" type_id="nvic_57b5eef3774cc60acaede6f5b8bddc67" mode="general" peripheral="NVIC" enabled="true" comment="" custom_name_enabled="false" editing_lock="false">
+                  <instance name="NVIC" uuid="0cc5caa9-710f-4236-b498-02724b503d22" type="nvic" type_id="nvic_57b5eef3774cc60acaede6f5b8bddc67" mode="general" peripheral="NVIC" enabled="true" comment="" custom_name_enabled="false" editing_lock="false">
                      <config_set name="nvic">
-                        <array name="interrupt_table"/>
+                        <array name="interrupt_table">
+                           <struct name="0"/>
+                        </array>
                         <array name="interrupts"/>
+                     </config_set>
+                  </instance>
+                  <instance name="GPIOA" uuid="804ac42a-84ec-4dcd-9999-354a07f484d7" type="gpio" type_id="gpio_f970a92e447fa4793838db25a2947ed7" mode="GPIO" peripheral="GPIOA" enabled="true" comment="" custom_name_enabled="false" editing_lock="false">
+                     <config_set name="fsl_gpio">
+                        <setting name="enable_irq" value="true"/>
+                        <struct name="port_interrupt">
+                           <setting name="IRQn" value="PORTA_IRQn"/>
+                           <setting name="enable_interrrupt" value="enabled"/>
+                           <setting name="enable_priority" value="false"/>
+                           <setting name="priority" value="0"/>
+                           <setting name="enable_custom_name" value="false"/>
+                        </struct>
                      </config_set>
                   </instance>
                </instances>
             </functional_group>
-            <functional_group name="BOARD_InitButtonsPeripheral" uuid="087c5fc1-45db-4295-867e-adb7c8a0904b" called_from_default_init="false" id_prefix="BOARD_" core="core0">
+            <functional_group name="BOARD_InitButtonsPeripheral" uuid="3ccf29ba-2282-4694-bcc7-f51453d5bb39" called_from_default_init="false" id_prefix="BOARD_" core="core0">
                <description></description>
                <options/>
                <dependencies>
@@ -823,7 +649,7 @@
                   </dependency>
                </dependencies>
                <instances>
-                  <instance name="SW1_SW3" uuid="ccd06112-7ce4-4533-b254-20c67d379b49" type="gpio" type_id="gpio_f970a92e447fa4793838db25a2947ed7" mode="GPIO" peripheral="GPIOC" enabled="true" comment="" custom_name_enabled="true" editing_lock="false">
+                  <instance name="SW1_SW3" uuid="c6078208-a5c5-4fb0-a47d-016be9d33a84" type="gpio" type_id="gpio_f970a92e447fa4793838db25a2947ed7" mode="GPIO" peripheral="GPIOC" enabled="true" comment="" custom_name_enabled="true" editing_lock="false">
                      <config_set name="fsl_gpio">
                         <setting name="enable_irq" value="false"/>
                         <struct name="port_interrupt">
@@ -835,15 +661,17 @@
                         </struct>
                      </config_set>
                   </instance>
-                  <instance name="NVIC" uuid="7249a827-81ba-4531-bc3b-d272ae3259b3" type="nvic" type_id="nvic_57b5eef3774cc60acaede6f5b8bddc67" mode="general" peripheral="NVIC" enabled="true" comment="" custom_name_enabled="false" editing_lock="false">
+                  <instance name="NVIC" uuid="4b2c35c2-4c40-4455-baf4-c8a5abdd50c0" type="nvic" type_id="nvic_57b5eef3774cc60acaede6f5b8bddc67" mode="general" peripheral="NVIC" enabled="true" comment="" custom_name_enabled="false" editing_lock="false">
                      <config_set name="nvic">
-                        <array name="interrupt_table"/>
+                        <array name="interrupt_table">
+                           <struct name="0"/>
+                        </array>
                         <array name="interrupts"/>
                      </config_set>
                   </instance>
                </instances>
             </functional_group>
-            <functional_group name="BOARD_InitLEDsPeripheral" uuid="d280e04c-48ae-4b69-a585-e8c92b8cf677" called_from_default_init="false" id_prefix="BOARD_" core="core0">
+            <functional_group name="BOARD_InitLEDsPeripheral" uuid="6e7d1127-b186-4998-b877-a47f6bf5d15f" called_from_default_init="false" id_prefix="BOARD_" core="core0">
                <description></description>
                <options/>
                <dependencies>
@@ -869,7 +697,7 @@
                   </dependency>
                </dependencies>
                <instances>
-                  <instance name="LED_RED" uuid="95ec394f-656c-4e87-b951-ab1addb4ed20" type="gpio" type_id="gpio_f970a92e447fa4793838db25a2947ed7" mode="GPIO" peripheral="GPIOE" enabled="true" comment="" custom_name_enabled="true" editing_lock="false">
+                  <instance name="LED_RED" uuid="a67ce5ba-544f-4444-8f61-32eddb8764b6" type="gpio" type_id="gpio_f970a92e447fa4793838db25a2947ed7" mode="GPIO" peripheral="GPIOE" enabled="true" comment="" custom_name_enabled="true" editing_lock="false">
                      <config_set name="fsl_gpio">
                         <setting name="enable_irq" value="false"/>
                         <struct name="port_interrupt">
@@ -881,7 +709,7 @@
                         </struct>
                      </config_set>
                   </instance>
-                  <instance name="LED_GREEN" uuid="fff053d1-dea1-4354-b8ec-a5441683ddd8" type="gpio" type_id="gpio_f970a92e447fa4793838db25a2947ed7" mode="GPIO" peripheral="GPIOD" enabled="true" comment="" custom_name_enabled="true" editing_lock="false">
+                  <instance name="LED_GREEN" uuid="a3ecc91d-0af3-4210-9587-be964cb3f389" type="gpio" type_id="gpio_f970a92e447fa4793838db25a2947ed7" mode="GPIO" peripheral="GPIOD" enabled="true" comment="" custom_name_enabled="true" editing_lock="false">
                      <config_set name="fsl_gpio">
                         <setting name="enable_irq" value="false"/>
                         <struct name="port_interrupt">
@@ -893,15 +721,17 @@
                         </struct>
                      </config_set>
                   </instance>
-                  <instance name="NVIC_2" uuid="3ee1fa90-a7ba-470e-8da2-b2209a7b1b0e" type="nvic" type_id="nvic_57b5eef3774cc60acaede6f5b8bddc67" mode="general" peripheral="NVIC" enabled="true" comment="" custom_name_enabled="false" editing_lock="false">
+                  <instance name="NVIC_2" uuid="991bbe2b-d8cf-4e6b-84a1-725dc094b2c4" type="nvic" type_id="nvic_57b5eef3774cc60acaede6f5b8bddc67" mode="general" peripheral="NVIC" enabled="true" comment="" custom_name_enabled="false" editing_lock="false">
                      <config_set name="nvic">
-                        <array name="interrupt_table"/>
+                        <array name="interrupt_table">
+                           <struct name="0"/>
+                        </array>
                         <array name="interrupts"/>
                      </config_set>
                   </instance>
                </instances>
             </functional_group>
-            <functional_group name="BOARD_InitACCELPeripheral" uuid="776e7025-aa85-43ce-95c0-60c1bf1b6338" called_from_default_init="false" id_prefix="BOARD_" core="core0">
+            <functional_group name="BOARD_InitACCELPeripheral" uuid="7dd1f952-d116-4e1b-a727-271ccdb85886" called_from_default_init="false" id_prefix="BOARD_" core="core0">
                <description></description>
                <options/>
                <dependencies>
@@ -942,7 +772,7 @@
                   </dependency>
                </dependencies>
                <instances>
-                  <instance name="ACCEL_I2C" uuid="67c80ff7-546b-4e71-89b7-30f6b13cf40d" type="i2c" type_id="i2c_2566d7363e7e9aaedabb432110e372d7" mode="I2C_Polling" peripheral="I2C0" enabled="true" comment="" custom_name_enabled="true" editing_lock="false">
+                  <instance name="ACCEL_I2C" uuid="43404e21-ff82-4cb2-9a30-5a7c76b98034" type="i2c" type_id="i2c_2566d7363e7e9aaedabb432110e372d7" mode="I2C_Polling" peripheral="I2C0" enabled="true" comment="" custom_name_enabled="true" editing_lock="false">
                      <config_set name="fsl_i2c" quick_selection="QS_I2C_1">
                         <setting name="i2c_mode" value="kI2C_Master"/>
                         <setting name="clockSource" value="BusInterfaceClock"/>
@@ -955,7 +785,7 @@
                         </struct>
                      </config_set>
                   </instance>
-                  <instance name="INT1" uuid="7726c68b-f6a9-4be9-ab00-406560f93abb" type="gpio" type_id="gpio_f970a92e447fa4793838db25a2947ed7" mode="GPIO" peripheral="GPIOC" enabled="true" comment="" custom_name_enabled="true" editing_lock="false">
+                  <instance name="INT1" uuid="e085342c-eea6-487d-b9fb-6b42bdd3601c" type="gpio" type_id="gpio_f970a92e447fa4793838db25a2947ed7" mode="GPIO" peripheral="GPIOC" enabled="true" comment="" custom_name_enabled="true" editing_lock="false">
                      <config_set name="fsl_gpio">
                         <setting name="enable_irq" value="false"/>
                         <struct name="port_interrupt">
@@ -967,7 +797,7 @@
                         </struct>
                      </config_set>
                   </instance>
-                  <instance name="INT2" uuid="3fdd3888-4b59-4747-955d-9dc4984b0297" type="gpio" type_id="gpio_f970a92e447fa4793838db25a2947ed7" mode="GPIO" peripheral="GPIOD" enabled="true" comment="" custom_name_enabled="true" editing_lock="false">
+                  <instance name="INT2" uuid="c92f6d39-2301-412f-998f-d040aaa8fe1e" type="gpio" type_id="gpio_f970a92e447fa4793838db25a2947ed7" mode="GPIO" peripheral="GPIOD" enabled="true" comment="" custom_name_enabled="true" editing_lock="false">
                      <config_set name="fsl_gpio">
                         <setting name="enable_irq" value="false"/>
                         <struct name="port_interrupt">
@@ -979,15 +809,17 @@
                         </struct>
                      </config_set>
                   </instance>
-                  <instance name="NVIC_3" uuid="97ef8996-4795-4c52-85a2-ab3ee125bfdc" type="nvic" type_id="nvic_57b5eef3774cc60acaede6f5b8bddc67" mode="general" peripheral="NVIC" enabled="true" comment="" custom_name_enabled="false" editing_lock="false">
+                  <instance name="NVIC_3" uuid="1b1582ec-d1fc-4e96-bfff-60d8c9b008e7" type="nvic" type_id="nvic_57b5eef3774cc60acaede6f5b8bddc67" mode="general" peripheral="NVIC" enabled="true" comment="" custom_name_enabled="false" editing_lock="false">
                      <config_set name="nvic">
-                        <array name="interrupt_table"/>
+                        <array name="interrupt_table">
+                           <struct name="0"/>
+                        </array>
                         <array name="interrupts"/>
                      </config_set>
                   </instance>
                </instances>
             </functional_group>
-            <functional_group name="BOARD_InitMAGPeripheral" uuid="05b9d870-6f17-43a7-af88-795a5a83017c" called_from_default_init="false" id_prefix="" core="core0">
+            <functional_group name="BOARD_InitMAGPeripheral" uuid="675d9399-89b7-40f1-964b-cdf92b67419b" called_from_default_init="false" id_prefix="" core="core0">
                <description></description>
                <options/>
                <dependencies>
@@ -1018,7 +850,7 @@
                   </dependency>
                </dependencies>
                <instances>
-                  <instance name="MAG_I2C" uuid="c2fc8228-5c96-4e7d-96da-ecea1f28127a" type="i2c" type_id="i2c_2566d7363e7e9aaedabb432110e372d7" mode="I2C_Polling" peripheral="I2C0" enabled="true" comment="" custom_name_enabled="true" editing_lock="false">
+                  <instance name="MAG_I2C" uuid="85b546d3-2459-40b2-98f3-ec3924b409b0" type="i2c" type_id="i2c_2566d7363e7e9aaedabb432110e372d7" mode="I2C_Polling" peripheral="I2C0" enabled="true" comment="" custom_name_enabled="true" editing_lock="false">
                      <config_set name="fsl_i2c" quick_selection="QS_I2C_1">
                         <setting name="i2c_mode" value="kI2C_Master"/>
                         <setting name="clockSource" value="BusInterfaceClock"/>
@@ -1031,7 +863,7 @@
                         </struct>
                      </config_set>
                   </instance>
-                  <instance name="INT2" uuid="b444ca8b-d4d2-4fe9-9fd1-19df699bc386" type="gpio" type_id="gpio_f970a92e447fa4793838db25a2947ed7" mode="GPIO" peripheral="GPIOD" enabled="true" comment="" custom_name_enabled="true" editing_lock="false">
+                  <instance name="INT2" uuid="fcb55674-85c2-47c0-b1d1-a3888ce0e989" type="gpio" type_id="gpio_f970a92e447fa4793838db25a2947ed7" mode="GPIO" peripheral="GPIOD" enabled="true" comment="" custom_name_enabled="true" editing_lock="false">
                      <config_set name="fsl_gpio">
                         <setting name="enable_irq" value="false"/>
                         <struct name="port_interrupt">
@@ -1043,15 +875,17 @@
                         </struct>
                      </config_set>
                   </instance>
-                  <instance name="NVIC_2" uuid="7845a9cb-d289-4a09-b69d-eed89edbb60b" type="nvic" type_id="nvic_57b5eef3774cc60acaede6f5b8bddc67" mode="general" peripheral="NVIC" enabled="true" comment="" custom_name_enabled="false" editing_lock="false">
+                  <instance name="NVIC_2" uuid="1137b7ac-04ff-42e2-b5e8-552d8cb62667" type="nvic" type_id="nvic_57b5eef3774cc60acaede6f5b8bddc67" mode="general" peripheral="NVIC" enabled="true" comment="" custom_name_enabled="false" editing_lock="false">
                      <config_set name="nvic">
-                        <array name="interrupt_table"/>
+                        <array name="interrupt_table">
+                           <struct name="0"/>
+                        </array>
                         <array name="interrupts"/>
                      </config_set>
                   </instance>
                </instances>
             </functional_group>
-            <functional_group name="BOARD_InitDEBUG_UARTPeripheral" uuid="0687d12b-ac12-4551-b6f4-9ff7812a1e1b" called_from_default_init="false" id_prefix="BOARD_" core="core0">
+            <functional_group name="BOARD_InitDEBUG_UARTPeripheral" uuid="1086a954-ae8a-4649-9cd7-aef5e455e907" called_from_default_init="false" id_prefix="BOARD_" core="core0">
                <description></description>
                <options/>
                <dependencies>
@@ -1062,7 +896,7 @@
                   </dependency>
                </dependencies>
                <instances>
-                  <instance name="LPSCI_1" uuid="5584f3ac-84cb-4dd7-aa85-671b2c565453" type="lpsci" type_id="lpsci_d7d643c7d665ff9a7a181303138bb697" mode="polling" peripheral="UART0" enabled="true" comment="" custom_name_enabled="true" editing_lock="false">
+                  <instance name="LPSCI_1" uuid="9e90139a-ffae-4de9-820b-84edd24be089" type="lpsci" type_id="lpsci_d7d643c7d665ff9a7a181303138bb697" mode="polling" peripheral="UART0" enabled="true" comment="" custom_name_enabled="true" editing_lock="false">
                      <config_set name="lpsciConfig_t">
                         <struct name="lpsciConfig">
                            <setting name="clockSource" value="UartClock"/>
@@ -1076,9 +910,11 @@
                         </struct>
                      </config_set>
                   </instance>
-                  <instance name="NVIC_4" uuid="35813841-9a59-4ebe-bc79-e3ac7564f344" type="nvic" type_id="nvic_57b5eef3774cc60acaede6f5b8bddc67" mode="general" peripheral="NVIC" enabled="true" comment="" custom_name_enabled="false" editing_lock="false">
+                  <instance name="NVIC_4" uuid="2d376620-fb60-4f4b-8c2b-db4507556b32" type="nvic" type_id="nvic_57b5eef3774cc60acaede6f5b8bddc67" mode="general" peripheral="NVIC" enabled="true" comment="" custom_name_enabled="false" editing_lock="false">
                      <config_set name="nvic">
-                        <array name="interrupt_table"/>
+                        <array name="interrupt_table">
+                           <struct name="0"/>
+                        </array>
                         <array name="interrupts"/>
                      </config_set>
                   </instance>
@@ -1086,29 +922,29 @@
             </functional_group>
          </functional_groups>
          <components>
-            <component name="system" uuid="250cc2b8-192e-4390-b021-fab6fea44814" type_id="system">
+            <component name="system" uuid="e0f66c7e-6cf2-4e0c-b5b8-133ec00de5b6" type_id="system">
                <config_set_global name="global_system_definitions">
                   <setting name="user_definitions" value=""/>
                   <setting name="user_includes" value=""/>
                </config_set_global>
             </component>
-            <component name="uart_cmsis_common" uuid="90d6e069-20a8-460e-91a2-f87aa81d9a82" type_id="uart_cmsis_common_9cb8e302497aa696fdbb5a4fd622c2a8">
+            <component name="uart_cmsis_common" uuid="fef5fbce-7e66-43e5-9924-8e1cb99edf11" type_id="uart_cmsis_common_9cb8e302497aa696fdbb5a4fd622c2a8">
                <config_set_global name="global_USART_CMSIS_common" quick_selection="default"/>
             </component>
-            <component name="generic_can" uuid="a5dce366-4a8e-48e9-ba4f-8a2081644247" type_id="generic_can_1bfdd78b1af214566c1f23cf6a582d80">
-               <config_set_global name="global_can"/>
-            </component>
-            <component name="gpio_adapter_common" uuid="86995c4d-e2b0-4130-965c-6f6f36e96815" type_id="gpio_adapter_common_57579b9ac814fe26bf95df0a384c36b6">
-               <config_set_global name="global_gpio_adapter_common" quick_selection="default"/>
-            </component>
-            <component name="generic_uart" uuid="fb2fdaf0-e520-4187-b3eb-593690b151b1" type_id="generic_uart_8cae00565451cf2346eb1b8c624e73a6">
-               <config_set_global name="global_uart"/>
-            </component>
-            <component name="msg" uuid="5663c467-66e1-4578-b85b-87fe0b40d6df" type_id="msg_6e2baaf3b97dbeef01c0043275f9a0e7">
+            <component name="msg" uuid="b90f90ba-3215-41ad-ba4d-3f5f81679c7b" type_id="msg_6e2baaf3b97dbeef01c0043275f9a0e7">
                <config_set_global name="global_messages"/>
             </component>
-            <component name="generic_enet" uuid="c55a8c23-5f50-427d-9178-7b1047610685" type_id="generic_enet_74db5c914f0ddbe47d86af40cb77a619">
+            <component name="gpio_adapter_common" uuid="421385e7-b404-43e4-8cb4-0015ca127ab0" type_id="gpio_adapter_common_57579b9ac814fe26bf95df0a384c36b6">
+               <config_set_global name="global_gpio_adapter_common" quick_selection="default"/>
+            </component>
+            <component name="generic_uart" uuid="7bfd0214-39ad-4567-93b2-569ac8d4de72" type_id="generic_uart_8cae00565451cf2346eb1b8c624e73a6">
+               <config_set_global name="global_uart"/>
+            </component>
+            <component name="generic_enet" uuid="3d17f099-acf4-49b5-810f-ecd07ec4fe56" type_id="generic_enet_74db5c914f0ddbe47d86af40cb77a619">
                <config_set_global name="global_enet"/>
+            </component>
+            <component name="generic_can" uuid="21fcec6d-0d03-4fd0-88de-96a1e68f9e86" type_id="generic_can_1bfdd78b1af214566c1f23cf6a582d80">
+               <config_set_global name="global_can"/>
             </component>
          </components>
       </periphs>

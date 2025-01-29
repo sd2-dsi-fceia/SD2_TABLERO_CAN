@@ -40,12 +40,15 @@
 #include "MKL46Z4.h"
 #include "fsl_debug_console.h"
 /* TODO: insert other include files here. */
+#include "mcp2515.h"
 #include "can.h"
-#include "CanApi.h"
 /* TODO: insert other definitions and declarations here. */
 #define TIEMPO_DE_SALIDA	500
+#define TIMEOUT	20000
 
 uint16_t Delay1s = TIEMPO_DE_SALIDA;
+uint16_t DelayTimeOut = TIMEOUT;
+
 /**
  * @brief Interrupcion por recepcion de datos del modulo can.
  *
@@ -59,10 +62,8 @@ uint16_t Delay1s = TIEMPO_DE_SALIDA;
  */
 volatile static bool Rx_flag_mcp2515 = false;
 
-typedef union
-{
-	struct
-	{
+typedef union {
+	struct {
 		unsigned LED_ROJO :1;
 		unsigned PULSADOR1 :1;
 		unsigned PULSADOR2 :1;
@@ -74,38 +75,61 @@ typedef union
 /**
  * @brief Mensaje de lectura.
  */
-struct can_frame canMsgRead =
-{ .can_dlc = 0, .can_id = 0, };
+struct can_frame canMsgRead = { .can_dlc = 0, .can_id = 0, };
 
 volatile uint16_t adc_read;
 EstPerifericos_t perifericos;
 
 bool estSW1, estSW2, estLedRojo;
 
-static void init_Can(void);
+// DECLARACION DE FUNCIONES.
+//---------------------------------------------------------------------------------------
+/**
+ * @brief Inicializa todas las configuraciones.
+ */
+static void init(void);
+/**
+ * @brief Lectura del mensaje can desde el bus.
+ */
+static void canmsg_readFromBus(void);
+/**
+ * @brief Procesa la interrupcion del MCP2515.
+ */
+static void canmsg_interrupt(void);
 /**
  * @brief Salida por serie de datos del nodo 3.
  */
 static void canmsg_procesar(void);
 /**
- * @brief Funcion callback para nodo 1.
+ * @brief Función de callback cuando se termina el tiempo.
  */
-static void Callback_Nodo1(canid_t SubcriberId, canid_t nodeId);
-/**
- * @brief Funcion callback para nodo 2.
- */
-static void Callback_Nodo2(canid_t SubcriberId, canid_t nodeId);
-extern void callbackTimeout(void);
+static void callbackTimeout(void);
+//---------------------------------------------------------------------------------------
 
-/*
- * @brief   Application entry point.
- */
-int main(void)
-{
+// CUERPO DE FUNCIONES.
+//---------------------------------------------------------------------------------------
+int main(void) {
+	init();
+
+	PRINTF("\nNombre: Nodo 3\n\r");
+	PRINTF("Descripcion: Este nodo se encarga de recibir"
+			"datos desde el modulo can y luego msotrar"
+			"en un puerto serie dicho resultados.\n\r");
+
+	SysTick_Config(CLOCK_GetCoreSysClkFreq() / 1000U);
+
+	while (1) {
+		if (Delay1s == 0)
+			canmsg_procesar();
+	}
+
+	return 0;
+}
+//---------------------------------------------------------------------------------------
+static void init(void) {
 	/* Init board hardware. */
 	BOARD_InitBootPins();
 	BOARD_InitBootClocks();
-	BOARD_InitBootPeripherals();
 #ifndef BOARD_INIT_DEBUG_CONSOLE_PERIPHERAL
 	/* Init FSL debug console. */
 	BOARD_InitDebugConsole();
@@ -115,109 +139,142 @@ int main(void)
 	BOARD_InitLEDs();
 	BOARD_InitButtons();
 
-	PRINTF("\nNombre: Nodo 3\n\r");
-	PRINTF("Descripcion: Este nodo se encarga de recibir"
-			"datos desde el modulo can y luego msotrar"
-			"en un puerto serie dicho resultados.\n\r");
-	PRINTF("Materia: Sistemas digitales 2\n\r");
+	/* Inicializa el modulo mcp2515. */
+	ERROR_t status = mcp2515_reset();
+	assert(status == ERROR_OK);	// Detiene el programa si hubo algún error al incializar
 
-	/* Incializamos todos los parametros de can. */
-	init_Can();
+	status = mcp2515_setBitrate(CAN_125KBPS, MCP_8MHZ);
+	assert(status == ERROR_OK);
 
-	SysTick_Config(CLOCK_GetCoreSysClkFreq() / 1000U);
+#define MASK0_ID10		0x00F	// Para el ID=20 es lo mismo
+#define FILTER0_ID10	0x00A
+#define FILTER1_ID20	20
 
-	while (1)
-	{
-		if (Delay1s == 0)
-			canmsg_procesar();
-	}
-	return 0;
-}
-//---------------------------------------------------------------------------------------
-static void init_Can(void)
-{
-	/* Inicializamos el can. */
-	CAN_init();
+	mcp2515_setFilterMask(MASK0, false, MASK0_ID10);
+	mcp2515_setFilterMask(MASK1, false, MASK0_ID10);
 
-	/* Configuro los filtros y mascaras para la recepcion. */
-	Error_Can_t result = CAN_setMask(MASK0, false, 0x7FF); // Máscara 0x7FF, no extendido (ID estándar)
-	if (result != ERROR_CAN_OK) {
-		PRINTF("\n\rError: al configurar la mascara.\n\r");
-	}
+	mcp2515_setFilter(RXF0, false, FILTER0_ID10);
+	mcp2515_setFilter(RXF2, false, FILTER1_ID20);
 
-	result = CAN_setFilter(RXF0, false, 10); // Filtro para ID 10, no extendido (ID estándar)
-	if (result != ERROR_CAN_OK) {
-		PRINTF("\n\rError: al configurar el filtro.\n\r");
-	}
+	status = mcp2515_setNormalMode();
+	assert(status == ERROR_OK);
 
-	result = CAN_setFilter(RXF1, false, 20); // Filtro para ID 20, no extendido (ID estándar)
-	if (result != ERROR_CAN_OK) {
-		PRINTF("\n\rError: al configurar el filtro.\n\r");
-	}
+	mcp2515_clearInterrupts();
 
-	/* Creamos las subscriones a los distintos nodos. */
-	Error_Can_t error = CAN_Subscribe(10, 30, Callback_Nodo1);
-	assert(error != ERROR_CAN_MEMORY);
-
-	error = CAN_Subscribe(20, 30, Callback_Nodo2);
-	assert(error != ERROR_CAN_MEMORY);
+	BOARD_InitBootPeripherals();
 
 	return;
 }
 //---------------------------------------------------------------------------------------
-static void Callback_Nodo1(canid_t SubcriberId, canid_t nodeId)
-{
-	CAN_readMsg(&canMsgRead, nodeId, SubcriberId);
+static void canmsg_readFromBus(void) {
+#define CAN_NODO1_ID	10
+#define CAN_NODO2_ID	20
 
-	adc_read = canMsgRead.data[1];
-	adc_read = (adc_read << 8) | canMsgRead.data[0];
+	// Recibe el mensaje
+	ERROR_t status = mcp2515_readMessage(&canMsgRead);
+	if (status != ERROR_OK)
+		PRINTF("Error al recibir el mensaje.\n\r");
+
+	if (canMsgRead.can_id == CAN_NODO1_ID) {
+		adc_read = canMsgRead.data[1];
+		adc_read = (adc_read << 8) | canMsgRead.data[0];
+	}
+
+	else if (canMsgRead.can_id == CAN_NODO2_ID) {
+		perifericos.data = canMsgRead.data[0];
+
+		estLedRojo = perifericos.LED_ROJO;
+		estSW1 = perifericos.PULSADOR1;
+		estSW2 = perifericos.PULSADOR2;
+	}
+
+	/* Reiniciamos el contador de tiempo */
+	DelayTimeOut = TIMEOUT;
 
 	return;
 }
 //---------------------------------------------------------------------------------------
-static void Callback_Nodo2(canid_t SubcriberId, canid_t nodeId)
-{
-	CAN_readMsg(&canMsgRead, nodeId, SubcriberId);
-
-	perifericos.data = canMsgRead.data[0];
-
-	estLedRojo = perifericos.LED_ROJO;
-	estSW1 = perifericos.PULSADOR1;
-	estSW2 = perifericos.PULSADOR2;
-
-	return;
-}
-//---------------------------------------------------------------------------------------
-static void canmsg_procesar(void)
-{
+static void canmsg_procesar(void) {
 //	PRINTF("\n\r> Salida por consola\n\r");
+	PRINTF("\n----------------------------------\n\r");
 	PRINTF("Led rojo: %d\r\n", estLedRojo);
 	PRINTF("Boton 1: %d\r\n", estSW1);
 	PRINTF("Boton 2: %d\r\n", estSW2);
 	PRINTF("Sensor de luz: %d\r\n", adc_read);
+	PRINTF("----------------------------------\n\r");
 
 	return;
 }
 //---------------------------------------------------------------------------------------
-extern void callbackTimeout(void)
-{
-	init_Can();
+static void callbackTimeout(void) {
+	PRINTF("\n\nTiempo agotado!!!\n\r");
+
+	LED_RED_ON();
+
+	NVIC_DisableIRQ(GPIOA_IRQN);
+
+	assert(false);
 
 	return;
 }
 //---------------------------------------------------------------------------------------
-void SysTick_Handler(void)
-{
+void SysTick_Handler(void) {
 	if (Delay1s != 0)
 		Delay1s--;
 	else
 		Delay1s = TIEMPO_DE_SALIDA;
 
-	if (CAN_getTimer())
-	{
-		CAN_eventTx();
-		CAN_eventRx();
+	if (DelayTimeOut != 0)
+		DelayTimeOut--;
+	else
+		callbackTimeout();
+
+	return;
+}
+//---------------------------------------------------------------------------------------
+static void canmsg_interrupt(void) {
+	// Leemos las interrupciones generadas
+	ERROR_t error = mcp2515_getInterrupts();
+
+	if (error != ERROR_OK) {
+		PRINTF("Fallo al leer la interrupcion\n\r");
+		return;
+	}
+
+	// Detectamos las interrupciones relevantes
+	if (mcp2515_getIntERRIF()) {
+		PRINTF("Error interrupt flag\n\r");
+		mcp2515_clearERRIF();
+		return;
+	}
+
+	if (mcp2515_getIntMERRF()) {
+		PRINTF("Message error interrupt flag\n\r");
+		mcp2515_clearMERR();
+		return;
+	}
+
+	if (mcp2515_getIntRX0IF() || mcp2515_getIntRX1IF()) {
+		canmsg_readFromBus();
 	}
 
 	return;
+}
+//---------------------------------------------------------------------------------------
+/* PORTA_IRQn interrupt handler */
+void GPIOA_IRQHANDLER(void) {
+	/* Get pin flags */
+	uint32_t pin_flags = GPIO_PortGetInterruptFlags(GPIOA);
+
+	/* Place your interrupt code here */
+	canmsg_interrupt();
+
+	/* Clear pin flags */
+	GPIO_PortClearInterruptFlags(GPIOA, pin_flags);
+
+	/* Add for ARM errata 838869, affects Cortex-M4, Cortex-M4F
+	 Store immediate overlapping exception return operation might vector to incorrect interrupt. */
+#if defined __CORTEX_M && (__CORTEX_M == 4U)
+    __DSB();
+  #endif
 }
