@@ -1,0 +1,605 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model version="7.0.0" links="1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.state-machine.com/qm/qm7.xsd">
+ <documentation>About this example:
+-------------------
+Simple &quot;Blinky&quot; console application for workstations (Windows, Linux, MacOS)
+(see &quot;QM Tutorial&quot; at: https://www.state-machine.com/qm/gs_tut.html)
+
+This example demonstrates:
+- Active object (Blinky) with state machine
+- Board Support Package abstraction for portability
+- BSP implementation for desktop OS (Windows, Linux, MacOS)
+- Platform-independent main() function
+- Makefile to build the generated code on desktop OS (Windows, Linux, MacOS)
+- Customized tools for building the generated code directly from QM
+
+Building the example:
+---------------------
+To build this example, you will need the QP/C framework installed on your
+computer and the GNU-GCC compiler. Both of them will be available if you
+install the QP-bundle from:
+
+https://www.state-machine.com/#Downloads
+
+Running the example:
+--------------------
+This example is a simple console application, which you can run from a terminal.
+
+For more QM examples for QP/C see:
+https://www.state-machine.com/qpc/exa.html</documentation>
+ <!--${qpc}-->
+ <framework name="qpc"/>
+ <!--${Shared}-->
+ <package name="Shared" stereotype="0x00">
+  <!--${Shared::MEFSignals}-->
+  <attribute name="MEFSignals" type="enum" visibility="0x04" properties="0x00">
+   <code>{
+    TIMEOUT_SIG = Q_USER_SIG,
+    TIMER1S_SIG,
+    TIMER2S_SIG,
+    TIMER3S_SIG,
+    EMERGENCIA_SIG,
+    TRIG1_SIG,
+};</code>
+  </attribute>
+  <!--${Shared::AO_MEF}-->
+  <attribute name="AO_MEF" type="QActive * const" visibility="0x00" properties="0x00">
+   <code>= &amp;MEF_inst.super;</code>
+  </attribute>
+  <!--${Shared::MEF_ctor}-->
+  <operation name="MEF_ctor" type="void" visibility="0x00" properties="0x01">
+   <documentation>The Blinky &quot;constructor&quot; is provided outside of the Blinky class, so that it can be used independently from the class. This is part of the &quot;opaque pointer&quot; design idiom.</documentation>
+   <code>MEF * const me = &amp;MEF_inst;
+
+// Construye el objeto activo
+QActive_ctor(&amp;me-&gt;super, Q_STATE_CAST(&amp;MEF_initial));
+
+// Construye los timers
+QTimeEvt_ctorX(&amp;me-&gt;timeEvt, &amp;me-&gt;super, TIMEOUT_SIG, 0U);
+QTimeEvt_ctorX(&amp;me-&gt;time1sEvt, &amp;me-&gt;super, TIMER1S_SIG, 0U);
+QTimeEvt_ctorX(&amp;me-&gt;time2sEvt, &amp;me-&gt;super, TIMER2S_SIG, 0U);
+QTimeEvt_ctorX(&amp;me-&gt;time3sEvt, &amp;me-&gt;super, TIMER3S_SIG, 0U);</code>
+  </operation>
+  <!--${Shared::MEF_setEvtEmergencia}-->
+  <operation name="MEF_setEvtEmergencia" type="void" visibility="0x00" properties="0x00">
+   <code>QACTIVE_POST(AO_MEF, &amp;evtEmergencia, 0U);</code>
+  </operation>
+ </package>
+ <!--${AOs}-->
+ <package name="AOs" stereotype="0x02">
+  <!--${AOs::MEF}-->
+  <class name="MEF" superclass="qpc::QActive">
+   <!--${AOs::MEF::inst}-->
+   <attribute name="inst" type="MEF" visibility="0x00" properties="0x01"/>
+   <!--${AOs::MEF::timeEvt}-->
+   <attribute name="timeEvt" type="QTimeEvt" visibility="0x02" properties="0x00"/>
+   <!--${AOs::MEF::time1sEvt}-->
+   <attribute name="time1sEvt" type="QTimeEvt" visibility="0x02" properties="0x00"/>
+   <!--${AOs::MEF::time2sEvt}-->
+   <attribute name="time2sEvt" type="QTimeEvt" visibility="0x02" properties="0x00"/>
+   <!--${AOs::MEF::time3sEvt}-->
+   <attribute name="time3sEvt" type="QTimeEvt" visibility="0x02" properties="0x00"/>
+   <!--${AOs::MEF::SM}-->
+   <statechart properties="0x03">
+    <documentation>Blinky state machine</documentation>
+    <!--${AOs::MEF::SM::initial}-->
+    <initial target="../1">
+     <action brief="init_mef"/>
+     <initial_glyph color="3" conn="15,8,5,3,9">
+      <action box="0,-2,10,2"/>
+     </initial_glyph>
+    </initial>
+    <!--${AOs::MEF::SM::MEF_Semaforo}-->
+    <state name="MEF_Semaforo">
+     <!--${AOs::MEF::SM::MEF_Semaforo::initial}-->
+     <initial target="../3">
+      <action brief="init">QTimeEvt_armX(&amp;me-&gt;timeEvt,
+BSP_TICKS_PER_SEC, 0);</action>
+      <initial_glyph color="3" conn="31,15,5,3,7">
+       <action box="0,-2,6,2"/>
+      </initial_glyph>
+     </initial>
+     <!--${AOs::MEF::SM::MEF_Semaforo::history}-->
+     <history type="deep" target="../4">
+      <history_glyph color="3" conn="77,16,1,1,-18,14,-3"/>
+     </history>
+     <!--${AOs::MEF::SM::MEF_Semaforo::EMERGENCIA}-->
+     <tran trig="EMERGENCIA" target="../../2">
+      <tran_glyph color="3" conn="77,11,1,3,12">
+       <action box="0,-2,11,2"/>
+      </tran_glyph>
+     </tran>
+     <!--${AOs::MEF::SM::MEF_Semaforo::Est_reset}-->
+     <state name="Est_reset">
+      <entry brief="reset">// Apaga todos los leds
+BSP_ledOff();</entry>
+      <exit brief="fin reset">// Desarma el temp.
+QTimeEvt_disarm(&amp;me-&gt;timeEvt);</exit>
+      <!--${AOs::MEF::SM::MEF_Semaforo::Est_reset::TIMEOUT}-->
+      <tran trig="TIMEOUT" target="../../4">
+       <tran_glyph color="1" conn="38,19,3,0,-3,3,8,3">
+        <action box="0,-2,8,2"/>
+       </tran_glyph>
+      </tran>
+      <state_glyph color="2" node="38,9,16,12">
+       <entry box="0,3,11,2"/>
+       <exit box="0,5,11,2"/>
+      </state_glyph>
+     </state>
+     <!--${AOs::MEF::SM::MEF_Semaforo::Est_Rojo}-->
+     <state name="Est_Rojo">
+      <entry brief="Prende rojo">// Prende led
+PRINTF(&quot;LED ROJO ON\n\r&quot;);
+LED_RED_ON();
+estActual = Est_ROJO;
+// Arma el temporizador de 2 segundos
+QTimeEvt_armX(&amp;me-&gt;time2sEvt, BSP_TICKS_PER_SEC*2, 0);</entry>
+      <exit brief="Apaga rojo">// Apaga led
+LED_RED_OFF();
+// Desarma el temporizador de 2 segundos
+QTimeEvt_disarm(&amp;me-&gt;time2sEvt);</exit>
+      <!--${AOs::MEF::SM::MEF_Semaforo::Est_Rojo::TIMER2S}-->
+      <tran trig="TIMER2S" target="../../5">
+       <tran_glyph color="1" conn="43,38,2,0,5">
+        <action box="1,1,10,2"/>
+       </tran_glyph>
+      </tran>
+      <state_glyph color="2" node="31,25,25,13">
+       <entry box="0,3,12,2"/>
+       <exit box="0,5,12,2"/>
+      </state_glyph>
+     </state>
+     <!--${AOs::MEF::SM::MEF_Semaforo::Est_Amarillo}-->
+     <state name="Est_Amarillo">
+      <entry brief="Prende amarillo">// Prende led
+PRINTF(&quot;LED AMARILLO ON\n\r&quot;);
+// Arma temp. 1 segundo
+QTimeEvt_armX(&amp;me-&gt;time1sEvt, BSP_TICKS_PER_SEC*1, 0);</entry>
+      <exit brief="Apaga amarillo">// Apaga led
+
+// Desarma temp. 1 segundo
+QTimeEvt_disarm(&amp;me-&gt;time1sEvt);</exit>
+      <!--${AOs::MEF::SM::MEF_Semaforo::Est_Amarillo::TIMER1S}-->
+      <tran trig="TIMER1S">
+       <!--${AOs::MEF::SM::MEF_Semaforo::Est_Amarillo::TIMER1S::[VERDE]}-->
+       <choice target="../../../6">
+        <guard brief="VERDE">guardCond1()</guard>
+        <choice_glyph color="1" conn="59,59,4,1,9,-3">
+         <action box="0,3,9,3"/>
+        </choice_glyph>
+       </choice>
+       <!--${AOs::MEF::SM::MEF_Semaforo::Est_Amarillo::TIMER1S::[ROJO]}-->
+       <choice target="../../../4">
+        <guard brief="ROJO">else</guard>
+        <choice_glyph color="1" conn="59,59,4,1,-25,-3">
+         <action box="0,-23,9,3"/>
+        </choice_glyph>
+       </choice>
+       <tran_glyph color="1" conn="43,56,2,-1,3,16">
+        <action box="2,1,10,2"/>
+       </tran_glyph>
+      </tran>
+      <state_glyph color="2" node="31,43,25,13">
+       <entry box="0,3,15,2"/>
+       <exit box="0,5,15,2"/>
+      </state_glyph>
+     </state>
+     <!--${AOs::MEF::SM::MEF_Semaforo::Est_Verde}-->
+     <state name="Est_Verde">
+      <entry brief="Prende verde">// Prende led
+PRINTF(&quot;LED VERDE ON\n\r&quot;);
+LED_GREEN_ON();
+estActual = Est_VERDE;
+// Arma temp. 3 segundos
+QTimeEvt_armX(&amp;me-&gt;time3sEvt, BSP_TICKS_PER_SEC*3, 0);</entry>
+      <exit brief="Apaga verde">// Apaga led
+LED_GREEN_OFF();
+// Desarma temp. 3 segundos
+QTimeEvt_disarm(&amp;me-&gt;time3sEvt);</exit>
+      <!--${AOs::MEF::SM::MEF_Semaforo::Est_Verde::TIMER3S}-->
+      <tran trig="TIMER3S" target="../../5">
+       <tran_glyph color="1" conn="31,70,3,3,-3,-19,3">
+        <action box="1,-1,10,2"/>
+       </tran_glyph>
+      </tran>
+      <state_glyph color="2" node="31,61,25,14">
+       <entry box="0,3,14,2"/>
+       <exit box="0,5,14,2"/>
+      </state_glyph>
+     </state>
+     <state_glyph node="24,3,53,76"/>
+    </state>
+    <!--${AOs::MEF::SM::MEF_Emergencia}-->
+    <state name="MEF_Emergencia">
+     <!--${AOs::MEF::SM::MEF_Emergencia::initial}-->
+     <initial target="../1">
+      <action brief="init"/>
+      <initial_glyph color="3" conn="93,8,5,0,12,3">
+       <action box="0,-2,10,2"/>
+      </initial_glyph>
+     </initial>
+     <!--${AOs::MEF::SM::MEF_Emergencia::Est_Emerg_reset}-->
+     <state name="Est_Emerg_reset">
+      <entry brief="reset">// Arma el evento
+PRINTF(&quot;Emergencia!!!\n\r&quot;);
+QACTIVE_POST(AO_MEF, &amp;evtTRIG1, 0U);</entry>
+      <!--${AOs::MEF::SM::MEF_Emergencia::Est_Emerg_reset::TRIG1}-->
+      <tran trig="TRIG1" target="../../2">
+       <tran_glyph color="1" conn="105,23,2,0,6">
+        <action box="1,2,10,2"/>
+       </tran_glyph>
+      </tran>
+      <state_glyph color="2" node="96,11,18,12">
+       <entry box="0,3,8,2"/>
+      </state_glyph>
+     </state>
+     <!--${AOs::MEF::SM::MEF_Emergencia::Est_Intermitente}-->
+     <state name="Est_Intermitente">
+      <entry brief="acciones">// Arma el temp.
+QTimeEvt_armX(&amp;me-&gt;timeEvt,
+BSP_TICKS_PER_SEC, BSP_TICKS_PER_SEC/2);</entry>
+      <exit brief="acciones">// Desarma el temp.
+LED_RED_OFF();
+QTimeEvt_disarm(&amp;me-&gt;timeEvt);</exit>
+      <!--${AOs::MEF::SM::MEF_Emergencia::Est_Intermitente::TIMEOUT}-->
+      <tran trig="TIMEOUT">
+       <action brief="Toggle rojo">// Toggle led
+//PRINTF(&quot;Toggle ROJO\n\r&quot;);
+LED_RED_TOGGLE();</action>
+       <tran_glyph color="1" conn="92,41,3,-1,21">
+        <action box="0,-4,14,4"/>
+       </tran_glyph>
+      </tran>
+      <!--${AOs::MEF::SM::MEF_Emergencia::Est_Intermitente::EMERGENCIA}-->
+      <tran trig="EMERGENCIA" target="../../../1" cpref="../../../1/1">
+       <tran_glyph color="3" conn="92,43,3,1,-7,-27,-7">
+        <action box="1,-1,13,2"/>
+       </tran_glyph>
+      </tran>
+      <state_glyph color="2" node="92,29,26,15">
+       <entry box="0,3,11,2"/>
+       <exit box="0,5,11,2"/>
+      </state_glyph>
+     </state>
+     <state_glyph node="89,3,31,43"/>
+    </state>
+    <state_diagram size="144,84"/>
+   </statechart>
+  </class>
+  <!--${AOs::estANT}-->
+  <attribute name="estANT" type="typedef enum" visibility="0x04" properties="0x01">
+   <code>{
+    Est_ROJO = 0,
+    Est_VERDE,
+}estANT;</code>
+  </attribute>
+  <!--${AOs::guardCond1}-->
+  <operation name="guardCond1" type="bool" visibility="0x02" properties="0x01">
+   <code>return estActual==Est_ROJO? true:false;</code>
+  </operation>
+  <!--${AOs::estActual}-->
+  <attribute name="estActual" type="estANT" visibility="0x00" properties="0x00">
+   <code>= Est_ROJO;</code>
+  </attribute>
+  <!--${AOs::evtEmergencia}-->
+  <attribute name="evtEmergencia" type="QEvt const" visibility="0x00" properties="0x01">
+   <code>= QEVT_INITIALIZER(EMERGENCIA_SIG);</code>
+  </attribute>
+  <!--${AOs::evtTRIG1}-->
+  <attribute name="evtTRIG1" type="QEvt const" visibility="0x00" properties="0x00">
+   <code>= QEVT_INITIALIZER(TRIG1_SIG);</code>
+  </attribute>
+ </package>
+ <!--${.}-->
+ <directory name=".">
+  <!--${.::bsp.h}-->
+  <file name="bsp.h">
+   <text>#ifndef BSP_H_
+#define BSP_H_
+
+#define BSP_TICKS_PER_SEC    1000U
+
+void BSP_init(void);
+void BSP_start(void);
+void BSP_ledOn(void);
+void BSP_ledOff(void);
+
+$declare ${Shared}
+
+#endif // BSP_H_</text>
+  </file>
+  <!--${.::bsp.c}-->
+  <file name="bsp.c" properties="external"/>
+  <!--${.::blinky.c}-->
+  <file name="blinky.c">
+   <text>#include &quot;qpc.h&quot;    // QP/C real-time embedded framework
+#include &quot;bsp.h&quot;    // Board Support Package interface
+
+// ask QM to declare the Blinky class
+//$declare ${AOs::Blinky}
+
+//$define ${Shared}
+
+//$define ${AOs::Blinky}</text>
+  </file>
+  <!--${.::main.c}-->
+  <file name="main.c" properties="external"/>
+  <!--${.::Makefile}-->
+  <file name="Makefile">
+   <text># Makefile for building QP/C application on Windows and POSIX hosts
+#
+# examples of invoking this Makefile:
+# building configurations: Debug (default), Release, and Spy
+# make
+# make CONF=rel
+# make CONF=spy
+# make clean   # cleanup the build
+# make CONF=spy clean   # cleanup the build
+#
+# NOTE:
+# To use this Makefile on Windows, you will need the GNU make utility, which
+# is included in the QTools collection for Windows, see:
+#    http://sourceforge.net/projects/qpc/files/QTools/
+#
+
+#-----------------------------------------------------------------------------
+# project name:
+#
+PROJECT := blinky
+
+#-----------------------------------------------------------------------------
+# project directories:
+#
+
+# list of all source directories used by this project
+VPATH := . \
+
+# list of all include directories needed by this project
+INCLUDES := -I. \
+
+# location of the QP/C framework (if not provided in an env. variable)
+ifeq ($(QPC),)
+QPC := /qp/qpc
+endif
+
+#-----------------------------------------------------------------------------
+# project files:
+#
+
+# C source files...
+C_SRCS := \
+    blinky.c \
+    bsp.c \
+    main.c
+
+# C++ source files...
+CPP_SRCS :=
+
+LIB_DIRS :=
+LIBS     :=
+
+# defines...
+# QP_API_VERSION controls the QP API compatibility; 9999 means the latest API
+DEFINES   := -DQP_API_VERSION=9999
+
+ifeq (,$(CONF))
+    CONF := dbg
+endif
+
+#-----------------------------------------------------------------------------
+# add QP/C framework:
+#
+C_SRCS += \
+    qep_hsm.c \
+    qep_msm.c \
+    qf_act.c \
+    qf_actq.c \
+    qf_defer.c \
+    qf_dyn.c \
+    qf_mem.c \
+    qf_ps.c \
+    qf_qact.c \
+    qf_qeq.c \
+    qf_qmact.c \
+    qf_time.c \
+    qf_port.c
+
+QS_SRCS := \
+    qs.c \
+    qs_64bit.c \
+    qs_rx.c \
+    qs_fp.c \
+    qs_port.c
+
+ifeq ($(OS),Windows_NT)
+
+# NOTE:
+# For Windows hosts, you can choose:
+# - the single-threaded QP/C port (win32-qv) or
+# - the multithreaded QP/C port (win32).
+#
+QP_PORT_DIR := $(QPC)/ports/win32-qv
+#QP_PORT_DIR := $(QPC)/ports/win32
+LIBS += -lws2_32
+
+else
+
+# NOTE:
+# For POSIX hosts (Linux, MacOS), you can choose:
+# - the single-threaded QP/C port (win32-qv) or
+# - the multithreaded QP/C port (win32).
+#
+QP_PORT_DIR := $(QPC)/ports/posix-qv
+#QP_PORT_DIR := $(QPC)/ports/posix
+LIBS += -lpthread
+
+endif
+
+#============================================================================
+# Typically you should not need to change anything below this line
+
+VPATH    += $(QPC)/src/qf $(QP_PORT_DIR)
+INCLUDES += -I$(QPC)/include -I$(QP_PORT_DIR)
+
+#-----------------------------------------------------------------------------
+# GNU toolset:
+#
+# NOTE:
+# GNU toolset (MinGW) is included in the QTools collection for Windows, see:
+#     https://www.state-machine.com/qtools
+# It is assumed that %QTOOLS%\bin directory is added to the PATH
+#
+CC    := gcc
+CPP   := g++
+LINK  := gcc    # for C programs
+#LINK  := g++   # for C++ programs
+
+#-----------------------------------------------------------------------------
+# basic utilities (depends on the OS this Makefile runs on):
+#
+ifeq ($(OS),Windows_NT)
+    MKDIR      := mkdir
+    RM         := rm
+    TARGET_EXT := .exe
+else ifeq ($(OSTYPE),cygwin)
+    MKDIR      := mkdir -p
+    RM         := rm -f
+    TARGET_EXT := .exe
+else
+    MKDIR      := mkdir -p
+    RM         := rm -f
+    TARGET_EXT :=
+endif
+
+#-----------------------------------------------------------------------------
+# build configurations...
+
+ifeq (rel, $(CONF)) # Release configuration ..................................
+
+BIN_DIR := build_rel
+# gcc options:
+CFLAGS  = -c -O3 -fno-pie -std=c11 -pedantic -Wall -Wextra -W \
+    $(INCLUDES) $(DEFINES) -DNDEBUG
+
+CPPFLAGS = -c -O3 -fno-pie -std=c++11 -pedantic -Wall -Wextra \
+    -fno-rtti -fno-exceptions \
+    $(INCLUDES) $(DEFINES) -DNDEBUG
+
+else ifeq (spy, $(CONF))  # Spy configuration ................................
+
+BIN_DIR := build_spy
+
+C_SRCS   += $(QS_SRCS)
+VPATH    += $(QPC)/src/qs
+
+# gcc options:
+CFLAGS  = -c -g -O -fno-pie -std=c11 -pedantic -Wall -Wextra -W \
+    $(INCLUDES) $(DEFINES) -DQ_SPY
+
+CPPFLAGS = -c -g -O -fno-pie -std=c++11 -pedantic -Wall -Wextra \
+    -fno-rtti -fno-exceptions \
+    $(INCLUDES) $(DEFINES) -DQ_SPY
+
+else # default Debug configuration .........................................
+
+BIN_DIR := build
+
+# gcc options:
+CFLAGS  = -c -g -O -fno-pie -std=c11 -pedantic -Wall -Wextra -W \
+    $(INCLUDES) $(DEFINES)
+
+CPPFLAGS = -c -g -O -fno-pie -std=c++11 -pedantic -Wall -Wextra \
+    -fno-rtti -fno-exceptions \
+    $(INCLUDES) $(DEFINES)
+
+endif  # .....................................................................
+
+ifndef GCC_OLD
+    LINKFLAGS := -no-pie
+endif
+
+#-----------------------------------------------------------------------------
+C_OBJS       := $(patsubst %.c,%.o,   $(C_SRCS))
+CPP_OBJS     := $(patsubst %.cpp,%.o, $(CPP_SRCS))
+
+TARGET_EXE   := $(BIN_DIR)/$(PROJECT)$(TARGET_EXT)
+C_OBJS_EXT   := $(addprefix $(BIN_DIR)/, $(C_OBJS))
+C_DEPS_EXT   := $(patsubst %.o,%.d, $(C_OBJS_EXT))
+CPP_OBJS_EXT := $(addprefix $(BIN_DIR)/, $(CPP_OBJS))
+CPP_DEPS_EXT := $(patsubst %.o,%.d, $(CPP_OBJS_EXT))
+
+#-----------------------------------------------------------------------------
+# rules
+#
+
+.PHONY: clean show
+
+all: $(TARGET_EXE)
+
+$(TARGET_EXE) : $(C_OBJS_EXT) $(CPP_OBJS_EXT)
+    $(CC) $(CFLAGS) $(QPC)/src/qs/qstamp.c -o $(BIN_DIR)/qstamp.o
+    $(LINK) $(LINKFLAGS) $(LIB_DIRS) -o $@ $^ $(BIN_DIR)/qstamp.o $(LIBS)
+
+$(BIN_DIR)/%.d : %.c
+    $(CC) -MM -MT $(@:.d=.o) $(CFLAGS) $&lt; &gt; $@
+
+$(BIN_DIR)/%.d : %.cpp
+    $(CPP) -MM -MT $(@:.d=.o) $(CPPFLAGS) $&lt; &gt; $@
+
+$(BIN_DIR)/%.o : %.c
+    $(CC) $(CFLAGS) $&lt; -o $@
+
+$(BIN_DIR)/%.o : %.cpp
+    $(CPP) $(CPPFLAGS) $&lt; -o $@
+
+# create BIN_DIR and include dependencies only if needed
+ifneq ($(MAKECMDGOALS),clean)
+ifneq ($(MAKECMDGOALS),show)
+ifneq ($(MAKECMDGOALS),debug)
+ifeq (&quot;$(wildcard $(BIN_DIR))&quot;,&quot;&quot;)
+$(shell $(MKDIR) $(BIN_DIR))
+endif
+-include $(C_DEPS_EXT) $(CPP_DEPS_EXT)
+endif
+endif
+endif
+
+clean :
+    -$(RM) $(BIN_DIR)/*.o \
+    $(BIN_DIR)/*.d \
+    $(TARGET_EXE)
+
+show :
+    @echo PROJECT      = $(PROJECT)
+    @echo TARGET_EXE   = $(TARGET_EXE)
+    @echo VPATH        = $(VPATH)
+    @echo C_SRCS       = $(C_SRCS)
+    @echo CPP_SRCS     = $(CPP_SRCS)
+    @echo C_DEPS_EXT   = $(C_DEPS_EXT)
+    @echo C_OBJS_EXT   = $(C_OBJS_EXT)
+    @echo C_DEPS_EXT   = $(C_DEPS_EXT)
+    @echo CPP_DEPS_EXT = $(CPP_DEPS_EXT)
+    @echo CPP_OBJS_EXT = $(CPP_OBJS_EXT)
+    @echo LIB_DIRS     = $(LIB_DIRS)
+    @echo LIBS         = $(LIBS)
+    @echo DEFINES      = $(DEFINES)
+</text>
+  </file>
+  <!--${.::MEF.c}-->
+  <file name="MEF.c">
+   <text>#include &quot;qpc.h&quot;    // QP/C real-time embedded framework
+#include &quot;bsp.h&quot;    // Board Support Package interface
+
+#include &quot;fsl_debug_console.h&quot;
+#include &quot;board.h&quot;
+
+$declare ${AOs}
+
+//$declare ${AOs::MEF}
+
+$define ${Shared}
+
+$define ${AOs}</text>
+  </file>
+ </directory>
+</model>
