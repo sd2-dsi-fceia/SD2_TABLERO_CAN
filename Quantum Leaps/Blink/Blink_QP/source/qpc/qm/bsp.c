@@ -49,8 +49,7 @@
 //............................................................................
 void BSP_init(void) {
 	printf("Simple Blinky example\n"
-			"QP/C version: %s\n"
-			"Press Ctrl-C to quit...\n",
+			"QP/C version: %s\n\r",
 	QP_VERSION_STR);
 }
 //............................................................................
@@ -97,8 +96,8 @@ void QF_onClockTick(void) {
 //	QF_TICK_X(0U, (void *)0); // QF clock tick processing for rate 0
 }
 Q_NORETURN Q_onError(char const *const module, int id) {
-	fprintf(stderr, "Assertion failed in %s:%d", module, id);
-
+	PRINTF("Assertion failed in %s:%d\n\r", module, id);
+	PRINTF("ERROR!!!\n\rRevisar funciones de eventos,atributos,...\n\r");
     // NOTE: this implementation of the error handler is intended only
     // for debugging and MUST be changed for deployment of the application
     // (assuming that you ship your production code with assertions enabled).
