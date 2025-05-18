@@ -1,0 +1,9 @@
+<map id="mcp2515_clearMERR" name="mcp2515_clearMERR">
+<area shape="rect" id="Node000001" title="Limpia la bandera de merr." alt="" coords="5,31,155,57"/>
+<area shape="rect" id="Node000002" href="$mcp2515_8c.html#ac3bc690a1b8ef1495f5fbb57eab28eaf" title="Modifica un registro en particular." alt="" coords="203,31,372,57"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="155,41,187,41,187,47,155,47"/>
+<area shape="rect" id="Node000003" href="$mcp2515_8c.html#ae85a49925cc5c6fd1b15522434dc51ce" title="Finaliza la comunicacion spi." alt="" coords="422,5,487,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="372,28,406,23,407,28,373,34"/>
+<area shape="rect" id="Node000004" href="$mcp2515_8c.html#afea997d2aa89cc2831bff10e34198bd8" title="Funciones privadas." alt="" coords="420,56,489,83"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="373,54,405,59,404,64,372,60"/>
+</map>

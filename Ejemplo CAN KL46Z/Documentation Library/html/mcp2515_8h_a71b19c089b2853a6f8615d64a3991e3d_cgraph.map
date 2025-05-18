@@ -1,0 +1,9 @@
+<map id="mcp2515_clearTXInterrupts" name="mcp2515_clearTXInterrupts">
+<area shape="rect" id="Node000001" title="Limpia las banderas de interrupcion de tx." alt="" coords="5,31,187,57"/>
+<area shape="rect" id="Node000002" href="$mcp2515_8c.html#ac3bc690a1b8ef1495f5fbb57eab28eaf" title="Modifica un registro en particular." alt="" coords="235,31,404,57"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="187,41,219,41,219,47,187,47"/>
+<area shape="rect" id="Node000003" href="$mcp2515_8c.html#ae85a49925cc5c6fd1b15522434dc51ce" title="Finaliza la comunicacion spi." alt="" coords="454,5,519,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="404,28,438,23,439,28,405,34"/>
+<area shape="rect" id="Node000004" href="$mcp2515_8c.html#afea997d2aa89cc2831bff10e34198bd8" title="Funciones privadas." alt="" coords="452,56,521,83"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="405,54,437,59,436,64,404,60"/>
+</map>

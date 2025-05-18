@@ -1,0 +1,19 @@
+<map id="mcp2515_sendMessageWithBufferId" name="mcp2515_sendMessageWithBufferId">
+<area shape="rect" id="Node000001" title="Envio de mensaje con el buffer." alt="" coords="5,81,240,108"/>
+<area shape="rect" id="Node000002" href="$mcp2515_8c.html#ac3bc690a1b8ef1495f5fbb57eab28eaf" title="Modifica un registro en particular." alt="" coords="288,5,457,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="168,78,287,41,310,34,311,40,288,47,169,83"/>
+<area shape="rect" id="Node000005" href="$mcp2515_8c.html#aed2f12d8207c7b34f82733dbccdb3c76" title="Configura el id para una accion en particular." alt="" coords="305,157,440,184"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="169,106,288,143,311,150,310,155,287,148,168,111"/>
+<area shape="rect" id="Node000006" href="$mcp2515_8c.html#a1dcd2d88901952184ce8297e1c5c6bf6" title="Lee un solo registro a la vez." alt="" coords="295,56,450,83"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="240,80,279,76,279,81,240,85"/>
+<area shape="rect" id="Node000007" href="$mcp2515_8c.html#a06105d6f139b5a81ffc4650b634f9cfe" title="Setea multiples registros." alt="" coords="295,107,450,133"/>
+<area shape="poly" id="edge8_Node000001_Node000007" title=" " alt="" coords="240,104,279,108,279,113,240,109"/>
+<area shape="rect" id="Node000003" href="$mcp2515_8c.html#ae85a49925cc5c6fd1b15522434dc51ce" title="Finaliza la comunicacion spi." alt="" coords="508,31,572,57"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="458,29,492,34,491,39,457,34"/>
+<area shape="rect" id="Node000004" href="$mcp2515_8c.html#afea997d2aa89cc2831bff10e34198bd8" title="Funciones privadas." alt="" coords="505,81,574,108"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="428,30,458,42,509,70,506,75,456,46,426,35"/>
+<area shape="poly" id="edge6_Node000006_Node000003" title=" " alt="" coords="450,55,492,48,493,54,451,60"/>
+<area shape="poly" id="edge7_Node000006_Node000004" title=" " alt="" coords="451,78,490,85,489,90,450,84"/>
+<area shape="poly" id="edge9_Node000007_Node000003" title=" " alt="" coords="426,104,456,92,506,64,509,68,458,97,428,109"/>
+<area shape="poly" id="edge10_Node000007_Node000004" title=" " alt="" coords="450,106,489,100,490,105,451,111"/>
+</map>

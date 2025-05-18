@@ -1,0 +1,7 @@
+<map id="mcp2515_readRegisters" name="mcp2515_readRegisters">
+<area shape="rect" id="Node000001" title="Lee multiples registros a la vez." alt="" coords="5,31,168,57"/>
+<area shape="rect" id="Node000002" href="$mcp2515_8c.html#ae85a49925cc5c6fd1b15522434dc51ce" title="Finaliza la comunicacion spi." alt="" coords="218,5,282,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="168,29,202,23,203,29,168,34"/>
+<area shape="rect" id="Node000003" href="$mcp2515_8c.html#afea997d2aa89cc2831bff10e34198bd8" title="Funciones privadas." alt="" coords="216,56,285,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="168,54,201,59,200,64,168,59"/>
+</map>

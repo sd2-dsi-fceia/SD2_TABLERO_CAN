@@ -1,0 +1,23 @@
+<map id="mcp2515_clearRXnOVR" name="mcp2515_clearRXnOVR">
+<area shape="rect" id="Node000001" title="Limpia la bandera de overflow de los buffers de rx." alt="" coords="5,56,170,83"/>
+<area shape="rect" id="Node000002" href="$mcp2515_8c.html#a584ccc859e4ab5430492f526cd77c0ed" title="Limpia las banderas de interrupcion." alt="" coords="234,5,398,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="151,53,237,33,238,39,152,58"/>
+<area shape="rect" id="Node000006" href="$mcp2515_8c.html#ae96902bcbdb6e764a65cbe35f942dd7a" title="Limpia la bandera de overflow de los buffer de rx." alt="" coords="218,56,414,83"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="170,67,202,67,202,72,170,72"/>
+<area shape="rect" id="Node000008" href="$mcp2515_8c.html#ac3d500cb17c7da9f83aeb38c96e78a05" title="Obtiene el estado de error de modulo can." alt="" coords="236,107,396,133"/>
+<area shape="poly" id="edge9_Node000001_Node000008" title=" " alt="" coords="152,81,238,100,237,105,151,86"/>
+<area shape="rect" id="Node000003" href="$mcp2515_8c.html#aa1ab73089d5c9bfb753aaa1b3b3f8d28" title="Setea un registro." alt="" coords="472,5,621,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="398,16,457,16,457,21,398,21"/>
+<area shape="rect" id="Node000004" href="$mcp2515_8c.html#ae85a49925cc5c6fd1b15522434dc51ce" title="Finaliza la comunicacion spi." alt="" coords="682,31,746,57"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="622,27,667,34,666,40,621,33"/>
+<area shape="rect" id="Node000005" href="$mcp2515_8c.html#afea997d2aa89cc2831bff10e34198bd8" title="Funciones privadas." alt="" coords="679,81,749,108"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="602,30,632,42,683,70,680,75,630,46,600,35"/>
+<area shape="rect" id="Node000007" href="$mcp2515_8c.html#ac3bc690a1b8ef1495f5fbb57eab28eaf" title="Modifica un registro en particular." alt="" coords="462,56,631,83"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="415,67,446,67,446,72,415,72"/>
+<area shape="poly" id="edge7_Node000007_Node000004" title=" " alt="" coords="631,54,666,49,667,54,632,59"/>
+<area shape="poly" id="edge8_Node000007_Node000005" title=" " alt="" coords="632,80,664,85,663,90,631,85"/>
+<area shape="rect" id="Node000009" href="$mcp2515_8c.html#a1dcd2d88901952184ce8297e1c5c6bf6" title="Lee un solo registro a la vez." alt="" coords="469,107,624,133"/>
+<area shape="poly" id="edge10_Node000008_Node000009" title=" " alt="" coords="396,117,453,117,453,123,396,123"/>
+<area shape="poly" id="edge11_Node000009_Node000004" title=" " alt="" coords="600,104,630,92,680,64,683,68,632,97,602,109"/>
+<area shape="poly" id="edge12_Node000009_Node000005" title=" " alt="" coords="624,106,664,100,665,105,625,111"/>
+</map>

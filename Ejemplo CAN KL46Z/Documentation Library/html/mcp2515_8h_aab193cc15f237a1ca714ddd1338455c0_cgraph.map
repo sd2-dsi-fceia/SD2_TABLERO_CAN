@@ -1,0 +1,9 @@
+<map id="mcp2515_errorCountTX" name="mcp2515_errorCountTX">
+<area shape="rect" id="Node000001" title="Chequea el contador de error de transmision." alt="" coords="5,31,165,57"/>
+<area shape="rect" id="Node000002" href="$mcp2515_8c.html#a1dcd2d88901952184ce8297e1c5c6bf6" title="Lee un solo registro a la vez." alt="" coords="213,31,368,57"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="165,41,198,41,198,47,165,47"/>
+<area shape="rect" id="Node000003" href="$mcp2515_8c.html#ae85a49925cc5c6fd1b15522434dc51ce" title="Finaliza la comunicacion spi." alt="" coords="418,5,483,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="368,29,403,23,403,29,369,34"/>
+<area shape="rect" id="Node000004" href="$mcp2515_8c.html#afea997d2aa89cc2831bff10e34198bd8" title="Funciones privadas." alt="" coords="416,56,485,83"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="369,54,401,59,400,64,368,59"/>
+</map>

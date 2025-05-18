@@ -1,0 +1,23 @@
+<map id="mcp2515_setFilterMask" name="mcp2515_setFilterMask">
+<area shape="rect" id="Node000001" title="Setea el filtro y la mascara. Se configuran dichos datos en los registros del propio modulo." alt="" coords="5,56,166,83"/>
+<area shape="rect" id="Node000002" href="$mcp2515_8c.html#aed2f12d8207c7b34f82733dbccdb3c76" title="Configura el id para una accion en particular." alt="" coords="231,5,366,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="144,53,224,34,225,39,145,58"/>
+<area shape="rect" id="Node000003" href="$mcp2515_8c.html#a0a1c3cc8b486dbd55ff9d2d011694fa6" title="Setea el modo de configuracion." alt="" coords="214,56,383,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="166,67,198,67,198,72,166,72"/>
+<area shape="rect" id="Node000009" href="$mcp2515_8c.html#a06105d6f139b5a81ffc4650b634f9cfe" title="Setea multiples registros." alt="" coords="617,107,773,133"/>
+<area shape="poly" id="edge10_Node000001_Node000009" title=" " alt="" coords="148,81,214,92,318,103,422,110,602,116,602,122,422,115,317,108,213,97,147,86"/>
+<area shape="rect" id="Node000004" href="$mcp2515_8c.html#aa8f4e44a2081362f25ff79e24d4bf6cb" title="Seteado el modo de trabajo." alt="" coords="431,56,562,83"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="383,67,415,67,415,72,383,72"/>
+<area shape="rect" id="Node000005" href="$mcp2515_8c.html#ac3bc690a1b8ef1495f5fbb57eab28eaf" title="Modifica un registro en particular." alt="" coords="610,56,780,83"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="563,67,595,67,595,72,563,72"/>
+<area shape="rect" id="Node000008" href="$mcp2515_8c.html#a1dcd2d88901952184ce8297e1c5c6bf6" title="Lee un solo registro a la vez." alt="" coords="617,5,773,32"/>
+<area shape="poly" id="edge7_Node000004_Node000008" title=" " alt="" coords="551,53,625,34,626,39,553,58"/>
+<area shape="rect" id="Node000006" href="$mcp2515_8c.html#ae85a49925cc5c6fd1b15522434dc51ce" title="Finaliza la comunicacion spi." alt="" coords="830,31,894,57"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="780,54,814,49,815,54,781,59"/>
+<area shape="rect" id="Node000007" href="$mcp2515_8c.html#afea997d2aa89cc2831bff10e34198bd8" title="Funciones privadas." alt="" coords="828,81,897,108"/>
+<area shape="poly" id="edge6_Node000005_Node000007" title=" " alt="" coords="781,80,812,85,812,90,780,85"/>
+<area shape="poly" id="edge8_Node000008_Node000006" title=" " alt="" coords="773,28,815,34,814,40,772,33"/>
+<area shape="poly" id="edge9_Node000008_Node000007" title=" " alt="" coords="751,30,781,42,831,70,829,75,779,46,749,35"/>
+<area shape="poly" id="edge11_Node000009_Node000006" title=" " alt="" coords="749,104,779,92,829,64,831,68,781,97,751,109"/>
+<area shape="poly" id="edge12_Node000009_Node000007" title=" " alt="" coords="772,106,812,100,813,105,773,111"/>
+</map>

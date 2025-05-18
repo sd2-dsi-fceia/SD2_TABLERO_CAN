@@ -1,0 +1,17 @@
+<map id="mcp2515_readMessageWithBufferId" name="mcp2515_readMessageWithBufferId">
+<area shape="rect" id="Node000001" title="Lee mensaje con el buffer indicado." alt="" coords="5,56,237,83"/>
+<area shape="rect" id="Node000002" href="$mcp2515_8c.html#ac3bc690a1b8ef1495f5fbb57eab28eaf" title="Modifica un registro en particular." alt="" coords="285,5,454,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="190,53,285,33,286,38,191,58"/>
+<area shape="rect" id="Node000005" href="$mcp2515_8c.html#a1dcd2d88901952184ce8297e1c5c6bf6" title="Lee un solo registro a la vez." alt="" coords="292,56,447,83"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="237,67,276,67,276,72,237,72"/>
+<area shape="rect" id="Node000006" href="$mcp2515_8c.html#a560b6de316a626011c27ae51cafaac11" title="Lee multiples registros a la vez." alt="" coords="288,107,450,133"/>
+<area shape="poly" id="edge7_Node000001_Node000006" title=" " alt="" coords="191,81,286,100,285,106,190,86"/>
+<area shape="rect" id="Node000003" href="$mcp2515_8c.html#ae85a49925cc5c6fd1b15522434dc51ce" title="Finaliza la comunicacion spi." alt="" coords="504,31,569,57"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="455,29,489,34,488,39,454,34"/>
+<area shape="rect" id="Node000004" href="$mcp2515_8c.html#afea997d2aa89cc2831bff10e34198bd8" title="Funciones privadas." alt="" coords="502,81,571,108"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="425,30,455,42,506,70,503,75,453,46,423,35"/>
+<area shape="poly" id="edge5_Node000005_Node000003" title=" " alt="" coords="447,55,489,48,490,54,448,60"/>
+<area shape="poly" id="edge6_Node000005_Node000004" title=" " alt="" coords="448,78,487,85,486,90,447,84"/>
+<area shape="poly" id="edge8_Node000006_Node000003" title=" " alt="" coords="423,104,453,92,503,64,506,68,455,97,425,109"/>
+<area shape="poly" id="edge9_Node000006_Node000004" title=" " alt="" coords="451,105,486,100,487,105,451,110"/>
+</map>

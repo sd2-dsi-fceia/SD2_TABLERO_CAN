@@ -1,0 +1,23 @@
+<map id="mcp2515_readMessage" name="mcp2515_readMessage">
+<area shape="rect" id="Node000001" title="Lee mensaje." alt="" coords="5,56,165,83"/>
+<area shape="rect" id="Node000002" href="$mcp2515_8c.html#adab84b04c3e872a779e0b50cd6f939be" title="Obtiene los estados solicitados de lectura." alt="" coords="508,5,645,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="165,59,493,25,493,30,165,64"/>
+<area shape="rect" id="Node000005" href="$mcp2515_8c.html#a5a56a5809b74e255e306caa97853dd13" title="Lee mensaje con el buffer indicado." alt="" coords="213,81,444,108"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="165,75,198,78,197,84,165,80"/>
+<area shape="rect" id="Node000003" href="$mcp2515_8c.html#ae85a49925cc5c6fd1b15522434dc51ce" title="Finaliza la comunicacion spi." alt="" coords="712,56,776,83"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="625,30,662,41,698,52,696,58,661,47,623,35"/>
+<area shape="rect" id="Node000004" href="$mcp2515_8c.html#afea997d2aa89cc2831bff10e34198bd8" title="Funciones privadas." alt="" coords="709,107,779,133"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="639,30,663,42,679,54,689,66,711,93,713,94,710,98,707,97,685,69,675,58,660,46,636,35"/>
+<area shape="rect" id="Node000006" href="$mcp2515_8c.html#ac3bc690a1b8ef1495f5fbb57eab28eaf" title="Modifica un registro en particular." alt="" coords="492,56,661,83"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="444,80,476,77,477,82,445,85"/>
+<area shape="rect" id="Node000007" href="$mcp2515_8c.html#a1dcd2d88901952184ce8297e1c5c6bf6" title="Lee un solo registro a la vez." alt="" coords="499,107,654,133"/>
+<area shape="poly" id="edge8_Node000005_Node000007" title=" " alt="" coords="445,104,484,108,483,113,444,109"/>
+<area shape="rect" id="Node000008" href="$mcp2515_8c.html#a560b6de316a626011c27ae51cafaac11" title="Lee multiples registros a la vez." alt="" coords="496,157,658,184"/>
+<area shape="poly" id="edge11_Node000005_Node000008" title=" " alt="" coords="375,106,493,143,516,150,514,155,491,148,373,111"/>
+<area shape="poly" id="edge6_Node000006_Node000003" title=" " alt="" coords="662,67,696,67,696,72,662,72"/>
+<area shape="poly" id="edge7_Node000006_Node000004" title=" " alt="" coords="625,81,662,92,695,102,694,108,661,97,623,86"/>
+<area shape="poly" id="edge9_Node000007_Node000003" title=" " alt="" coords="623,104,661,92,696,81,698,86,662,97,625,109"/>
+<area shape="poly" id="edge10_Node000007_Node000004" title=" " alt="" coords="655,117,694,117,694,123,655,123"/>
+<area shape="poly" id="edge12_Node000008_Node000003" title=" " alt="" coords="636,154,660,143,675,132,685,120,707,93,710,91,713,95,711,97,689,123,679,135,663,148,639,159"/>
+<area shape="poly" id="edge13_Node000008_Node000004" title=" " alt="" coords="623,154,661,143,694,132,695,138,662,148,625,159"/>
+</map>

@@ -1,0 +1,57 @@
+<map id="mcp2515_readRegister" name="mcp2515_readRegister">
+<area shape="rect" id="Node000001" title="Lee un solo registro a la vez." alt="" coords="1228,233,1384,260"/>
+<area shape="rect" id="Node000002" href="$mcp2515_8c.html#ab5e2dbab71fce64be2696e8901312f7e" title="Chequa el contador de error de recepcion." alt="" coords="982,5,1144,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1293,219,1277,180,1253,132,1220,85,1179,46,1143,30,1145,25,1182,42,1224,82,1257,130,1282,177,1298,217"/>
+<area shape="rect" id="Node000003" href="$mcp2515_8c.html#aab193cc15f237a1ca714ddd1338455c0" title="Chequea el contador de error de transmision." alt="" coords="984,56,1143,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="1288,221,1245,157,1214,124,1179,97,1142,82,1144,77,1182,92,1218,120,1249,154,1292,218"/>
+<area shape="rect" id="Node000004" href="$mcp2515_8c.html#ac3d500cb17c7da9f83aeb38c96e78a05" title="Obtiene el estado de error de modulo can." alt="" coords="984,107,1143,133"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="1280,224,1236,184,1208,164,1179,148,1143,135,1144,130,1181,143,1211,160,1239,180,1284,220"/>
+<area shape="rect" id="Node000007" href="$mcp2515_8c.html#a32b8237325cc18003a9482d90b3831e8" title="Obtiene las interrupciones habilitadas desde el modulo can." alt="" coords="974,157,1153,184"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="1260,229,1180,199,1137,187,1138,182,1181,193,1262,224"/>
+<area shape="rect" id="Node000008" href="$mcp2515_8c.html#a7af7b4fa57705edc5690d743269bb412" title="Obtiene las interrupciones del modulo can. Desde el registro de interrupt flags." alt="" coords="986,208,1140,235"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="1213,240,1141,232,1141,227,1213,234"/>
+<area shape="rect" id="Node000009" href="$mcp2515_8c.html#a5a56a5809b74e255e306caa97853dd13" title="Lee mensaje con el buffer indicado." alt="" coords="948,259,1179,285"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="1213,259,1180,263,1179,257,1213,254"/>
+<area shape="rect" id="Node000011" href="$mcp2515_8c.html#a21cb40a7513567cb455ce296ef0bbe4b" title="Resetea el modulo." alt="" coords="306,473,417,500"/>
+<area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="1294,275,1276,306,1251,341,1219,375,1182,401,1153,413,1119,423,1038,435,944,441,844,443,648,443,563,445,497,452,405,475,404,470,496,447,563,440,647,438,844,438,944,436,1037,430,1118,417,1151,408,1179,396,1216,371,1247,338,1271,303,1289,273"/>
+<area shape="rect" id="Node000014" href="$mcp2515_8c.html#a4139b924c04d5aa72c132ccd16f05437" title="Envio de mensaje." alt="" coords="720,360,882,387"/>
+<area shape="poly" id="edge13_Node000001_Node000014" title=" " alt="" coords="1262,269,1181,300,1046,331,881,362,880,357,1045,326,1180,295,1260,264"/>
+<area shape="rect" id="Node000016" href="$mcp2515_8c.html#a4733cdbc41bfeb798df55ab500ba76ee" title="Envio de mensaje con el buffer." alt="" coords="946,360,1180,387"/>
+<area shape="poly" id="edge16_Node000001_Node000016" title=" " alt="" coords="1281,273,1236,309,1182,344,1133,362,1131,357,1179,339,1233,305,1277,269"/>
+<area shape="rect" id="Node000017" href="$mcp2515_8c.html#aa8f4e44a2081362f25ff79e24d4bf6cb" title="Seteado el modo de trabajo." alt="" coords="998,537,1129,564"/>
+<area shape="poly" id="edge18_Node000001_Node000017" title=" " alt="" coords="1293,275,1247,353,1216,400,1182,444,1130,498,1084,539,1080,535,1127,495,1178,441,1212,397,1243,350,1288,272"/>
+<area shape="rect" id="Node000005" href="$mcp2515_8c.html#a8ceef1324ef15325f4a5826d5b58273b" title="Chequea los errores informados desde el modulo." alt="" coords="729,81,874,108"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="968,113,874,104,874,99,968,108"/>
+<area shape="rect" id="Node000006" href="$mcp2515_8c.html#aeb679de4c34c365123f989fab92b9b71" title="Limpia la bandera de overflow de los buffers de rx." alt="" coords="719,132,884,159"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="968,132,884,140,884,135,968,127"/>
+<area shape="rect" id="Node000010" href="$mcp2515_8c.html#a98f361e58e9c16ec15a1469172a80547" title="Lee mensajes tipo CAN." alt="" coords="722,259,881,285"/>
+<area shape="poly" id="edge9_Node000009_Node000010" title=" " alt="" coords="932,275,881,275,881,269,932,269"/>
+<area shape="rect" id="Node000012" href="$main_8c.html#a3df11f7015b4a015c6b468941125de20" title="Inicializacion de perifericos." alt="" coords="112,505,218,532"/>
+<area shape="poly" id="edge11_Node000011_Node000012" title=" " alt="" coords="292,501,218,513,218,508,291,495"/>
+<area shape="rect" id="Node000013" href="$main_8c.html#a840291bc02cba5474a4cb46a9b9566fe" title="Main." alt="" coords="5,480,55,507"/>
+<area shape="poly" id="edge12_Node000012_Node000013" title=" " alt="" coords="96,508,55,501,56,495,97,503"/>
+<area shape="rect" id="Node000015" href="$main_8c.html#ae3697afe652e8273e37aac8f55c48276" title="Escritura de mensajes tipo CAN." alt="" coords="103,408,227,435"/>
+<area shape="poly" id="edge14_Node000014_Node000015" title=" " alt="" coords="705,383,228,419,227,414,704,378"/>
+<area shape="poly" id="edge15_Node000015_Node000013" title=" " alt="" coords="126,445,56,483,54,478,123,440"/>
+<area shape="poly" id="edge17_Node000016_Node000014" title=" " alt="" coords="931,376,883,376,883,371,931,371"/>
+<area shape="rect" id="Node000018" href="$mcp2515_8c.html#a0a1c3cc8b486dbd55ff9d2d011694fa6" title="Setea el modo de configuracion." alt="" coords="717,461,886,488"/>
+<area shape="poly" id="edge19_Node000017_Node000018" title=" " alt="" coords="1004,535,897,503,856,491,857,486,899,497,1005,530"/>
+<area shape="rect" id="Node000022" href="$mcp2515_8c.html#a24629fc99e83c9f097a0d24629dcae79" title="Setea el modo de solo escucha." alt="" coords="705,563,898,589"/>
+<area shape="poly" id="edge26_Node000017_Node000022" title=" " alt="" coords="982,561,899,569,898,564,982,556"/>
+<area shape="rect" id="Node000023" href="$mcp2515_8c.html#a4d44b1c2e0ad790988f8821b12fc8c80" title="Setea el modo de loopback." alt="" coords="708,613,895,640"/>
+<area shape="poly" id="edge27_Node000017_Node000023" title=" " alt="" coords="1005,572,899,604,857,615,856,610,897,599,1004,567"/>
+<area shape="rect" id="Node000024" href="$mcp2515_8c.html#ab5403fd588f8558b6b3031e9cee0b35e" title="Setea el modo normal de trabajo." alt="" coords="275,613,448,640"/>
+<area shape="poly" id="edge28_Node000017_Node000024" title=" " alt="" coords="1036,576,976,619,939,639,899,655,833,669,766,676,698,678,631,675,511,661,418,643,419,638,511,656,632,670,698,673,765,671,832,664,897,649,936,635,973,614,1033,572"/>
+<area shape="rect" id="Node000025" href="$mcp2515_8c.html#a9eeb6e5089676520f1f243d43b25bd0b" title="Setea el modo sleep." alt="" coords="719,512,884,539"/>
+<area shape="poly" id="edge30_Node000017_Node000025" title=" " alt="" coords="982,546,883,536,884,531,982,540"/>
+<area shape="rect" id="Node000019" href="$mcp2515_8c.html#a376a8574dcdafeeac264e1b652333d58" title="Setea el baud rate." alt="" coords="293,537,430,564"/>
+<area shape="poly" id="edge20_Node000018_Node000019" title=" " alt="" coords="717,497,706,502,692,515,684,528,674,542,658,553,599,570,537,576,478,574,426,567,427,562,478,569,537,571,598,565,656,548,671,538,679,525,688,511,703,498,714,492"/>
+<area shape="rect" id="Node000020" href="$mcp2515_8c.html#adb0e9467c52bdc0cef5bb689dd3b996f" title="Se configura el filtro." alt="" coords="512,512,641,539"/>
+<area shape="poly" id="edge22_Node000018_Node000020" title=" " alt="" coords="725,495,640,514,638,509,723,489"/>
+<area shape="rect" id="Node000021" href="$mcp2515_8c.html#a34318296cf509afa4e66aeffdbeb0f6d" title="Setea el filtro y la mascara. Se configuran dichos datos en los registros del propio modulo." alt="" coords="496,461,657,488"/>
+<area shape="poly" id="edge24_Node000018_Node000021" title=" " alt="" coords="701,477,657,477,657,472,701,472"/>
+<area shape="poly" id="edge21_Node000019_Node000012" title=" " alt="" coords="277,540,217,530,218,525,278,534"/>
+<area shape="poly" id="edge23_Node000020_Node000011" title=" " alt="" coords="497,514,417,499,418,494,498,509"/>
+<area shape="poly" id="edge25_Node000021_Node000011" title=" " alt="" coords="481,483,417,486,417,481,481,477"/>
+<area shape="poly" id="edge29_Node000024_Node000012" title=" " alt="" coords="321,608,190,535,192,530,323,603"/>
+</map>

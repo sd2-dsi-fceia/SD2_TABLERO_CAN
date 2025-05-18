@@ -1,0 +1,5 @@
+<map id="mcp2515_readMessageWithBufferId" name="mcp2515_readMessageWithBufferId">
+<area shape="rect" id="Node000001" title="Lee mensaje con el buffer indicado." alt="" coords="213,5,444,32"/>
+<area shape="rect" id="Node000002" href="$mcp2515_8c.html#a98f361e58e9c16ec15a1469172a80547" title="Lee mensajes tipo CAN." alt="" coords="5,5,165,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="197,21,165,21,165,16,197,16"/>
+</map>

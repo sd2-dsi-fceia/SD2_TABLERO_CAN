@@ -1,0 +1,9 @@
+<map id="mcp2515_clearERRIF" name="mcp2515_clearERRIF">
+<area shape="rect" id="Node000001" title="Limpia la bandera de errif." alt="" coords="5,31,156,57"/>
+<area shape="rect" id="Node000002" href="$mcp2515_8c.html#ac3bc690a1b8ef1495f5fbb57eab28eaf" title="Modifica un registro en particular." alt="" coords="204,31,373,57"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="156,41,188,41,188,47,156,47"/>
+<area shape="rect" id="Node000003" href="$mcp2515_8c.html#ae85a49925cc5c6fd1b15522434dc51ce" title="Finaliza la comunicacion spi." alt="" coords="424,5,488,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="373,28,407,23,408,28,374,34"/>
+<area shape="rect" id="Node000004" href="$mcp2515_8c.html#afea997d2aa89cc2831bff10e34198bd8" title="Funciones privadas." alt="" coords="421,56,490,83"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="374,54,406,59,405,64,373,60"/>
+</map>

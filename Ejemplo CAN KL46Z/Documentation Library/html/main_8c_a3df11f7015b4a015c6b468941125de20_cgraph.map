@@ -1,0 +1,50 @@
+<map id="perifericos_init" name="perifericos_init">
+<area shape="rect" id="Node000001" title="Inicializacion de perifericos." alt="" coords="5,259,111,286"/>
+<area shape="rect" id="Node000002" href="$mcp2515_8c.html#a21cb40a7513567cb455ce296ef0bbe4b" title="Resetea el modulo." alt="" coords="190,259,300,286"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="111,270,175,270,175,275,111,275"/>
+<area shape="rect" id="Node000015" href="$mcp2515_8c.html#a376a8574dcdafeeac264e1b652333d58" title="Setea el baud rate." alt="" coords="392,57,529,83"/>
+<area shape="poly" id="edge28_Node000001_Node000015" title=" " alt="" coords="82,256,208,187,379,100,407,87,409,92,381,104,210,191,85,261"/>
+<area shape="rect" id="Node000016" href="$mcp2515_8c.html#ab5403fd588f8558b6b3031e9cee0b35e" title="Setea el modo normal de trabajo." alt="" coords="159,411,332,438"/>
+<area shape="poly" id="edge31_Node000001_Node000016" title=" " alt="" coords="77,284,218,399,214,404,74,288"/>
+<area shape="rect" id="Node000003" href="$mcp2515_8c.html#ae85a49925cc5c6fd1b15522434dc51ce" title="Finaliza la comunicacion spi." alt="" coords="1222,209,1286,235"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="247,258,261,214,286,155,303,123,325,93,350,65,379,42,418,21,453,9,486,3,518,3,587,11,672,17,881,17,937,22,991,37,1042,59,1090,86,1173,145,1230,195,1227,199,1170,149,1088,90,1040,64,989,42,936,27,881,22,672,22,586,16,518,9,487,9,454,14,420,26,381,47,353,69,329,96,308,126,291,157,266,216,253,260"/>
+<area shape="rect" id="Node000004" href="$mcp2515_8c.html#a93c2df6a52fa046c073256f50d96b930" title="Funciones publicas." alt="" coords="411,259,509,286"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="301,270,395,270,395,275,301,275"/>
+<area shape="rect" id="Node000005" href="$mcp2515_8c.html#ac3bc690a1b8ef1495f5fbb57eab28eaf" title="Modifica un registro en particular." alt="" coords="1002,310,1171,337"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="272,256,321,234,379,217,437,208,485,203,529,204,569,208,653,223,758,245,1012,303,1011,309,757,250,652,229,568,213,528,209,486,209,437,213,381,222,323,239,274,261"/>
+<area shape="rect" id="Node000006" href="$mcp2515_8c.html#afea997d2aa89cc2831bff10e34198bd8" title="Funciones privadas." alt="" coords="1219,361,1289,387"/>
+<area shape="poly" id="edge27_Node000002_Node000006" title=" " alt="" coords="258,285,316,370,351,414,381,441,421,461,456,473,488,479,520,481,587,477,672,473,881,473,964,469,1028,457,1091,438,1170,410,1213,392,1215,397,1172,415,1093,443,1030,463,965,474,881,478,672,478,587,482,520,486,488,484,455,478,419,465,379,446,348,418,312,373,253,288"/>
+<area shape="rect" id="Node000007" href="$mcp2515_8c.html#a1dcd2d88901952184ce8297e1c5c6bf6" title="Lee un solo registro a la vez." alt="" coords="1009,361,1164,387"/>
+<area shape="poly" id="edge7_Node000002_Node000007" title=" " alt="" coords="258,285,277,311,305,343,340,374,381,397,467,424,558,438,649,443,739,439,824,430,902,417,1024,389,1026,395,903,423,825,435,740,445,649,448,557,443,466,429,379,402,337,378,301,347,273,314,253,288"/>
+<area shape="rect" id="Node000008" href="$mcp2515_8c.html#adb0e9467c52bdc0cef5bb689dd3b996f" title="Se configura el filtro." alt="" coords="396,310,524,337"/>
+<area shape="poly" id="edge10_Node000002_Node000008" title=" " alt="" coords="301,283,386,303,385,309,300,288"/>
+<area shape="rect" id="Node000012" href="$mcp2515_8c.html#a06105d6f139b5a81ffc4650b634f9cfe" title="Setea multiples registros." alt="" coords="595,310,751,337"/>
+<area shape="poly" id="edge26_Node000002_Node000012" title=" " alt="" coords="282,256,335,241,401,229,472,228,508,234,542,245,558,256,567,270,576,283,590,296,600,301,597,306,587,300,572,287,563,273,554,260,539,250,506,239,472,233,401,235,336,246,284,261"/>
+<area shape="rect" id="Node000013" href="$mcp2515_8c.html#a34318296cf509afa4e66aeffdbeb0f6d" title="Setea el filtro y la mascara. Se configuran dichos datos en los registros del propio modulo." alt="" coords="380,361,540,387"/>
+<area shape="poly" id="edge19_Node000002_Node000013" title=" " alt="" coords="269,284,319,315,381,346,397,353,395,358,379,351,317,319,266,289"/>
+<area shape="rect" id="Node000014" href="$mcp2515_8c.html#aa1ab73089d5c9bfb753aaa1b3b3f8d28" title="Setea un registro." alt="" coords="806,107,954,134"/>
+<area shape="poly" id="edge23_Node000002_Node000014" title=" " alt="" coords="272,256,301,239,330,216,344,199,352,181,361,165,379,150,411,138,455,128,564,117,684,114,790,115,790,120,684,119,565,123,456,134,413,143,381,155,365,168,356,184,348,201,334,220,305,243,275,261"/>
+<area shape="poly" id="edge5_Node000005_Node000003" title=" " alt="" coords="1109,307,1216,241,1219,246,1112,312"/>
+<area shape="poly" id="edge6_Node000005_Node000006" title=" " alt="" coords="1135,335,1172,346,1205,356,1204,362,1171,351,1133,340"/>
+<area shape="poly" id="edge8_Node000007_Node000003" title=" " alt="" coords="1150,358,1170,347,1193,325,1212,299,1240,248,1244,251,1217,302,1197,328,1173,351,1153,362"/>
+<area shape="poly" id="edge9_Node000007_Node000006" title=" " alt="" coords="1165,371,1204,371,1204,377,1165,377"/>
+<area shape="rect" id="Node000009" href="$mcp2515_8c.html#aed2f12d8207c7b34f82733dbccdb3c76" title="Configura el id para una accion en particular." alt="" coords="605,361,741,387"/>
+<area shape="poly" id="edge11_Node000008_Node000009" title=" " alt="" coords="520,335,600,354,598,359,519,340"/>
+<area shape="rect" id="Node000010" href="$mcp2515_8c.html#a0a1c3cc8b486dbd55ff9d2d011694fa6" title="Setea el modo de configuracion." alt="" coords="588,259,758,286"/>
+<area shape="poly" id="edge12_Node000008_Node000010" title=" " alt="" coords="519,307,598,288,600,293,520,312"/>
+<area shape="poly" id="edge16_Node000008_Node000012" title=" " alt="" coords="525,321,580,321,580,326,525,326"/>
+<area shape="rect" id="Node000011" href="$mcp2515_8c.html#aa8f4e44a2081362f25ff79e24d4bf6cb" title="Seteado el modo de trabajo." alt="" coords="814,310,946,337"/>
+<area shape="poly" id="edge13_Node000010_Node000011" title=" " alt="" coords="731,284,808,303,807,308,730,289"/>
+<area shape="poly" id="edge14_Node000011_Node000005" title=" " alt="" coords="946,321,986,321,986,326,946,326"/>
+<area shape="poly" id="edge15_Node000011_Node000007" title=" " alt="" coords="938,335,1015,354,1014,359,937,340"/>
+<area shape="poly" id="edge17_Node000012_Node000003" title=" " alt="" coords="745,307,805,295,1206,227,1207,232,806,301,746,312"/>
+<area shape="poly" id="edge18_Node000012_Node000006" title=" " alt="" coords="720,335,846,368,924,385,1002,397,1087,404,1171,397,1204,389,1205,394,1172,402,1087,410,1002,402,923,390,845,373,719,340"/>
+<area shape="poly" id="edge20_Node000013_Node000009" title=" " alt="" coords="541,371,590,371,590,377,541,377"/>
+<area shape="poly" id="edge21_Node000013_Node000010" title=" " alt="" coords="516,358,539,346,553,334,562,322,571,309,587,296,597,290,600,295,590,300,575,312,566,325,557,338,542,351,518,363"/>
+<area shape="poly" id="edge22_Node000013_Node000012" title=" " alt="" coords="519,357,598,338,600,344,520,363"/>
+<area shape="poly" id="edge24_Node000014_Node000003" title=" " alt="" coords="933,132,1208,207,1206,212,932,137"/>
+<area shape="poly" id="edge25_Node000014_Node000006" title=" " alt="" coords="922,132,956,151,971,164,980,176,1004,201,1049,231,1087,249,1126,267,1173,296,1231,347,1227,351,1170,300,1124,272,1085,254,1046,236,1000,205,976,179,967,167,952,155,919,137"/>
+<area shape="poly" id="edge29_Node000015_Node000010" title=" " alt="" coords="478,82,649,247,645,251,474,86"/>
+<area shape="poly" id="edge30_Node000015_Node000014" title=" " alt="" coords="530,74,758,99,791,104,790,109,757,105,529,79"/>
+<area shape="poly" id="edge32_Node000016_Node000011" title=" " alt="" coords="333,431,423,435,530,434,645,422,702,412,757,397,807,373,850,344,853,349,810,378,759,402,703,417,646,428,530,439,422,440,332,436"/>
+</map>

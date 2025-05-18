@@ -1,0 +1,15 @@
+<map id="mcp2515_setListenOnlyMode" name="mcp2515_setListenOnlyMode">
+<area shape="rect" id="Node000001" title="Setea el modo de solo escucha." alt="" coords="5,31,199,57"/>
+<area shape="rect" id="Node000002" href="$mcp2515_8c.html#aa8f4e44a2081362f25ff79e24d4bf6cb" title="Seteado el modo de trabajo." alt="" coords="247,31,378,57"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="199,41,231,41,231,47,199,47"/>
+<area shape="rect" id="Node000003" href="$mcp2515_8c.html#ac3bc690a1b8ef1495f5fbb57eab28eaf" title="Modifica un registro en particular." alt="" coords="426,5,595,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="378,33,410,29,411,34,379,38"/>
+<area shape="rect" id="Node000006" href="$mcp2515_8c.html#a1dcd2d88901952184ce8297e1c5c6bf6" title="Lee un solo registro a la vez." alt="" coords="433,56,588,83"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="379,50,418,55,417,60,378,55"/>
+<area shape="rect" id="Node000004" href="$mcp2515_8c.html#ae85a49925cc5c6fd1b15522434dc51ce" title="Finaliza la comunicacion spi." alt="" coords="646,5,710,32"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="596,16,630,16,630,21,596,21"/>
+<area shape="rect" id="Node000005" href="$mcp2515_8c.html#afea997d2aa89cc2831bff10e34198bd8" title="Funciones privadas." alt="" coords="643,56,713,83"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="559,30,596,41,629,52,628,57,595,47,557,35"/>
+<area shape="poly" id="edge6_Node000006_Node000004" title=" " alt="" coords="557,53,595,41,630,30,632,36,596,47,559,58"/>
+<area shape="poly" id="edge7_Node000006_Node000005" title=" " alt="" coords="589,67,628,67,628,72,589,72"/>
+</map>

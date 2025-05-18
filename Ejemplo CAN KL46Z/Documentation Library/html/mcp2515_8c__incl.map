@@ -1,0 +1,21 @@
+<map id="MensajeCAN/source/mcp2515.c" name="MensajeCAN/source/mcp2515.c">
+<area shape="rect" id="Node000001" title="Libreria para manipulacion del modulo can mcp2515." alt="" coords="242,5,452,32"/>
+<area shape="rect" id="Node000002" href="$mcp2515_8h.html" title="Liberia del modulo CAN MCP2515, utilizada para la placa de desarrollo KL46Z." alt="" coords="72,80,157,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="307,35,170,78,169,72,305,30"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="182,80,231,107"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="324,35,246,75,244,70,321,30"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="256,80,333,107"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="340,34,315,69,310,66,335,31"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="358,80,439,107"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="358,31,383,66,379,69,354,34"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="464,80,539,107"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="375,30,462,71,460,75,372,35"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="562,80,627,107"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="391,30,548,76,547,81,389,35"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="5,155,59,181"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="102,109,59,146,56,142,99,105"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="82,155,147,181"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="117,107,117,139,112,139,112,107"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="171,155,245,181"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="133,105,182,143,178,147,129,109"/>
+</map>

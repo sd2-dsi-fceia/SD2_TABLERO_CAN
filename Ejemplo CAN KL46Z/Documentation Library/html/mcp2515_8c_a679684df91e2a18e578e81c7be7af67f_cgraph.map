@@ -1,0 +1,9 @@
+<map id="mcp2515_checkReceive" name="mcp2515_checkReceive">
+<area shape="rect" id="Node000001" title="Chequea la recepcion de los datos." alt="" coords="5,31,170,57"/>
+<area shape="rect" id="Node000002" href="$mcp2515_8c.html#adab84b04c3e872a779e0b50cd6f939be" title="Obtiene los estados solicitados de lectura." alt="" coords="218,31,355,57"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="170,41,202,41,202,47,170,47"/>
+<area shape="rect" id="Node000003" href="$mcp2515_8c.html#ae85a49925cc5c6fd1b15522434dc51ce" title="Finaliza la comunicacion spi." alt="" coords="406,5,470,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="355,30,390,24,391,29,356,35"/>
+<area shape="rect" id="Node000004" href="$mcp2515_8c.html#afea997d2aa89cc2831bff10e34198bd8" title="Funciones privadas." alt="" coords="403,56,472,83"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="356,53,388,58,387,64,355,58"/>
+</map>

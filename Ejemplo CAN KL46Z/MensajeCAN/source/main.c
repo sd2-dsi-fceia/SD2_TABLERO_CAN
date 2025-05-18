@@ -29,9 +29,10 @@
  */
 
 /**
- * @file    Nodo1_Baremetal.c
- * @brief   Application entry point.
+ * @file    Main.c
+ * @brief   Se encarga de enviar mensajes CAN cada 500 ms.
  */
+
 #include <stdio.h>
 #include "board.h"
 #include "peripherals.h"
@@ -44,8 +45,7 @@
 #include "mcp2515.h"
 
 /* TODO: insert other definitions and declarations here. */
-#define PIN_NUMBER 17
-
+//// Periodo de envio de mensajes can.
 #define ENVIAR_MENSAJE_PERIODO	500
 
 #define SW1_GPIO GPIOC
@@ -55,30 +55,48 @@
 
 #define CAN_ID	150
 
-uint16_t Delay1s = ENVIAR_MENSAJE_PERIODO;
+/**
+ * @brief Delay para enviar mensajes de tipo CAN.
+ */
+uint16_t Delay = ENVIAR_MENSAJE_PERIODO;
 
 /**
  * @brief Mensaje de tipo can.
+ *
+ * Prepara el mensaje can que se va a enviar al bus.
+ *
+ * @note Para poder declarar un mensaje de tipo CAN se debe
+ * incluir la libreria can.h.
  */
 struct can_frame canMsg1;
 
+/**
+ * @brief Primer byte a enviar en el mensaje CAN.
+ */
 uint8_t byte1;
+/**
+ * @brief Segundo byte a enviar en el mensaje CAN.
+ */
 uint8_t byte2;
 
-// DECLARACION DE FUNCIONES.
-//..................................................................................
 /**
  * @brief Inicializacion de perifericos.
+ *
+ * Inicializa el modulo mcp2515, los relojes de los pulsadores
+ * y el modo de gpio para los switches.
  */
 static void perifericos_init(void);
 /**
- * @brief Funcion de escritura del mensaje can.
+ * @brief Escritura de mensajes tipo CAN.
+ *
+ * Lee el estado de los pines del Switch 1 y Switch 3 y luego carga la informacion
+ * en el mensaje CAN.
  */
 static void canmsg_escritura(void);
-//..................................................................................
 
-// CUERPO DE FUNCIONES
-//..................................................................................
+/**
+ * @brief Main
+ */
 int main(void) {
 	/* Init board hardware. */
 	BOARD_InitBootPins();
@@ -105,16 +123,16 @@ int main(void) {
 	canMsg1.can_dlc = 2;
 
 	while (1) {
-		if (!Delay1s)
+		if (!Delay)
 		{
-			Delay1s = ENVIAR_MENSAJE_PERIODO;
+			Delay = ENVIAR_MENSAJE_PERIODO;
 
 			canmsg_escritura();
 		}
 	}
 	return 0;
 }
-//..................................................................................
+
 static void canmsg_escritura(void) {
 	ERROR_t estado;
 
@@ -143,7 +161,7 @@ static void canmsg_escritura(void) {
 
 	return;
 }
-//..................................................................................
+
 static void perifericos_init(void) {
 	ERROR_t error;
 
@@ -182,10 +200,15 @@ static void perifericos_init(void) {
 
 	return;
 }
-//..................................................................................
+
+/**
+ * @brief Interrupción del SysTick.
+ *
+ * Se encarga de manejar bases de tiempo como delays.
+ */
 void SysTick_Handler(void) {
-	if (Delay1s != 0)
-		Delay1s--;
+	if (Delay != 0)
+		Delay--;
 
 	return;
 }

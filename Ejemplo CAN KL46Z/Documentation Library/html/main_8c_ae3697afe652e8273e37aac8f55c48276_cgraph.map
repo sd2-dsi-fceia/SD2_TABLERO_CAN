@@ -1,0 +1,24 @@
+<map id="canmsg_escritura" name="canmsg_escritura">
+<area shape="rect" id="Node000001" title="Escritura de mensajes tipo CAN." alt="" coords="5,31,130,57"/>
+<area shape="rect" id="Node000002" href="$mcp2515_8c.html#a4139b924c04d5aa72c132ccd16f05437" title="Envio de mensaje." alt="" coords="178,31,340,57"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="130,41,162,41,162,47,130,47"/>
+<area shape="rect" id="Node000003" href="$mcp2515_8c.html#a1dcd2d88901952184ce8297e1c5c6bf6" title="Lee un solo registro a la vez." alt="" coords="677,5,833,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="340,37,662,21,662,26,341,43"/>
+<area shape="rect" id="Node000006" href="$mcp2515_8c.html#a4733cdbc41bfeb798df55ab500ba76ee" title="Envio de mensaje con el buffer." alt="" coords="388,56,622,83"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="341,50,373,53,373,58,340,55"/>
+<area shape="rect" id="Node000004" href="$mcp2515_8c.html#ae85a49925cc5c6fd1b15522434dc51ce" title="Finaliza la comunicacion spi." alt="" coords="890,31,954,57"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="833,28,875,34,874,40,832,33"/>
+<area shape="rect" id="Node000005" href="$mcp2515_8c.html#afea997d2aa89cc2831bff10e34198bd8" title="Funciones privadas." alt="" coords="888,81,957,108"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="811,30,841,42,891,70,889,75,839,46,809,35"/>
+<area shape="poly" id="edge10_Node000006_Node000003" title=" " alt="" coords="574,53,670,33,671,38,575,58"/>
+<area shape="rect" id="Node000007" href="$mcp2515_8c.html#ac3bc690a1b8ef1495f5fbb57eab28eaf" title="Modifica un registro en particular." alt="" coords="670,56,840,83"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="623,67,655,67,655,72,623,72"/>
+<area shape="rect" id="Node000008" href="$mcp2515_8c.html#aed2f12d8207c7b34f82733dbccdb3c76" title="Configura el id para una accion en particular." alt="" coords="687,157,823,184"/>
+<area shape="poly" id="edge9_Node000006_Node000008" title=" " alt="" coords="534,81,596,111,671,143,691,150,689,155,669,148,594,116,532,86"/>
+<area shape="rect" id="Node000009" href="$mcp2515_8c.html#a06105d6f139b5a81ffc4650b634f9cfe" title="Setea multiples registros." alt="" coords="677,107,833,133"/>
+<area shape="poly" id="edge11_Node000006_Node000009" title=" " alt="" coords="575,81,671,100,670,106,574,86"/>
+<area shape="poly" id="edge7_Node000007_Node000004" title=" " alt="" coords="840,54,874,49,875,54,841,59"/>
+<area shape="poly" id="edge8_Node000007_Node000005" title=" " alt="" coords="841,80,872,85,872,90,840,85"/>
+<area shape="poly" id="edge12_Node000009_Node000004" title=" " alt="" coords="809,104,839,92,889,64,891,68,841,97,811,109"/>
+<area shape="poly" id="edge13_Node000009_Node000005" title=" " alt="" coords="832,106,872,100,873,105,833,111"/>
+</map>

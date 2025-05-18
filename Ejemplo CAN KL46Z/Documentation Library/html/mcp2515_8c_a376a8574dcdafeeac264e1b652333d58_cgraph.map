@@ -1,0 +1,21 @@
+<map id="mcp2515_setBitrate" name="mcp2515_setBitrate">
+<area shape="rect" id="Node000001" title="Setea el baud rate." alt="" coords="5,81,143,108"/>
+<area shape="rect" id="Node000002" href="$mcp2515_8c.html#a0a1c3cc8b486dbd55ff9d2d011694fa6" title="Setea el modo de configuracion." alt="" coords="191,56,360,83"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="143,83,175,79,176,85,143,89"/>
+<area shape="rect" id="Node000008" href="$mcp2515_8c.html#aa1ab73089d5c9bfb753aaa1b3b3f8d28" title="Setea un registro." alt="" coords="598,107,746,133"/>
+<area shape="poly" id="edge9_Node000001_Node000008" title=" " alt="" coords="143,95,582,114,582,119,143,100"/>
+<area shape="rect" id="Node000003" href="$mcp2515_8c.html#aa8f4e44a2081362f25ff79e24d4bf6cb" title="Seteado el modo de trabajo." alt="" coords="408,56,539,83"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="360,67,392,67,392,72,360,72"/>
+<area shape="rect" id="Node000004" href="$mcp2515_8c.html#ac3bc690a1b8ef1495f5fbb57eab28eaf" title="Modifica un registro en particular." alt="" coords="587,56,757,83"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="540,67,572,67,572,72,540,72"/>
+<area shape="rect" id="Node000007" href="$mcp2515_8c.html#a1dcd2d88901952184ce8297e1c5c6bf6" title="Lee un solo registro a la vez." alt="" coords="594,5,750,32"/>
+<area shape="poly" id="edge6_Node000003_Node000007" title=" " alt="" coords="528,53,602,34,603,39,530,58"/>
+<area shape="rect" id="Node000005" href="$mcp2515_8c.html#ae85a49925cc5c6fd1b15522434dc51ce" title="Finaliza la comunicacion spi." alt="" coords="807,31,872,57"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="757,54,791,49,792,54,758,59"/>
+<area shape="rect" id="Node000006" href="$mcp2515_8c.html#afea997d2aa89cc2831bff10e34198bd8" title="Funciones privadas." alt="" coords="805,81,874,108"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="758,80,789,85,789,90,757,85"/>
+<area shape="poly" id="edge7_Node000007_Node000005" title=" " alt="" coords="750,28,792,34,791,40,749,33"/>
+<area shape="poly" id="edge8_Node000007_Node000006" title=" " alt="" coords="728,30,758,42,808,70,806,75,756,46,726,35"/>
+<area shape="poly" id="edge10_Node000008_Node000005" title=" " alt="" coords="726,104,756,92,806,64,808,68,758,97,728,109"/>
+<area shape="poly" id="edge11_Node000008_Node000006" title=" " alt="" coords="746,106,789,100,790,105,747,111"/>
+</map>

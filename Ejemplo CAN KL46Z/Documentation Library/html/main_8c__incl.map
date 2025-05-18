@@ -1,0 +1,27 @@
+<map id="MensajeCAN/source/main.c" name="MensajeCAN/source/main.c">
+<area shape="rect" id="Node000001" title="Se encarga de enviar mensajes CAN cada 500 ms." alt="" coords="363,5,548,32"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,80,66,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="363,34,233,54,81,82,80,77,232,48,362,29"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="90,80,154,107"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="389,35,170,82,169,77,388,30"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="178,80,274,107"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="416,35,282,77,280,72,415,30"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="298,80,379,107"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="436,35,373,74,370,69,434,30"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="403,80,508,107"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="458,33,458,64,453,64,453,33"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="533,80,621,107"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="478,30,544,69,541,74,475,35"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="645,80,786,107"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="502,30,656,73,655,78,500,35"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="810,80,859,107"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="549,30,663,49,795,77,794,82,662,54,548,35"/>
+<area shape="rect" id="Node000010" href="$mcp2515_8h.html" title="Liberia del modulo CAN MCP2515, utilizada para la placa de desarrollo KL46Z." alt="" coords="884,80,969,107"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="549,29,695,49,869,77,868,82,694,54,548,34"/>
+<area shape="rect" id="Node000011" title=" " alt="" coords="817,155,870,181"/>
+<area shape="poly" id="edge10_Node000010_Node000011" title=" " alt="" coords="914,109,871,146,867,142,910,105"/>
+<area shape="rect" id="Node000012" title=" " alt="" coords="894,155,958,181"/>
+<area shape="poly" id="edge11_Node000010_Node000012" title=" " alt="" coords="929,107,929,139,924,139,924,107"/>
+<area shape="rect" id="Node000013" title=" " alt="" coords="982,155,1057,181"/>
+<area shape="poly" id="edge12_Node000010_Node000013" title=" " alt="" coords="944,105,993,143,990,147,941,109"/>
+</map>

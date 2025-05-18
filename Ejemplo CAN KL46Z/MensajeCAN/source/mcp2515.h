@@ -10,7 +10,6 @@
  * @file mcp2515.h
  *
  * @brief Liberia del modulo CAN MCP2515, utilizada para la placa de desarrollo KL46Z.
- * Realizada como parte de la adcripcion de la materia de Sistemas digitales II.
  *
  * @author Zuliani, Agustin.
  *
@@ -30,7 +29,7 @@
  * Se debe definir si se utiliza el sistema de tiempo real freertos o
  * se utiliza el sistema de baremetal.
  *
- * @example
+ * @note
  * Si definimos USE_FREERTOS 1 entonces estamos utilizando el sistema en tiempo real de freertos
  * Si definimos USE_FREERTOS 0 entonces estamos utilizando el sistema de baremetal.
  */
@@ -572,10 +571,17 @@ typedef enum
 extern void mcp2515_init(void);
 /**
  * @brief Resetea el modulo.
+ *
+ * Es la función que debe ser llamada para inicializar el modulo. Dentro del mcp2515_reset()
+ * se llama a la funcion mcp2515_init().
+ *
+ * @code
+ * mcp2515_reset();
+ * @endcode
  */
 extern ERROR_t mcp2515_reset(void);
 /**
- * @brief Setea el modo de configuracion.
+ * @brief Setea el modo de configuracion
  */
 extern ERROR_t mcp2515_setConfigMode();
 /**
@@ -584,14 +590,45 @@ extern ERROR_t mcp2515_setConfigMode();
 extern ERROR_t mcp2515_setListenOnlyMode();
 /**
  * @brief Setea el modo sleep.
+ *
+ * Configura el modo de bajo consumo del módulo MCP2515.
+ *
+ * @code
+ * ERROR_t error;
+ *
+ * error = mcp2515_setSleepMode();
+ *
+ * if(error != ERROR_OK)
+ * 	PRINTF("Fallo al configurar modo de bajo consumo.\n\r");
+ * @endcode
  */
 extern ERROR_t mcp2515_setSleepMode();
 /**
  * @brief Setea el modo de loopback.
+ *
+ * Es un modo de prueba que sirve para verificar si el modulo
+ * funciona correctamente enviando y recibiendo mensajes CAN.
+ *
+ * @code
+ * ERROR_t error;
+ *
+ * error = mcp2515_setLoopbackMode();
+ * if(error != ERROR_OK)
+ * 	PRINTF("Fallo al configurar el modulo en modo loopback.\n\r");
+ * @endcode
  */
 extern ERROR_t mcp2515_setLoopbackMode();
 /**
  * @brief Setea el modo normal de trabajo.
+ *
+ * Es el que debería ser utilizado en operación normal.
+ *
+ * @code
+ * ERROR_t error;
+ * error = mcp2515_setNormalMode();
+ * if(error != ERROR_OK)
+ * 	PRINTF("Fallo al configurar el modulo MCP2515\n\r");
+ * @endcode
  */
 extern ERROR_t mcp2515_setNormalMode();
 /**
@@ -603,6 +640,13 @@ extern ERROR_t mcp2515_setClkOut(const CAN_CLKOUT divisor);
  *
  * @param[in] canSpeed velocidad en baudios.
  * @param[in] canClock velocidad del reloj.
+ *
+ * @code
+ * ERROR_t error;
+ * error = mcp2515_setBitrate(CAN_125KBPS, MCP_8MHZ);
+ * if (error != ERROR_OK)
+ * 	PRINTF("Fallo al setear el bit rate\n\r");
+ * @endcode
  */
 extern ERROR_t mcp2515_setBitrate(const CAN_SPEED canSpeed,
 								  const CAN_CLOCK canClock);
@@ -613,6 +657,8 @@ extern ERROR_t mcp2515_setBitrate(const CAN_SPEED canSpeed,
  * @param[in] num mascara.
  * @param[in] ext formato extendido.
  * @param[in] ulData id.
+ *
+ * @see https://github.com/Agustin586/Ejemplos-SD2/blob/main/Nodos%20Can/Nodo%203/Baremetal/Nodo3_Baremetal/source/Nodo3_Baremetal.c
  */
 extern ERROR_t mcp2515_setFilterMask(const MASK num, const bool ext,
 									 const uint32_t ulData);
@@ -622,6 +668,8 @@ extern ERROR_t mcp2515_setFilterMask(const MASK num, const bool ext,
  * @param[in] num filtro de rx.
  * @param[in] ext formato extendido.
  * @param[in] ulData id.
+ *
+ * @see https://github.com/Agustin586/Ejemplos-SD2/blob/main/Nodos%20Can/Nodo%203/Baremetal/Nodo3_Baremetal/source/Nodo3_Baremetal.c
  */
 extern ERROR_t mcp2515_setFilter(const RXF num, const bool ext,
 								 const uint32_t ulData);
@@ -637,6 +685,17 @@ extern ERROR_t mcp2515_sendMessageWithBufferId(const TXBn txbn,
  * @brief Envio de mensaje.
  *
  * @param[in] frame informacion a transmitir.
+ *
+ * @code
+ * ERROR_t error;
+ * struct can_frame canMsg1;
+ *
+ * canMsg1.data[0] = 255;
+ *
+ * error = mcp2515_sendMessage(&canMsg1);
+ * if (error != ERROR_OK)
+ * 	PRINTF("No se pudo enviar el mensaje CAN.\n\r");
+ * @endcode
  */
 extern ERROR_t mcp2515_sendMessage(const struct can_frame *frame);
 /**
@@ -647,9 +706,19 @@ extern ERROR_t mcp2515_sendMessage(const struct can_frame *frame);
  */
 extern ERROR_t mcp2515_readMessageWithBufferId(const RXBn rxbn, struct can_frame *frame);
 /**
- * @brief Lee mensaje.
+ * @brief Lee mensajes tipo CAN.
  *
  * @param[out] frame lugar donde carga la informacion.
+ *
+ * @code
+ * ERROR_t error;
+ * struct can_frame canMsgRead;
+ *
+ * error = mcp2515_readMessage(&canMsgRead);
+ *
+ * if(error != ERROR_OK)
+ * 	PRINTF("Fallo al recibir el mensaje CAN.\n\r");
+ * @endcode
  */
 extern ERROR_t mcp2515_readMessage(struct can_frame *frame);
 /**
@@ -729,42 +798,72 @@ extern uint8_t mcp2515_errorCountTX(void);
 /**
  * @brief Bandera de interrupcion de error int flag.
  * @return Devuelve el estado de la bandera.
+ *
+ * @see https://github.com/Agustin586/Ejemplos-SD2/blob/main/Nodos%20Can/Nodo%203/Baremetal/Nodo3_Baremetal/source/Nodo3_Baremetal.c
  */
 extern bool mcp2515_getIntERRIF(void);
 
 /**
  * @brief Bandera de int de MERRF.
  * @return Devuelve el estado de la bandera.
+ *
+ * @see https://github.com/Agustin586/Ejemplos-SD2/blob/main/Nodos%20Can/Nodo%203/Baremetal/Nodo3_Baremetal/source/Nodo3_Baremetal.c
  */
 extern bool mcp2515_getIntMERRF(void);
 
 /**
  * @brief Bandera de interrupcion de RX1IF.
  * @return Devuelve el estado de la bandera.
+ *
+ * @code
+ * bool Flag;
+ *
+ * Flag = mcp2515_getIntRX1IF();
+ *
+ * if(Flag)
+ * 	PRINTF("Interrupcion por buffer 1 de recepción generado");
+ * @endcode
+ *
+ * @see https://github.com/Agustin586/Ejemplos-SD2/blob/main/Nodos%20Can/Nodo%203/Baremetal/Nodo3_Baremetal/source/Nodo3_Baremetal.c
  */
 extern bool mcp2515_getIntRX1IF(void);
 
 /**
  * @brief Bandera de interrupcion de RX0IF.
  * @return Devuelve el estado de la bandera.
+ *
+ * @code
+ * bool Flag;
+ *
+ * if(Flag)
+ * 	PRINTF("Interrupción por buffer 0 de recepción generado");
+ * @endcode
+ *
+ * @see https://github.com/Agustin586/Ejemplos-SD2/blob/main/Nodos%20Can/Nodo%203/Baremetal/Nodo3_Baremetal/source/Nodo3_Baremetal.c
  */
 extern bool mcp2515_getIntRX0IF(void);
 
 /**
  * @brief Bandera de interrupcion de TX0IF.
  * @return Devuelve el estado de la bandera.
+ *
+ * @see https://github.com/Agustin586/Ejemplos-SD2/blob/main/Nodos%20Can/Nodo%203/Baremetal/Nodo3_Baremetal/source/Nodo3_Baremetal.c
  */
 extern bool mcp2515_getIntTX0IF(void);
 
 /**
  * @brief Bandera de interrupcion de TX1IF.
  * @return Devuelve el estado de la bandera.
+ *
+ * @see https://github.com/Agustin586/Ejemplos-SD2/blob/main/Nodos%20Can/Nodo%203/Baremetal/Nodo3_Baremetal/source/Nodo3_Baremetal.c
  */
 extern bool mcp2515_getIntTX1IF(void);
 
 /**
  * @brief Bandera de interrupcion de TX2IF.
  * @return Devuelve el estado de la bandera.
+ *
+ * @see https://github.com/Agustin586/Ejemplos-SD2/blob/main/Nodos%20Can/Nodo%203/Baremetal/Nodo3_Baremetal/source/Nodo3_Baremetal.c
  */
 extern bool mcp2515_getIntTX2IF(void);
 

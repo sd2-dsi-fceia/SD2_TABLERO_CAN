@@ -1,0 +1,9 @@
+<map id="mcp2515_setClkOut" name="mcp2515_setClkOut">
+<area shape="rect" id="Node000001" title="Hay que ver que hace." alt="" coords="5,31,146,57"/>
+<area shape="rect" id="Node000002" href="$mcp2515_8c.html#ac3bc690a1b8ef1495f5fbb57eab28eaf" title="Modifica un registro en particular." alt="" coords="194,31,363,57"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="146,41,178,41,178,47,146,47"/>
+<area shape="rect" id="Node000003" href="$mcp2515_8c.html#ae85a49925cc5c6fd1b15522434dc51ce" title="Finaliza la comunicacion spi." alt="" coords="414,5,478,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="363,28,397,23,398,28,364,34"/>
+<area shape="rect" id="Node000004" href="$mcp2515_8c.html#afea997d2aa89cc2831bff10e34198bd8" title="Funciones privadas." alt="" coords="411,56,480,83"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="364,54,396,59,395,64,363,60"/>
+</map>

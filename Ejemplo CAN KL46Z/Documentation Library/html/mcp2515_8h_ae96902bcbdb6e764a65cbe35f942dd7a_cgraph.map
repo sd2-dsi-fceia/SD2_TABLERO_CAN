@@ -1,0 +1,9 @@
+<map id="mcp2515_clearRXnOVRFlags" name="mcp2515_clearRXnOVRFlags">
+<area shape="rect" id="Node000001" title="Limpia la bandera de overflow de los buffer de rx." alt="" coords="5,31,202,57"/>
+<area shape="rect" id="Node000002" href="$mcp2515_8c.html#ac3bc690a1b8ef1495f5fbb57eab28eaf" title="Modifica un registro en particular." alt="" coords="250,31,419,57"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="202,41,234,41,234,47,202,47"/>
+<area shape="rect" id="Node000003" href="$mcp2515_8c.html#ae85a49925cc5c6fd1b15522434dc51ce" title="Finaliza la comunicacion spi." alt="" coords="470,5,534,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="419,28,453,23,454,28,420,34"/>
+<area shape="rect" id="Node000004" href="$mcp2515_8c.html#afea997d2aa89cc2831bff10e34198bd8" title="Funciones privadas." alt="" coords="467,56,536,83"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="420,54,452,59,451,64,419,60"/>
+</map>

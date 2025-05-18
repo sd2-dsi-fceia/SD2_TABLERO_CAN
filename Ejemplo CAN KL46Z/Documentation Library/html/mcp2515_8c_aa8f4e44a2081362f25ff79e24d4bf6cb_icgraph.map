@@ -1,0 +1,28 @@
+<map id="mcp2515_setMode" name="mcp2515_setMode">
+<area shape="rect" id="Node000001" title="Seteado el modo de trabajo." alt="" coords="927,109,1058,136"/>
+<area shape="rect" id="Node000002" href="$mcp2515_8c.html#a0a1c3cc8b486dbd55ff9d2d011694fa6" title="Setea el modo de configuracion." alt="" coords="698,8,867,35"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="962,102,923,74,878,49,847,38,849,33,880,44,926,70,965,98"/>
+<area shape="rect" id="Node000009" href="$mcp2515_8c.html#a24629fc99e83c9f097a0d24629dcae79" title="Setea el modo de solo escucha." alt="" coords="686,59,879,85"/>
+<area shape="poly" id="edge10_Node000001_Node000009" title=" " alt="" coords="919,108,840,89,841,83,920,103"/>
+<area shape="rect" id="Node000010" href="$mcp2515_8c.html#a4d44b1c2e0ad790988f8821b12fc8c80" title="Setea el modo de loopback." alt="" coords="689,109,876,136"/>
+<area shape="poly" id="edge11_Node000001_Node000010" title=" " alt="" coords="911,125,876,125,876,120,911,120"/>
+<area shape="rect" id="Node000011" href="$mcp2515_8c.html#ab5403fd588f8558b6b3031e9cee0b35e" title="Setea el modo normal de trabajo." alt="" coords="256,135,429,161"/>
+<area shape="poly" id="edge12_Node000001_Node000011" title=" " alt="" coords="926,143,879,151,757,160,635,162,429,156,430,151,635,157,757,154,879,145,926,137"/>
+<area shape="rect" id="Node000012" href="$mcp2515_8c.html#a9eeb6e5089676520f1f243d43b25bd0b" title="Setea el modo sleep." alt="" coords="700,211,864,237"/>
+<area shape="poly" id="edge14_Node000001_Node000012" title=" " alt="" coords="961,147,923,171,880,194,833,213,831,208,878,190,920,167,958,143"/>
+<area shape="rect" id="Node000003" href="$mcp2515_8c.html#a376a8574dcdafeeac264e1b652333d58" title="Setea el baud rate." alt="" coords="274,5,411,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="682,23,412,22,412,16,682,18"/>
+<area shape="rect" id="Node000006" href="$mcp2515_8c.html#adb0e9467c52bdc0cef5bb689dd3b996f" title="Se configura el filtro." alt="" coords="493,40,622,67"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="683,38,623,47,622,42,682,33"/>
+<area shape="rect" id="Node000008" href="$mcp2515_8c.html#a34318296cf509afa4e66aeffdbeb0f6d" title="Setea el filtro y la mascara. Se configuran dichos datos en los registros del propio modulo." alt="" coords="477,91,638,117"/>
+<area shape="poly" id="edge8_Node000002_Node000008" title=" " alt="" coords="703,42,687,49,663,65,639,81,610,93,608,88,636,76,660,60,684,44,701,37"/>
+<area shape="rect" id="Node000004" href="$main_8c.html#a3df11f7015b4a015c6b468941125de20" title="Inicializacion de perifericos." alt="" coords="103,72,208,99"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="289,40,196,74,194,69,287,35"/>
+<area shape="rect" id="Node000005" href="$main_8c.html#a840291bc02cba5474a4cb46a9b9566fe" title="Main." alt="" coords="5,72,55,99"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="87,88,55,88,55,83,87,83"/>
+<area shape="rect" id="Node000007" href="$mcp2515_8c.html#a21cb40a7513567cb455ce296ef0bbe4b" title="Resetea el modulo." alt="" coords="288,72,398,99"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="479,68,399,80,398,75,478,62"/>
+<area shape="poly" id="edge7_Node000007_Node000004" title=" " alt="" coords="272,88,208,88,208,83,272,83"/>
+<area shape="poly" id="edge9_Node000008_Node000007" title=" " alt="" coords="462,98,398,93,398,87,462,93"/>
+<area shape="poly" id="edge13_Node000011_Node000004" title=" " alt="" coords="285,132,197,102,198,97,287,127"/>
+</map>

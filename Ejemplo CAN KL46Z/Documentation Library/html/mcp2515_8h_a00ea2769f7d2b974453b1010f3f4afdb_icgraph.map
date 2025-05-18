@@ -1,0 +1,7 @@
+<map id="mcp2515_setBitrate" name="mcp2515_setBitrate">
+<area shape="rect" id="Node000001" title="Setea el baud rate." alt="" coords="256,5,393,32"/>
+<area shape="rect" id="Node000002" href="$main_8c.html#a3df11f7015b4a015c6b468941125de20" title="Inicializacion de perifericos." alt="" coords="103,5,208,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="240,21,209,21,209,16,240,16"/>
+<area shape="rect" id="Node000003" href="$main_8c.html#a840291bc02cba5474a4cb46a9b9566fe" title="Main." alt="" coords="5,5,55,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="87,21,55,21,55,16,87,16"/>
+</map>

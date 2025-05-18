@@ -1,0 +1,9 @@
+<map id="mcp2515_getInterrupts" name="mcp2515_getInterrupts">
+<area shape="rect" id="Node000001" title="Obtiene las interrupciones del modulo can. Desde el registro de interrupt flags." alt="" coords="5,31,160,57"/>
+<area shape="rect" id="Node000002" href="$mcp2515_8c.html#a1dcd2d88901952184ce8297e1c5c6bf6" title="Lee un solo registro a la vez." alt="" coords="208,31,363,57"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="160,41,192,41,192,47,160,47"/>
+<area shape="rect" id="Node000003" href="$mcp2515_8c.html#ae85a49925cc5c6fd1b15522434dc51ce" title="Finaliza la comunicacion spi." alt="" coords="414,5,478,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="363,29,398,23,398,29,364,34"/>
+<area shape="rect" id="Node000004" href="$mcp2515_8c.html#afea997d2aa89cc2831bff10e34198bd8" title="Funciones privadas." alt="" coords="411,56,480,83"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="364,54,396,59,395,64,363,59"/>
+</map>
