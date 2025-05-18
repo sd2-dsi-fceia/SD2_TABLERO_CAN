@@ -1,0 +1,7 @@
+<map id="mcp2515_getStatus" name="mcp2515_getStatus">
+<area shape="rect" id="Node000001" title="Obtiene los estados solicitados de lectura." alt="" coords="218,31,355,57"/>
+<area shape="rect" id="Node000002" href="$mcp2515_8c.html#a679684df91e2a18e578e81c7be7af67f" title="Chequea la recepcion de los datos." alt="" coords="5,5,170,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="202,36,170,32,170,27,203,31"/>
+<area shape="rect" id="Node000003" href="$mcp2515_8c.html#a98f361e58e9c16ec15a1469172a80547" title="Lee mensajes tipo CAN." alt="" coords="8,56,167,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="203,57,168,62,167,57,202,52"/>
+</map>

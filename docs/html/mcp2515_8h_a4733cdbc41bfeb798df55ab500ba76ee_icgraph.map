@@ -1,0 +1,9 @@
+<map id="mcp2515_sendMessageWithBufferId" name="mcp2515_sendMessageWithBufferId">
+<area shape="rect" id="Node000001" title="Envio de mensaje con el buffer." alt="" coords="485,5,720,32"/>
+<area shape="rect" id="Node000002" href="$mcp2515_8c.html#a4139b924c04d5aa72c132ccd16f05437" title="Envio de mensaje." alt="" coords="275,5,437,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="469,21,438,21,438,16,469,16"/>
+<area shape="rect" id="Node000003" href="$main_8c.html#ae3697afe652e8273e37aac8f55c48276" title="Escritura de mensajes tipo CAN." alt="" coords="103,5,227,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="260,21,227,21,227,16,260,16"/>
+<area shape="rect" id="Node000004" href="$main_8c.html#a840291bc02cba5474a4cb46a9b9566fe" title="Main." alt="" coords="5,5,55,32"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="87,21,55,21,55,16,87,16"/>
+</map>

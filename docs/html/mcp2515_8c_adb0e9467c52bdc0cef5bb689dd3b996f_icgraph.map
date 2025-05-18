@@ -1,0 +1,9 @@
+<map id="mcp2515_setFilter" name="mcp2515_setFilter">
+<area shape="rect" id="Node000001" title="Se configura el filtro." alt="" coords="414,5,543,32"/>
+<area shape="rect" id="Node000002" href="$mcp2515_8c.html#a21cb40a7513567cb455ce296ef0bbe4b" title="Resetea el modulo." alt="" coords="256,5,366,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="399,21,367,21,367,16,399,16"/>
+<area shape="rect" id="Node000003" href="$main_8c.html#a3df11f7015b4a015c6b468941125de20" title="Inicializacion de perifericos." alt="" coords="103,5,208,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="240,21,208,21,208,16,240,16"/>
+<area shape="rect" id="Node000004" href="$main_8c.html#a840291bc02cba5474a4cb46a9b9566fe" title="Main." alt="" coords="5,5,55,32"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="87,21,55,21,55,16,87,16"/>
+</map>

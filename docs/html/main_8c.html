@@ -1,0 +1,478 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.13.2"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>MCP2515: Referencia del archivo MensajeCAN/source/main.c</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<script type="text/javascript" src="clipboard.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="cookie.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+  $(function() { init_search(); });
+/* @license-end */
+</script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">MCP2515<span id="projectnumber">&#160;v1</span>
+   </div>
+   <div id="projectbrief">PortableWeb</div>
+  </td>
+    <td>        <div id="MSearchBox" class="MSearchBoxInactive">
+        <span class="left">
+          <span id="MSearchSelect"                onmouseover="return searchBox.OnSearchSelectShow()"                onmouseout="return searchBox.OnSearchSelectHide()">&#160;</span>
+          <input type="text" id="MSearchField" value="" placeholder="Buscar" accesskey="S"
+               onfocus="searchBox.OnSearchFieldFocus(true)" 
+               onblur="searchBox.OnSearchFieldFocus(false)" 
+               onkeyup="searchBox.OnSearchFieldChange(event)"/>
+          </span><span class="right">
+            <a id="MSearchClose" href="javascript:searchBox.CloseResultsWindow()"><img id="MSearchCloseImg" border="0" src="search/close.svg" alt=""/></a>
+          </span>
+        </div>
+</td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generado por Doxygen 1.13.2 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() { codefold.init(0); });
+/* @license-end */
+</script>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function(){initNavTree('main_8c.html',''); initResizable(true); });
+/* @license-end */
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Cargando...</div>
+<div class="SRStatus" id="Searching">Buscando...</div>
+<div class="SRStatus" id="NoMatches">Nada coincide</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="summary">
+<a href="#define-members">defines</a> &#124;
+<a href="#func-members">Funciones</a> &#124;
+<a href="#var-members">Variables</a>  </div>
+  <div class="headertitle"><div class="title">Referencia del archivo main.c</div></div>
+</div><!--header-->
+<div class="contents">
+
+<p>Se encarga de enviar mensajes CAN cada 500 ms.  
+<a href="#details">Más...</a></p>
+<div class="textblock"><code>#include &lt;stdio.h&gt;</code><br />
+<code>#include &quot;board.h&quot;</code><br />
+<code>#include &quot;peripherals.h&quot;</code><br />
+<code>#include &quot;pin_mux.h&quot;</code><br />
+<code>#include &quot;clock_config.h&quot;</code><br />
+<code>#include &quot;MKL46Z4.h&quot;</code><br />
+<code>#include &quot;fsl_debug_console.h&quot;</code><br />
+<code>#include &quot;spi.h&quot;</code><br />
+<code>#include &quot;<a class="el" href="mcp2515_8h_source.html">mcp2515.h</a>&quot;</code><br />
+</div><div class="textblock"><div class="dynheader">
+Gráfico de dependencias incluidas en main.c:</div>
+<div class="dyncontent">
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="main_8c__incl.svg" width="100%" height="440"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
+</div>
+</div>
+<p><a href="main_8c_source.html">Ir al código fuente de este archivo.</a></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
+defines</h2></td></tr>
+<tr class="memitem:a0518db88e57e69b3552f8cdf230769d8" id="r_a0518db88e57e69b3552f8cdf230769d8"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0518db88e57e69b3552f8cdf230769d8">ENVIAR_MENSAJE_PERIODO</a>&#160;&#160;&#160;500</td></tr>
+<tr class="separator:a0518db88e57e69b3552f8cdf230769d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac343cf8f556b8ab81488b42ed725a174" id="r_ac343cf8f556b8ab81488b42ed725a174"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac343cf8f556b8ab81488b42ed725a174">SW1_GPIO</a>&#160;&#160;&#160;GPIOC</td></tr>
+<tr class="separator:ac343cf8f556b8ab81488b42ed725a174"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3b206753e7f7b2e482816b53c6b8600c" id="r_a3b206753e7f7b2e482816b53c6b8600c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3b206753e7f7b2e482816b53c6b8600c">SW1_PIN</a>&#160;&#160;&#160;3</td></tr>
+<tr class="separator:a3b206753e7f7b2e482816b53c6b8600c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6c4471f31f0d177725b72cfd4c34c216" id="r_a6c4471f31f0d177725b72cfd4c34c216"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6c4471f31f0d177725b72cfd4c34c216">SW3_GPIO</a>&#160;&#160;&#160;GPIOC</td></tr>
+<tr class="separator:a6c4471f31f0d177725b72cfd4c34c216"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0a8b0ff3e617a7d97f22a692b96cc30d" id="r_a0a8b0ff3e617a7d97f22a692b96cc30d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0a8b0ff3e617a7d97f22a692b96cc30d">SW3_PIN</a>&#160;&#160;&#160;12</td></tr>
+<tr class="separator:a0a8b0ff3e617a7d97f22a692b96cc30d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1aa9f4ad6589c2013d008a60bd73dfba" id="r_a1aa9f4ad6589c2013d008a60bd73dfba"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1aa9f4ad6589c2013d008a60bd73dfba">CAN_ID</a>&#160;&#160;&#160;150</td></tr>
+<tr class="separator:a1aa9f4ad6589c2013d008a60bd73dfba"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
+Funciones</h2></td></tr>
+<tr class="memitem:a3df11f7015b4a015c6b468941125de20" id="r_a3df11f7015b4a015c6b468941125de20"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3df11f7015b4a015c6b468941125de20">perifericos_init</a> (void)</td></tr>
+<tr class="memdesc:a3df11f7015b4a015c6b468941125de20"><td class="mdescLeft">&#160;</td><td class="mdescRight">Inicializacion de perifericos.  <br /></td></tr>
+<tr class="separator:a3df11f7015b4a015c6b468941125de20"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae3697afe652e8273e37aac8f55c48276" id="r_ae3697afe652e8273e37aac8f55c48276"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae3697afe652e8273e37aac8f55c48276">canmsg_escritura</a> (void)</td></tr>
+<tr class="memdesc:ae3697afe652e8273e37aac8f55c48276"><td class="mdescLeft">&#160;</td><td class="mdescRight">Escritura de mensajes tipo CAN.  <br /></td></tr>
+<tr class="separator:ae3697afe652e8273e37aac8f55c48276"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a840291bc02cba5474a4cb46a9b9566fe" id="r_a840291bc02cba5474a4cb46a9b9566fe"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a840291bc02cba5474a4cb46a9b9566fe">main</a> (void)</td></tr>
+<tr class="memdesc:a840291bc02cba5474a4cb46a9b9566fe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Main.  <br /></td></tr>
+<tr class="separator:a840291bc02cba5474a4cb46a9b9566fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab5e09814056d617c521549e542639b7e" id="r_ab5e09814056d617c521549e542639b7e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab5e09814056d617c521549e542639b7e">SysTick_Handler</a> (void)</td></tr>
+<tr class="memdesc:ab5e09814056d617c521549e542639b7e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interrupción del SysTick.  <br /></td></tr>
+<tr class="separator:ab5e09814056d617c521549e542639b7e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
+Variables</h2></td></tr>
+<tr class="memitem:a16a366f1914db6923e6f49ba15572ea2" id="r_a16a366f1914db6923e6f49ba15572ea2"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a16a366f1914db6923e6f49ba15572ea2">Delay</a> = <a class="el" href="#a0518db88e57e69b3552f8cdf230769d8">ENVIAR_MENSAJE_PERIODO</a></td></tr>
+<tr class="memdesc:a16a366f1914db6923e6f49ba15572ea2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Delay para enviar mensajes de tipo CAN.  <br /></td></tr>
+<tr class="separator:a16a366f1914db6923e6f49ba15572ea2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac21fc9eb8ea44f32349f182ec38a6081" id="r_ac21fc9eb8ea44f32349f182ec38a6081"><td class="memItemLeft" align="right" valign="top">struct can_frame&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac21fc9eb8ea44f32349f182ec38a6081">canMsg1</a></td></tr>
+<tr class="memdesc:ac21fc9eb8ea44f32349f182ec38a6081"><td class="mdescLeft">&#160;</td><td class="mdescRight">Mensaje de tipo can.  <br /></td></tr>
+<tr class="separator:ac21fc9eb8ea44f32349f182ec38a6081"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a40396861b44e4f4de864b5bb22f69cca" id="r_a40396861b44e4f4de864b5bb22f69cca"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a40396861b44e4f4de864b5bb22f69cca">byte1</a></td></tr>
+<tr class="memdesc:a40396861b44e4f4de864b5bb22f69cca"><td class="mdescLeft">&#160;</td><td class="mdescRight">Primer byte a enviar en el mensaje CAN.  <br /></td></tr>
+<tr class="separator:a40396861b44e4f4de864b5bb22f69cca"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a33db1da8d46f8ca17619d8f3176708ae" id="r_a33db1da8d46f8ca17619d8f3176708ae"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a33db1da8d46f8ca17619d8f3176708ae">byte2</a></td></tr>
+<tr class="memdesc:a33db1da8d46f8ca17619d8f3176708ae"><td class="mdescLeft">&#160;</td><td class="mdescRight">Segundo byte a enviar en el mensaje CAN.  <br /></td></tr>
+<tr class="separator:a33db1da8d46f8ca17619d8f3176708ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">Descripción detallada</h2>
+<div class="textblock"><p>Se encarga de enviar mensajes CAN cada 500 ms. </p>
+
+<p class="definition">Definición en el archivo <a class="el" href="main_8c_source.html">main.c</a>.</p>
+</div><h2 class="groupheader">Documentación de «define»</h2>
+<a id="a1aa9f4ad6589c2013d008a60bd73dfba" name="a1aa9f4ad6589c2013d008a60bd73dfba"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1aa9f4ad6589c2013d008a60bd73dfba">&#9670;&#160;</a></span>CAN_ID</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define CAN_ID&#160;&#160;&#160;150</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definición en la línea <a class="el" href="main_8c_source.html#l00056">56</a> del archivo <a class="el" href="main_8c_source.html">main.c</a>.</p>
+
+</div>
+</div>
+<a id="a0518db88e57e69b3552f8cdf230769d8" name="a0518db88e57e69b3552f8cdf230769d8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0518db88e57e69b3552f8cdf230769d8">&#9670;&#160;</a></span>ENVIAR_MENSAJE_PERIODO</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define ENVIAR_MENSAJE_PERIODO&#160;&#160;&#160;500</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definición en la línea <a class="el" href="main_8c_source.html#l00049">49</a> del archivo <a class="el" href="main_8c_source.html">main.c</a>.</p>
+
+</div>
+</div>
+<a id="ac343cf8f556b8ab81488b42ed725a174" name="ac343cf8f556b8ab81488b42ed725a174"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac343cf8f556b8ab81488b42ed725a174">&#9670;&#160;</a></span>SW1_GPIO</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SW1_GPIO&#160;&#160;&#160;GPIOC</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definición en la línea <a class="el" href="main_8c_source.html#l00051">51</a> del archivo <a class="el" href="main_8c_source.html">main.c</a>.</p>
+
+</div>
+</div>
+<a id="a3b206753e7f7b2e482816b53c6b8600c" name="a3b206753e7f7b2e482816b53c6b8600c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3b206753e7f7b2e482816b53c6b8600c">&#9670;&#160;</a></span>SW1_PIN</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SW1_PIN&#160;&#160;&#160;3</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definición en la línea <a class="el" href="main_8c_source.html#l00052">52</a> del archivo <a class="el" href="main_8c_source.html">main.c</a>.</p>
+
+</div>
+</div>
+<a id="a6c4471f31f0d177725b72cfd4c34c216" name="a6c4471f31f0d177725b72cfd4c34c216"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6c4471f31f0d177725b72cfd4c34c216">&#9670;&#160;</a></span>SW3_GPIO</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SW3_GPIO&#160;&#160;&#160;GPIOC</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definición en la línea <a class="el" href="main_8c_source.html#l00053">53</a> del archivo <a class="el" href="main_8c_source.html">main.c</a>.</p>
+
+</div>
+</div>
+<a id="a0a8b0ff3e617a7d97f22a692b96cc30d" name="a0a8b0ff3e617a7d97f22a692b96cc30d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0a8b0ff3e617a7d97f22a692b96cc30d">&#9670;&#160;</a></span>SW3_PIN</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SW3_PIN&#160;&#160;&#160;12</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definición en la línea <a class="el" href="main_8c_source.html#l00054">54</a> del archivo <a class="el" href="main_8c_source.html">main.c</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Documentación de funciones</h2>
+<a id="ae3697afe652e8273e37aac8f55c48276" name="ae3697afe652e8273e37aac8f55c48276"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae3697afe652e8273e37aac8f55c48276">&#9670;&#160;</a></span>canmsg_escritura()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void canmsg_escritura </td>
+          <td>(</td>
+          <td class="paramtype">void</td>          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Escritura de mensajes tipo CAN. </p>
+<p>Lee el estado de los pines del Switch 1 y Switch 3 y luego carga la informacion en el mensaje CAN. </p>
+
+<p class="definition">Definición en la línea <a class="el" href="main_8c_source.html#l00136">136</a> del archivo <a class="el" href="main_8c_source.html">main.c</a>.</p>
+<div class="dynheader">
+Gráfico de llamadas a esta función:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="main_8c_ae3697afe652e8273e37aac8f55c48276_icgraph.svg" width="232" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+
+</div>
+</div>
+<a id="a840291bc02cba5474a4cb46a9b9566fe" name="a840291bc02cba5474a4cb46a9b9566fe"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a840291bc02cba5474a4cb46a9b9566fe">&#9670;&#160;</a></span>main()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int main </td>
+          <td>(</td>
+          <td class="paramtype">void</td>          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Main. </p>
+
+<p class="definition">Definición en la línea <a class="el" href="main_8c_source.html#l00100">100</a> del archivo <a class="el" href="main_8c_source.html">main.c</a>.</p>
+
+</div>
+</div>
+<a id="a3df11f7015b4a015c6b468941125de20" name="a3df11f7015b4a015c6b468941125de20"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3df11f7015b4a015c6b468941125de20">&#9670;&#160;</a></span>perifericos_init()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void perifericos_init </td>
+          <td>(</td>
+          <td class="paramtype">void</td>          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Inicializacion de perifericos. </p>
+<p>Inicializa el modulo mcp2515, los relojes de los pulsadores y el modo de gpio para los switches. </p>
+
+<p class="definition">Definición en la línea <a class="el" href="main_8c_source.html#l00165">165</a> del archivo <a class="el" href="main_8c_source.html">main.c</a>.</p>
+<div class="dynheader">
+Gráfico de llamadas a esta función:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="main_8c_a3df11f7015b4a015c6b468941125de20_icgraph.svg" width="214" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+
+</div>
+</div>
+<a id="ab5e09814056d617c521549e542639b7e" name="ab5e09814056d617c521549e542639b7e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab5e09814056d617c521549e542639b7e">&#9670;&#160;</a></span>SysTick_Handler()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SysTick_Handler </td>
+          <td>(</td>
+          <td class="paramtype">void</td>          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Interrupción del SysTick. </p>
+<p>Se encarga de manejar bases de tiempo como delays. </p>
+
+<p class="definition">Definición en la línea <a class="el" href="main_8c_source.html#l00209">209</a> del archivo <a class="el" href="main_8c_source.html">main.c</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Documentación de variables</h2>
+<a id="a40396861b44e4f4de864b5bb22f69cca" name="a40396861b44e4f4de864b5bb22f69cca"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a40396861b44e4f4de864b5bb22f69cca">&#9670;&#160;</a></span>byte1</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint8_t byte1</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Primer byte a enviar en el mensaje CAN. </p>
+
+<p class="definition">Definición en la línea <a class="el" href="main_8c_source.html#l00076">76</a> del archivo <a class="el" href="main_8c_source.html">main.c</a>.</p>
+
+</div>
+</div>
+<a id="a33db1da8d46f8ca17619d8f3176708ae" name="a33db1da8d46f8ca17619d8f3176708ae"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a33db1da8d46f8ca17619d8f3176708ae">&#9670;&#160;</a></span>byte2</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint8_t byte2</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Segundo byte a enviar en el mensaje CAN. </p>
+
+<p class="definition">Definición en la línea <a class="el" href="main_8c_source.html#l00080">80</a> del archivo <a class="el" href="main_8c_source.html">main.c</a>.</p>
+
+</div>
+</div>
+<a id="ac21fc9eb8ea44f32349f182ec38a6081" name="ac21fc9eb8ea44f32349f182ec38a6081"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac21fc9eb8ea44f32349f182ec38a6081">&#9670;&#160;</a></span>canMsg1</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct can_frame canMsg1</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Mensaje de tipo can. </p>
+<p>Prepara el mensaje can que se va a enviar al bus.</p>
+<dl class="section note"><dt>Nota</dt><dd>Para poder declarar un mensaje de tipo CAN se debe incluir la libreria can.h. </dd></dl>
+
+<p class="definition">Definición en la línea <a class="el" href="main_8c_source.html#l00071">71</a> del archivo <a class="el" href="main_8c_source.html">main.c</a>.</p>
+
+</div>
+</div>
+<a id="a16a366f1914db6923e6f49ba15572ea2" name="a16a366f1914db6923e6f49ba15572ea2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a16a366f1914db6923e6f49ba15572ea2">&#9670;&#160;</a></span>Delay</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint16_t Delay = <a class="el" href="#a0518db88e57e69b3552f8cdf230769d8">ENVIAR_MENSAJE_PERIODO</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Delay para enviar mensajes de tipo CAN. </p>
+
+<p class="definition">Definición en la línea <a class="el" href="main_8c_source.html#l00061">61</a> del archivo <a class="el" href="main_8c_source.html">main.c</a>.</p>
+
+</div>
+</div>
+</div><!-- contents -->
+</div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="dir_dd137b79b6944c9d0f69d3aa78c622f0.html">MensajeCAN</a></li><li class="navelem"><a class="el" href="dir_9c174dca7fbf6e6e20f8e42ca67cfaf4.html">source</a></li><li class="navelem"><a class="el" href="main_8c.html">main.c</a></li>
+    <li class="footer">Generado por <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+  </ul>
+</div>
+</body>
+</html>

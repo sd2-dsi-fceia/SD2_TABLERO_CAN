@@ -1,0 +1,16 @@
+<map id="mcp2515_setRegister" name="mcp2515_setRegister">
+<area shape="rect" id="Node000001" title="Setea un registro." alt="" coords="527,56,676,83"/>
+<area shape="rect" id="Node000002" href="$mcp2515_8c.html#a584ccc859e4ab5430492f526cd77c0ed" title="Limpia las banderas de interrupcion." alt="" coords="315,5,479,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="529,54,453,35,455,30,531,49"/>
+<area shape="rect" id="Node000004" href="$mcp2515_8c.html#a21cb40a7513567cb455ce296ef0bbe4b" title="Resetea el modulo." alt="" coords="342,56,452,83"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="512,72,453,72,453,67,512,67"/>
+<area shape="rect" id="Node000007" href="$mcp2515_8c.html#a376a8574dcdafeeac264e1b652333d58" title="Setea el baud rate." alt="" coords="328,107,466,133"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="531,90,455,109,453,103,529,84"/>
+<area shape="rect" id="Node000003" href="$mcp2515_8c.html#aeb679de4c34c365123f989fab92b9b71" title="Limpia la bandera de overflow de los buffers de rx." alt="" coords="103,5,267,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="300,21,267,21,267,16,300,16"/>
+<area shape="rect" id="Node000005" href="$main_8c.html#a3df11f7015b4a015c6b468941125de20" title="Inicializacion de perifericos." alt="" coords="132,81,238,108"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="327,80,238,91,237,86,326,75"/>
+<area shape="rect" id="Node000006" href="$main_8c.html#a840291bc02cba5474a4cb46a9b9566fe" title="Main." alt="" coords="5,81,55,108"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="117,97,55,97,55,92,117,92"/>
+<area shape="poly" id="edge7_Node000007_Node000005" title=" " alt="" coords="313,113,238,104,238,98,314,107"/>
+</map>

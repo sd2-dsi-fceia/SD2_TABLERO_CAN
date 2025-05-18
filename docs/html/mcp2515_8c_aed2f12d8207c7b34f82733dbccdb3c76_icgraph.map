@@ -1,0 +1,21 @@
+<map id="mcp2515_prepareId" name="mcp2515_prepareId">
+<area shape="rect" id="Node000001" title="Configura el id para una accion en particular." alt="" coords="768,56,903,83"/>
+<area shape="rect" id="Node000002" href="$mcp2515_8c.html#a4733cdbc41bfeb798df55ab500ba76ee" title="Envio de mensaje con el buffer." alt="" coords="485,5,720,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="756,55,719,47,667,35,668,30,720,41,757,49"/>
+<area shape="rect" id="Node000006" href="$mcp2515_8c.html#adb0e9467c52bdc0cef5bb689dd3b996f" title="Se configura el filtro." alt="" coords="538,56,667,83"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="752,72,667,72,667,67,752,67"/>
+<area shape="rect" id="Node000009" href="$mcp2515_8c.html#a34318296cf509afa4e66aeffdbeb0f6d" title="Setea el filtro y la mascara. Se configuran dichos datos en los registros del propio modulo." alt="" coords="522,107,683,133"/>
+<area shape="poly" id="edge9_Node000001_Node000009" title=" " alt="" coords="757,89,720,97,668,109,667,103,719,92,756,84"/>
+<area shape="rect" id="Node000003" href="$mcp2515_8c.html#a4139b924c04d5aa72c132ccd16f05437" title="Envio de mensaje." alt="" coords="275,5,437,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="469,21,438,21,438,16,469,16"/>
+<area shape="rect" id="Node000004" href="$main_8c.html#ae3697afe652e8273e37aac8f55c48276" title="Escritura de mensajes tipo CAN." alt="" coords="103,5,227,32"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="260,21,227,21,227,16,260,16"/>
+<area shape="rect" id="Node000005" href="$main_8c.html#a840291bc02cba5474a4cb46a9b9566fe" title="Main." alt="" coords="5,31,55,57"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="88,36,56,42,55,37,87,31"/>
+<area shape="rect" id="Node000007" href="$mcp2515_8c.html#a21cb40a7513567cb455ce296ef0bbe4b" title="Resetea el modulo." alt="" coords="301,56,411,83"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="523,72,412,72,412,67,523,67"/>
+<area shape="rect" id="Node000008" href="$main_8c.html#a3df11f7015b4a015c6b468941125de20" title="Inicializacion de perifericos." alt="" coords="112,56,218,83"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="286,72,218,72,218,67,286,67"/>
+<area shape="poly" id="edge8_Node000008_Node000005" title=" " alt="" coords="96,59,55,51,56,46,97,54"/>
+<area shape="poly" id="edge10_Node000009_Node000007" title=" " alt="" coords="519,106,411,83,412,78,520,100"/>
+</map>
