@@ -46,15 +46,14 @@
 /* TODO: insert other definitions and declarations here. */
 #define PIN_NUMBER 17
 
-#define ENVIAR_MENSAJE_PERIODO	1000
-
+#define ENVIAR_MENSAJE_PERIODO	500
 
 #define SW1_GPIO GPIOC
 #define SW1_PIN	3
 #define SW3_GPIO GPIOC
 #define SW3_PIN	12
 
-#define CAN_ID	10
+#define CAN_ID	150
 
 uint16_t Delay1s = ENVIAR_MENSAJE_PERIODO;
 
@@ -63,16 +62,8 @@ uint16_t Delay1s = ENVIAR_MENSAJE_PERIODO;
  */
 struct can_frame canMsg1;
 
-typedef union {
-	struct {
-		unsigned SW1:1;
-		unsigned SW3:1;
-		unsigned SIN_USO:6;
-	};
-	uint8_t dato;
-} EstPerifericos_t;
-
-EstPerifericos_t perifericos;
+uint8_t byte1;
+uint8_t byte2;
 
 // DECLARACION DE FUNCIONES.
 //..................................................................................
@@ -111,7 +102,7 @@ int main(void) {
 	perifericos_init();
 
 	canMsg1.can_id = CAN_ID;
-	canMsg1.can_dlc = 1;
+	canMsg1.can_dlc = 2;
 
 	while (1) {
 		if (!Delay1s)
@@ -128,11 +119,12 @@ static void canmsg_escritura(void) {
 	ERROR_t estado;
 
 	// Estado de los pines
-	perifericos.SW1 = !GPIO_PinRead(SW1_GPIO, SW1_PIN);
-	perifericos.SW3 = !GPIO_PinRead(SW3_GPIO, SW3_PIN);
+	byte1 = !GPIO_PinRead(SW1_GPIO, SW1_PIN);
+	byte2 = !GPIO_PinRead(SW3_GPIO, SW3_PIN);
 
 	// Mensaje
-	canMsg1.data[0] = perifericos.dato;
+	canMsg1.data[0] = byte1;
+	canMsg1.data[1] = byte2;
 
 	estado = mcp2515_sendMessage(&canMsg1);
 
