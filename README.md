@@ -17,22 +17,83 @@ A continuación detallamos cada nodo en particular, describiendo el mensaje que 
 
 ### Nodo 1 - Arduino Uno
 
-#### Mensaje que envia
+#### Mensaje que envía
 
-| ID | Trama del mensaje | Período de transmisión |
-|:--:|:-----------------|:----------------------:|
-|0x110| Byte1: 0 = Tecla off / 1 = Tecla On <br> Byte2: 0 = Tecla Off / 1 = Tecla On| 200 ms |
+| ID    | Trama del mensaje                                                                 | Período de transmisión |
+|:-----:|:----------------------------------------------------------------------------------:|:----------------------:|
+| 0x110 | Byte1: 0 = Tecla off / 1 = Tecla On <br> Byte2: 0 = Tecla Off / 1 = Tecla On      | 200 ms                |
 
 #### Mensaje que recibe
 
-| ID | Trama del mensaje | Período de recepción |
-|:--:|:-----------------|:----------------------:|
-| 0x120 | Byte1: Flag Rx de Temp <br> Byte2: Flag alarma de luz | - |
-| 0x130 | Byte1: Temperatua <br> Byte2: Humedad; Byte3: Luz | - |
+| ID    | Trama del mensaje                                                              | Período de recepción |
+|:-----:|:-------------------------------------------------------------------------------:|:--------------------:|
+| 0x120 | Byte1: Flag Rx de Temperatura <br> Byte2: Flag alarma de luz                   | -                   |
+| 0x130 | Byte1: Temperatura <br> Byte2: Humedad <br> Byte3: Luz                         | -                   |
 
 #### Descripción
 
 Muestra en el display LCD el valor de la Temperatura, Humedad, Luz, estado de la conexión con el nodo 3 y bandera de alarma de luz.
+
+---
+
+### Nodo 2
+
+#### Mensaje que recibe
+
+| ID    | Trama del mensaje                                                                                     | Período de recepción |
+|:-----:|:------------------------------------------------------------------------------------------------------:|:--------------------:|
+| 0x110 | Byte1: 0 = relé1 desactivado / 1 = relé1 activado <br> Byte2: 0 = relé2 desactivado / 1 = relé2 activado | -                   |
+| 0x130 | Byte1: Temperatura <br> Byte2: Humedad <br> Byte3: Luz                                                 | -                   |
+
+#### Mensaje que envía
+
+| ID    | Trama del mensaje                                                                      | Período de transmisión |
+|:-----:|:---------------------------------------------------------------------------------------:|:----------------------:|
+| 0x120 | Byte1: Bandera Rx Temp 1/0 <br> Byte2: 0 = Bandera alarma luz / 1 = Bandera activa     | 1 s                    |
+
+#### Descripción
+
+Activa una alarma ante un determinado nivel de Luz. Envía cada 1 segundo el estado de recepción de temperatura y estado de la alarma de luz.
+
+---
+
+### Nodo 3
+
+#### Mensaje que envía
+
+| ID    | Trama del mensaje                                           | Período de transmisión |
+|:-----:|:------------------------------------------------------------:|:----------------------:|
+| 0x130 | Byte1: Temperatura <br> Byte2: Humedad <br> Byte3: Luz       | 1 s                    |
+
+#### Descripción
+
+Envía cada 1 segundo el valor de Temperatura, Humedad y Luz.
+
+---
+
+### Nodo 4
+
+#### Mensaje que envía
+
+| ID    | Trama del mensaje                                           | Período de transmisión |
+|:-----:|:------------------------------------------------------------:|:----------------------:|
+| 0x130 | Byte1: Temperatura <br> Byte2: Humedad <br> Byte3: Luz       | -                      |
+
+#### Descripción
+
+Trabaja como servidor web. Reporta el valor de Temperatura y Humedad mediante HTML para acceder desde un navegador.
+
+---
+
+### Nodo 5
+
+#### Mensaje que envía
+
+| ID    | Trama del mensaje                                                                 | Período de transmisión |
+|:-----:|:----------------------------------------------------------------------------------:|:----------------------:|
+| 0x150 | Byte1: 0 = switch1 desactivado / 1 = tecla activado <br> Byte2: 0 = switch3 desactivado / 1 = tecla activado | - |
+
+
 
 ## Diagrama de conexión
 
