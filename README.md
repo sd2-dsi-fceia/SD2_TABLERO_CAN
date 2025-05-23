@@ -27,8 +27,8 @@ A continuación detallamos cada nodo en particular, describiendo el mensaje que 
 
 | ID | Trama del mensaje | Período de recepción |
 |:--:|:-----------------:|:----------------------:|
-| 0x120 | Byte1: Flag Rx de Temp; Byte2: Flag alarma de luz | - |
-| 0x130 | Byte1: Temperatua; Byte2: Humedad; Byte3: Luz | - |
+| 0x120 | Byte1: Flag Rx de Temp <br> Byte2: Flag alarma de luz | - |
+| 0x130 | Byte1: Temperatua <br> Byte2: Humedad; Byte3: Luz | - |
 
 #### Descripción
 
