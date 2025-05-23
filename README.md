@@ -11,6 +11,29 @@ El objetivo de este proyecto es mostrar el uso de los nodos CAN, enfocando fuert
 | 4    | 0x130       | -          | X          |           | Reporta por WiFi en una página HTML para ver en el navegador el dato de temperatura y humedad del Nodo 3 | ESP32 |
 | 5    | -           | 0x150      |            | X         | Envía los estados de sus pulsadores SW1 y SW3 | KL46Z |
 
+
+## Información detallada de cada Nodo
+A continuación detallamos cada nodo en particular, describiendo el mensaje que envía y recibe.
+
+### Nodo 1 - Arduino Uno
+
+#### Mensaje que envia
+
+| ID | Trama del mensaje | Período de transmisión |
+|:--:|:-----------------:|:----------------------:|
+|0x110| Byte1: 0 = Tecla off / 1 = Tecla On; Byte2: 0 = Tecla Off / 1 = Tecla On| 200 ms |
+
+#### Mensaje que recibe
+
+| ID | Trama del mensaje | Período de recepción |
+|:--:|:-----------------:|:----------------------:|
+| 0x120 | Byte1: Flag Rx de Temp; Byte2: Flag alarma de luz | - |
+| 0x130 | Byte1: Temperatua; Byte2: Humedad; Byte3: Luz | - |
+
+#### Descripción
+
+Muestra en el display LCD el valor de la Temperatura, Humedad, Luz, estado de la conexión con el nodo 3 y bandera de alarma de luz.
+
 ## Diagrama de conexión
 
 ![Diagrama de conexionado del Bus Can con sus Nodos](https://github.com/Agustin586/Ejemplos-SD2/blob/main/image/Diagrama_CANBUS.jpeg)
