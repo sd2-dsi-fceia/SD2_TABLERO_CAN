@@ -15,6 +15,8 @@ El objetivo de este proyecto es mostrar el uso de los nodos CAN, enfocando fuert
 ## Información detallada de cada Nodo
 A continuación detallamos cada nodo en particular, describiendo el mensaje que envía y recibe.
 
+---
+
 ### Nodo 1 - Arduino Uno
 
 #### Mensaje que envía
