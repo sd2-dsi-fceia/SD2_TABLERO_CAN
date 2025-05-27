@@ -3,7 +3,7 @@
 ## Indice
 - [Introducción](#Introducción)
 - [Información detallada de cada Nodo](#información-detallada-de-cada-nodo)
-
+- - [Nodo 1 - Arduino Uno](#nodo-1---arduino-uno)
 
 ## Introducción
 El objetivo de este proyecto es mostrar el uso de los nodos CAN, enfocando fuertemente el concepto de productor y consumidor. Detallaremos a continuación en una tabla comparativa cada nodo en particular para poder entender a grandes rasgos que hace cada uno. Luego en la siguiente sección se tendrá una descripción mucho mas detallada de la trama de transimisión y de recepción.
