@@ -12,7 +12,11 @@
 - [Organización de carpetas](#organización-de-carpetas)
 
 ## Introducción
-El objetivo de este proyecto es mostrar el uso de los nodos CAN, enfocando fuertemente el concepto de productor y consumidor. Detallaremos a continuación en una tabla comparativa cada nodo en particular para poder entender a grandes rasgos que hace cada uno. Luego en la siguiente sección se tendrá una descripción mucho mas detallada de la trama de transimisión y de recepción.
+Este repositorio contiene una serie de ejemplos prácticos desarrollados para la placa FRDM-KL46Z, Arduino Uno y ESP32, en el marco de la materia **Sistemas Digitales 2**. 
+
+El enfoque principal está puesto en la implementación de una red **CAN (Controller Area Network)** interconectando múltiples nodos, ilustrando los conceptos de **productor** y **consumidor**. A lo largo del proyecto se exploran distintas configuraciones de hardware, integración de sensores y actuadores, y gestión del protocolo CAN, todo con el objetivo de reforzar los conocimientos adquiridos durante la cursada de la materia.
+
+Cada carpeta dentro del repositorio representa un nodo específico dentro de la red, implementado con una arquitectura distinta, como Arduino, placas NXP u otros microcontroladores. Se incluye además una descripción detallada de cada nodo, su comportamiento y el tipo de mensajes que transmite o recibe.
 
 | Nodo | ID recibido      | ID enviado | Consumidor | Productor | Descripción | Dispositivo |
 |:----:|:----------------:|:----------:|:----------:|:---------:|:-----------:|:-----------:|
