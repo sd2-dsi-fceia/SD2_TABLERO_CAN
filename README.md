@@ -29,18 +29,18 @@ A continuación detallamos cada nodo en particular, describiendo el mensaje que 
 
 ### Nodo 1
 
+#### Mensaje que recibe
+
+| ID    | Trama del mensaje                                                              | Período de recepción |
+|:-----:|:-------------------------------------------------------------------------------|:--------------------:|
+| 0x120 | Byte1: Flag Rx de Temperatura <br> Byte2: Flag alarma de luz                   | 1 s                  |
+| 0x130 | Byte1: Temperatura <br> Byte2: Humedad <br> Byte3: Luz                         | 1 s                  |
+
 #### Mensaje que envía
 
 | ID    | Trama del mensaje                                                                 | Período de transmisión |
 |:-----:|:----------------------------------------------------------------------------------|:----------------------:|
 | 0x110 | Byte1: 0 = Tecla off / 1 = Tecla On <br> Byte2: 0 = Tecla Off / 1 = Tecla On      | 200 ms                |
-
-#### Mensaje que recibe
-
-| ID    | Trama del mensaje                                                              | Período de recepción |
-|:-----:|:-------------------------------------------------------------------------------|:--------------------:|
-| 0x120 | Byte1: Flag Rx de Temperatura <br> Byte2: Flag alarma de luz                   | -                   |
-| 0x130 | Byte1: Temperatura <br> Byte2: Humedad <br> Byte3: Luz                         | -                   |
 
 #### Descripción
 
