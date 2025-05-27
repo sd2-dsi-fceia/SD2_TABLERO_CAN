@@ -3,7 +3,13 @@
 ## Indice
 - [Introducción](#Introducción)
 - [Información detallada de cada Nodo](#información-detallada-de-cada-nodo)
-- - [Nodo 1 - Arduino Uno](#nodo-1---arduino-uno)
+  - [Nodo 1](#nodo-1)
+  - [Nodo 2](#nodo-2)
+  - [Nodo 3](#nodo-3)
+  - [Nodo 4](#nodo-4)
+  - [Nodo 5](#nodo-5)
+- [Diagrama de conexión](#diagrama-de-conexión)
+- [Organización de carpetas](#organización-de-carpetas)
 
 ## Introducción
 El objetivo de este proyecto es mostrar el uso de los nodos CAN, enfocando fuertemente el concepto de productor y consumidor. Detallaremos a continuación en una tabla comparativa cada nodo en particular para poder entender a grandes rasgos que hace cada uno. Luego en la siguiente sección se tendrá una descripción mucho mas detallada de la trama de transimisión y de recepción.
@@ -21,7 +27,7 @@ A continuación detallamos cada nodo en particular, describiendo el mensaje que 
 
 ---
 
-### Nodo 1 - Arduino Uno
+### Nodo 1
 
 #### Mensaje que envía
 
