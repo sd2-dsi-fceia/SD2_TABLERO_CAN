@@ -2,16 +2,14 @@
 
 ## Índice
 - [Introducción](#introducción)
-- [Requisitos](#requisitos)
-- [Estructura del proyecto](#estructura-del-proyecto)
-- [Instalación y uso](#instalación-y-uso)
 - [Información detallada de cada Nodo](#información-detallada-de-cada-nodo)
-  - [Nodo 1 - Arduino Uno](#nodo-1---arduino-uno)
-  - [Nodo 2 - KL46Z](#nodo-2---kl46z)
-  - [Nodo 3 - ESP32](#nodo-3---esp32)
-- [Diagramas de conexión](#diagramas-de-conexión)
-- [Licencia](#licencia)
-
+  - [Nodo 1](#nodo-1)
+  - [Nodo 2](#nodo-2)
+  - [Nodo 3](#nodo-3)
+  - [Nodo 4](#nodo-4)
+  - [Nodo 5](#nodo-5)
+- [Diagrama de conexión](#diagrama-de-conexión)
+- [Organización de carpetas](#organización-de-carpetas)
 
 ## Introducción
 Este repositorio contiene una serie de ejemplos prácticos desarrollados para la placa FRDM-KL46Z, Arduino Uno y ESP32, en el marco de la materia **Sistemas Digitales 2**. 
