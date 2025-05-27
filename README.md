@@ -2,7 +2,8 @@
 
 ## Indice
 - [Introducción](#Introducción)
-- [Información detallada de cada Nodo] (#Información-detallada-de-cada-Nodo)
+- [Información detallada de cada Nodo](#información-detallada-de-cada-nodo)
+
 
 ## Introducción
 El objetivo de este proyecto es mostrar el uso de los nodos CAN, enfocando fuertemente el concepto de productor y consumidor. Detallaremos a continuación en una tabla comparativa cada nodo en particular para poder entender a grandes rasgos que hace cada uno. Luego en la siguiente sección se tendrá una descripción mucho mas detallada de la trama de transimisión y de recepción.
