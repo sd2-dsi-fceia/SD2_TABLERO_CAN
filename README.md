@@ -1,7 +1,11 @@
 # Proyecto Nodos SD2
 
+## Indice
+- [Introducción](#Introducción)
+- [Información detallada de cada Nodo] (#Información-detallada-de-cada-Nodo)
+
 ## Introducción
-El objetivo de este proyecto es mostrar el uso de los nodos CAN, enfocando fuertemente el concepto de productor y consumidor. Como veremos en la siguiente imagen se presentan cinco nodos que detallaremos a continuación en una tabla comparativa.
+El objetivo de este proyecto es mostrar el uso de los nodos CAN, enfocando fuertemente el concepto de productor y consumidor. Detallaremos a continuación en una tabla comparativa cada nodo en particular para poder entender a grandes rasgos que hace cada uno. Luego en la siguiente sección se tendrá una descripción mucho mas detallada de la trama de transimisión y de recepción.
 
 | Nodo | ID recibido   | ID enviado | Consumidor | Productor | Descripción | Dispositivo |
 |:----:|:-------------:|:----------:|:----------:|:---------:|:-----------:|:-----------:|
