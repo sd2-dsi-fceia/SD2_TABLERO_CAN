@@ -117,10 +117,10 @@ Trabaja como servidor web. Reporta el valor de Temperatura y Humedad mediante HT
 Dentro de esta carpeta se encuentra el datasheet del módulo MCP2515 y la presentación del módulo.
 
 ### Extras
-Se encuentra ejemplos de tres Nodos CAN, todos realizados con la placa de desarrollo KL46Z. Se encuentra una mejor explicación y mas detallada dentro del README de dicha carpeta.
+Se encuentran ejemplos de tres Nodos CAN, todos realizados con la placa de desarrollo KL46Z. Dentro hay un Readme con una explicación más detallada.
 
 ### Nodo KL46Z
-Se encuentra un Nodo realizado con dicha placa de desarrollo que corresponde al proyecto de Nodos CAN. Dicho Nodo se encarga de mandar cada 500 ms el estado de los pulsadores SW1 y SW3. Dentro de este programa se utiliza la libreria del MCP2515 para la KL46Z.
+Se encuentra el Nodo realizado con dicha placa de desarrollo que corresponde al proyecto de Nodos CAN. Dicho Nodo se encarga de mandar cada 500 ms el estado de los pulsadores SW1 y SW3. Dentro de este programa se utiliza la libreria del MCP2515 para la KL46Z.
 
 ### Nodos Arduino
-Se encuentran todos los programas .ino correspondientes a los Nodos 1,2,3.
+Se encuentran todos los programas correspondientes a los Nodos 1,2,3.
