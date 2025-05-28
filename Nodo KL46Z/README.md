@@ -8,6 +8,7 @@ cualquier mensaje CAN e imprimirlo en el puerto serie. El período de recepción
 
 ## Conexión del Nodo a la KL46Z
 
+Se debe conectar con el módulo CAN MCP2515 de la siguiente manera:
 * MISO: PTE19
 * MOSI: PTE18
 * SCK: PTE17
