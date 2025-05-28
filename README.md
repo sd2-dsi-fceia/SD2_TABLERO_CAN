@@ -128,3 +128,6 @@ Se encuentra el Nodo realizado con dicha placa de desarrollo que corresponde al 
 
 ### Nodos Arduino
 Se encuentran todos los programas correspondientes a los Nodos 1,2,3.
+
+### Nodo ESP32
+Se encuentra el programa del nodo correspondiente al ESP32.
