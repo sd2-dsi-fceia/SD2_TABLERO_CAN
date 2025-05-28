@@ -1,4 +1,4 @@
-# Ejemplo-de-comunicacion-CAN
+# Ejemplo de comunicacion CAN
 
 ## Introducción
 
