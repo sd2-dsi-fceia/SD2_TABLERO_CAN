@@ -1,7 +1,8 @@
 # Ejemplo-de-comunicacion-CAN
 
-Se tienen dos proyectos MensajeCAN que se encarga de enviar un mensaje de tipo CAN con ID = 150. Luego se tiene otro proyecto ReceptorCAN
-que lo único que hace es leer cualquier mensaje de tipo CAN de forma periódica cada 300 ms.
+Dentro de esta carpeta podemos encontrar dos proyectos para la KL46Z. El proyecto con el nombre MensajeCAN se encarga de enviar un mensaje donde se informen
+los estados de los pulsadores SW1 y SW3 cada 500 ms. Esto se realiza cada 500 ms. Luego se encuentra el otro proyecto ReceptorCAN que se encarga de tomar
+cualquier mensaje CAN e imprimirlo en el puerto serie. El período de recepción de mensajes es cada 300 ms (se puede cambiar en la macro correspondiente).
 
 ## Documentacion de la libreria MCP2515
 [Ver index.html](https://agustin586.github.io/Ejemplos-SD2/)
