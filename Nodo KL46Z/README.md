@@ -20,3 +20,9 @@ Se debe conectar con el módulo CAN MCP2515 de la siguiente manera:
 
 ## Documentacion de la libreria MCP2515
 [Ver index.html](https://agustin586.github.io/Ejemplos-SD2/)
+
+## Ejemplo de uso de la liberia
+
+> Para utilizar correctamente la libreria es necesario que se tenga la libreria correspondiente al manejo del periférico SPI de la KL46Z
+> y además un archivo can.h que permite definir una estructura para el mensaje a enviar.
+
