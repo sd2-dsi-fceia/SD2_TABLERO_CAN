@@ -115,6 +115,8 @@ Trabaja como servidor web. Reporta el valor de Temperatura y Humedad mediante HT
 
 ![Diagrama de conexionado del Bus Can con sus Nodos](https://github.com/Agustin586/Ejemplos-SD2/blob/main/image/Diagrama_CANBUS.jpeg)
 
+> Red CAN BUS
+
 ## Organización de carpetas
 
 ### Documentación
