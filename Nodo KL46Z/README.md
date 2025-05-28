@@ -26,6 +26,22 @@ Se debe conectar con el módulo CAN MCP2515 de la siguiente manera:
 > Para utilizar correctamente la libreria es necesario que se tenga la libreria correspondiente al manejo del periférico SPI de la KL46Z
 > y además un archivo can.h que permite definir una estructura para el mensaje a enviar.
 
+### Enviar mensaje CAN
 ```
 Bloque de codigo
 ```
+
+### Recibir mensaje CAN (polling)
+```
+Bloque de codigo
+```
+### Configurar filtro y máscaras
+```
+Bloque de codigo
+```
+
+### Configurar Modo de funcionamiento
+```
+Bloque de codigo
+```
+
