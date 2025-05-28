@@ -1,4 +1,4 @@
-# Ejemplo de comunicacion CAN
+# Nodo de KL46Z
 
 ## Introducción
 
