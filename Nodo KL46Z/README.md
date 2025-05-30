@@ -49,7 +49,7 @@ struct can_frame canMsg1;
 
 error = mcp2515_sendMessage(&canMsg1);
 
-if (error != ERROR_t)
+if (error != ERROR_OK)
   PRINTF("Error al enviar el mensaje");
 ```
 
@@ -64,12 +64,32 @@ if (error != ERROR_OK)
   PRINTF("No hubo mensaje recibidos o hubo error");
 ```
 ### Configurar filtro y máscaras
-```
-Bloque de codigo
+```c
+#define MASK0_ID10		0x00F	// Para el ID=20 es lo mismo
+#define FILTER0_ID10	0x00A
+#define FILTER1_ID20	20
+
+mcp2515_setFilterMask(MASK0, false, MASK0_ID10);
+mcp2515_setFilterMask(MASK1, false, MASK0_ID10);
+
+mcp2515_setFilter(RXF0, false, FILTER0_ID10);
+mcp2515_setFilter(RXF2, false, FILTER1_ID20);
 ```
 
 ### Configurar Modo de funcionamiento
-```
-Bloque de codigo
+```c
+ERROR_t error;
+
+error = mcp2515_setListenOnlyMode();
+assert (error == ERROR_OK)
+
+error = mcp2515_setSleepMode();
+assert (error == ERROR_OK)
+
+error = mcp2515_setLoopbackMode();
+assert (error == ERROR_OK)
+
+error = mcp2515_setNormalMode();
+assert (error == ERROR_OK)
 ```
 
