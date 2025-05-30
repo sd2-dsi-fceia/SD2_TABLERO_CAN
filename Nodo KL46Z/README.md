@@ -27,7 +27,7 @@ Se debe conectar con el módulo CAN MCP2515 de la siguiente manera:
 > y además un archivo can.h que permite definir una estructura para el mensaje a enviar.
 
 ### Enviar mensaje CAN
-```
+```c
 ERROR_t error;
 struct can_frame canMsg1;
 
