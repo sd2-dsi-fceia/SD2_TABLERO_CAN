@@ -65,7 +65,7 @@ if (error != ERROR_OK)
 ```
 ### Configurar filtro y máscaras
 ```c
-#define MASK0_ID10		0x00F	// Para el ID=20 es lo mismo
+#define MASK0_ID10 0x00F
 #define FILTER0_ID10	0x00A
 #define FILTER1_ID20	20
 
