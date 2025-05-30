@@ -66,8 +66,8 @@ if (error != ERROR_OK)
 ### Configurar filtro y máscaras
 ```c
 #define MASK0_ID10 0x00F
-#define FILTER0_ID10	0x00A
-#define FILTER1_ID20	20
+#define FILTER0_ID10 0x00A
+#define FILTER1_ID20 20
 
 mcp2515_setFilterMask(MASK0, false, MASK0_ID10);
 mcp2515_setFilterMask(MASK1, false, MASK0_ID10);
