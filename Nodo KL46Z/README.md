@@ -26,6 +26,22 @@ Se debe conectar con el módulo CAN MCP2515 de la siguiente manera:
 > Para utilizar correctamente la libreria es necesario que se tenga la libreria correspondiente al manejo del periférico SPI de la KL46Z
 > y además un archivo can.h que permite definir una estructura para el mensaje a enviar.
 
+### Inicialización CAN
+
+```c
+// Reseteo del módulo
+ERROR_t status = mcp2515_reset();                
+assert(status == ERROR_OK);                            // Detiene la ejecución del programa
+
+// Configuración de Bits por Segundos
+status = mcp2515_setBitrate(CAN_125KBPS, MCP_8MHZ);
+assert(status == ERROR_OK);
+
+// Modo de operación del módulo
+status = mcp2515_setNormalMode();
+assert(status == ERROR_OK);
+```
+
 ### Enviar mensaje CAN
 ```c
 ERROR_t error;
@@ -38,8 +54,14 @@ if (error != ERROR_t)
 ```
 
 ### Recibir mensaje CAN (polling)
-```
-Bloque de codigo
+```c
+ERROR_t error;
+struct can_frame canMsgRead;
+
+error = mcp2515_readMessage(&canMsgRead);
+
+if (error != ERROR_OK)
+  PRINTF("No hubo mensaje recibidos o hubo error");
 ```
 ### Configurar filtro y máscaras
 ```
