@@ -28,7 +28,13 @@ Se debe conectar con el módulo CAN MCP2515 de la siguiente manera:
 
 ### Enviar mensaje CAN
 ```
-Bloque de codigo
+ERROR_t error;
+struct can_frame canMsg1;
+
+error = mcp2515_sendMessage(&canMsg1);
+
+if (error != ERROR_t)
+  PRINTF("Error al enviar el mensaje");
 ```
 
 ### Recibir mensaje CAN (polling)
